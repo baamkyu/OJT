@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+<!-- 재사용할 요소들 -->
+    <defs>
+        <!-- 주황색 동그라미 -->
+        <circle id="orangeCircle" r="5" fill="orange" />
+        <!-- 파란색 동그라미 -->
+        <circle id="blueCircle" r="5" fill="blue" />
+        <!-- 왼쪽 네모 (재사용 못했음)  -->
+        <!-- <rect id="leftBox" rx="15" ry="15" fill="none" style="stroke: skyblue; stroke-width: 2px;"/> -->
+        <!-- 오른쪽 네모 -->
+        <rect id="rightBox" rx="15" ry="15" width="32" height="32" fill="none" style="stroke: skyblue; stroke-width: 2px;" />
+        
+        <!-- 곡선 -->
+        <path id="curve" d="M 0 0 Q 24 -40 48 0" stroke="skyblue" fill="none" stroke-width="2" stroke-linecap= "round" />
+
+        <!-- 정답 라인 -->
+        <line id="underLine" x1="0" y1="32" x2="56" y2="32" stroke="skyblue" stroke-width="2" />
+ 
+    </defs>
+
+
+  <!-- 왼쪽 네모 = 8 + 24n (n: 주황색 동그라미의 수)-->
+  <!-- 주황 동그라미 좌표 = 16 + 24(n-1) -->
+
+<!-- 렌더링은 여기부터 -->
+
+<!-- 왼쪽-1 -->
+    <text x="40" y="80" font-size="24px">🔎 다음과 같이 덧셈을 하시오.</text>
+    <g transform="matrix(1, 0, 0, 1, 32, 160)">
+      <use href="leftBox" width="56" height="32"></use>
+      <rect x="0" y="0" rx="15" ry="15" width="56" height="32" fill="none" style="stroke: skyblue; stroke-width: 2px;" />
+      <use href="#orangeCircle" x="16" y="16"></use>
+      <use href="#orangeCircle" x="40" y="16"></use>
+      <use href="#curve" x="40"></use>
+      <use href="#rightBox" x="80" y="0"></use>
+      <use href="#blueCircle" x="96" y="16"></use>
+      <text x="136" y="28" fill="black" font-size="32">2 + 1 = </text>
+      <use href="#underLine" x="240"></use>
+    </g>
+
+<!-- 오른족-2 -->
+    <!-- 재사용 가능한 코드로 짜서 x좌표의 시작점 바꾸고 위에 작성한 코드랑 같은 흐름으로 작성 -->
+    <g transform="matrix(1, 0, 0, 1, 400, 160)">
+      <rect x="0" y="0" rx="15" ry="15" width="176" height="32" fill="none" style="stroke: skyblue; stroke-width: 2px;" />
+      <use href="#orangeCircle" x="16" y="16"></use>
+      <use href="#orangeCircle" x="40" y="16"></use>
+      <use href="#orangeCircle" x="64" y="16"></use>
+      <use href="#orangeCircle" x="88" y="16"></use>
+      <use href="#orangeCircle" x="112" y="16"></use>
+      <use href="#orangeCircle" x="136" y="16"></use>
+      <use href="#orangeCircle" x="160" y="16"></use>
+      <use href="#curve" x="160"></use>
+      <use href="#rightBox" x="200" y="0"></use>
+      <use href="#blueCircle" x="216" y="16"></use>
+      <text x="256" y="28" fill="black" font-size="32">7 + 1 = </text>
+      <use href="#underLine" x="360"></use>
+    </g>
+
+<!-- 왼쪽-2 -->
+    <g transform="matrix(1, 0, 0, 1, 32, 240)">
+      <rect x="0" y="0" rx="15" ry="15" width="104" height="32" fill="none" style="stroke: skyblue; stroke-width: 2px;" />
+      <use href="#orangeCircle" x="16" y="16"></use>
+      <use href="#orangeCircle" x="40" y="16"></use>
+      <use href="#orangeCircle" x="64" y="16"></use>
+      <use href="#orangeCircle" x="88" y="16"></use>
+      <use href="#curve" x="88"></use>
+      <use href="#rightBox" x="128" y="0"></use>
+      <use href="#blueCircle" x="144" y="16"></use>
+      <path id="curve" d="M 88 0 q 24 -40 48 0" stroke="skyblue" fill="none" stroke-width="2" stroke-linecap= "round" />
+      <text x="184" y="28" fill="black" font-size="32">4 + 1 = </text>
+      <use href="#underLine" x="288"></use>
+    </g>
+
+<!-- 오른쪽-2 -->
+    <!-- 7+1 코드에서 맨 앞 동그라미 2개 빼줌 & 왼쪽 네모 너비 줄여줌 & 좌표를(48,0)으로 이동
+          나머진 똑같음 -->
+    <g transform="matrix(1, 0, 0, 1, 400, 240)">
+      <rect x="48" y="0" rx="15" ry="15" width="128" height="32" fill="none" style="stroke: skyblue; stroke-width: 2px;" />
+      <use href="#orangeCircle" x="64" y="16"></use>
+      <use href="#orangeCircle" x="88" y="16"></use>
+      <use href="#orangeCircle" x="112" y="16"></use>
+      <use href="#orangeCircle" x="136" y="16"></use>
+      <use href="#orangeCircle" x="160" y="16"></use>
+      <use href="#curve" x="160"></use>
+      <use href="#rightBox" x="200" y="0"></use>
+      <use href="#blueCircle" x="216" y="16"></use>
+      <text x="256" y="28" fill="black" font-size="32">5 + 1 = </text>
+      <use href="#underLine" x="360"></use>
+    </g>
+
+
+
+<!-- 왼쪽-3 -->
+    <g transform="matrix(1, 0, 0, 1, 32, 320)">
+      <rect x="0" y="0" rx="15" ry="15" width="152" height="32" fill="none" style="stroke: skyblue; stroke-width: 2px;" />
+      <use href="#orangeCircle" x="16" y="16"></use>
+      <use href="#orangeCircle" x="40" y="16"></use>
+      <use href="#orangeCircle" x="64" y="16"></use>
+      <use href="#orangeCircle" x="88" y="16"></use>
+      <use href="#orangeCircle" x="112" y="16"></use>
+      <use href="#orangeCircle" x="136" y="16"></use>
+      <use href="#curve" x="136"></use>
+      <use href="#rightBox" x="176" y="0"></use>
+      <use href="#blueCircle" x="192" y="16"></use>
+      <text x="232" y="28" fill="black" font-size="32">6 + 1 = </text>
+      <use href="#underLine" x="336"></use>
+    </g>
+
+<!-- 오른쪽-3 -->
+    <g transform="matrix(1, 0, 0, 1, 400, 320)">
+      <rect x="96" y="0" rx="15" ry="15" width="80" height="32" fill="none" style="stroke: skyblue; stroke-width: 2px;" />
+
+      <use href="#orangeCircle" x="112" y="16"></use>
+      <use href="#orangeCircle" x="136" y="16"></use>
+      <use href="#orangeCircle" x="160" y="16"></use>
+      <use href="#curve" x="160"></use>
+      <use href="#rightBox" x="200" y="0"></use>
+      <use href="#blueCircle" x="216" y="16"></use>
+      <text x="256" y="28" fill="black" font-size="32">3 + 1 = </text>
+      <use href="#underLine" x="360"></use>
+    </g>
+
+<!-- 왼쪽-4 -->
+    <g transform="matrix(1, 0, 0, 1, 32, 400)">
+      <rect x="0" y="0" rx="15" ry="15" width="200" height="32" fill="none" style="stroke: skyblue; stroke-width: 2px;" />
+      <use href="#orangeCircle" x="16" y="16"></use>
+      <use href="#orangeCircle" x="40" y="16"></use>
+      <use href="#orangeCircle" x="64" y="16"></use>
+      <use href="#orangeCircle" x="88" y="16"></use>
+      <use href="#orangeCircle" x="112" y="16"></use>
+      <use href="#orangeCircle" x="136" y="16"></use>
+      <use href="#orangeCircle" x="160" y="16"></use>
+      <use href="#orangeCircle" x="184" y="16"></use>
+      <use href="#curve" x="184"></use>
+      <use href="#rightBox" x="224" y="0"></use>
+      <use href="#blueCircle" x="240" y="16"></use>
+      <text x="280" y="28" fill="black" font-size="32">8 + 1 = </text>
+      <use href="#underLine" x="384"></use>
+    </g>
+
+<!-- 오른쪽-4 -->
+    <g transform="matrix(1, 0, 0, 1, 400, 400)">
+      <rect x="144" y="0" rx="15" ry="15" width="32" height="32" fill="none" style="stroke: skyblue; stroke-width: 2px;" />
+
+      <use href="#orangeCircle" x="160" y="16"></use>
+      <use href="#curve" x="160"></use>
+      <use href="#rightBox" x="200" y="0"></use>
+      <use href="#blueCircle" x="216" y="16"></use>
+      <text x="256" y="28" fill="black" font-size="32">1 + 1 = </text>
+      <use href="#underLine" x="360"></use>
+    </g>
+</svg>
