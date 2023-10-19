@@ -1,85 +1,4 @@
-// Solving 클래스 정의
-class Header {
-  template() {
-      return `
-          <div>
-            <style>
-              .header-div {
-                width: 100%;
-                max-width: 1200px;
-                background-color: green;
-                display: flex;
-                justify-content: center;
-                font-size: 32px;
-              }
-              .title{
-                font-size: 28px;
-              }
-              .btn-div{
-                position: absolute;
-                left: 160px;
-                bottom: 80px;
-                width: 600px;
-                height: 68px;
-                background-color: lightgray;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              }
-              .btn-style{
-                width: 56px;
-                height: 56px;
-                margin: 0 4px 0 4px;
-                font-size: 28px;
-                background-color: white;
-                border: none;
-                box-shadow: 1px 1px 2px 1px gray;
-                color: blue;
-              } .btn-style:hover {
-                box-shadow: 2px 3px 4px 4px gray;
-              }
 
-              .header-star{
-                width: 95%;
-                display: flex;
-                justify-content: center;
-              }
-              .header-exit{
-                width: 5%;
-                font-size: 24px;
-                font-weight: bold;
-                background-color: green;
-                border: none;
-              } .header-exit:hover{
-                background-color: red;
-                border: black;
-              }
-            </style>
-            <div class="header-div">
-              <div class="header-star">✮✮✮✮✮✰✰✰</div>
-              <button class="header-exit">⤦</button>
-            </div>
-            <p class="title">🔔 다음 덧셈을 하세요.</p>
-            <div class="btn-div">
-              <button class="btn-style">1</button>
-              <button class="btn-style">2</button>
-              <button class="btn-style">3</button>
-              <button class="btn-style">4</button>
-              <button class="btn-style">5</button>
-              <button class="btn-style">6</button>
-              <button class="btn-style">7</button>
-              <button class="btn-style">8</button>
-              <button class="btn-style">9</button>
-            </div>
-          </div>
-      `;
-  }
-  render() {
-    const container = document.createElement('div');
-    container.innerHTML = this.template();
-    return container;
-  }
-}
 
 
 // 앞의 숫자 랜덤 돌리기
@@ -98,16 +17,13 @@ const randomArray = () => {
 
 
 const content = () => {
-      const header = new Header();
-      const headerElement = header.render();
-      document.querySelector('#app').appendChild(headerElement)
 
       const container = document.createElement("section");
 
       // svg에서 사용한 태그들 생성
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       // const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      const problemGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
       // const rightRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
       // const curve = document.createElementNS("http://www.w3.org/2000/svg", "path");
       // const orangeCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -119,33 +35,40 @@ const content = () => {
       svg.setAttribute('height', '800')
 
 
-
+      // 랜덤으로 돌아갈 문제 배열
+      // 배열의 첫번째부터 시작해서 배열의 끝부분까지 반복문
+      // problemNum = 배열의 인덱스 번호
+      // circleLength = 배열의 값 (문제 앞에 올 수)
       const num = randomArray()
-
-      for (let i=0; i<num.length;){ 
-        for (let j=0; j<num[i]; j++){
-          var cx = 428 - 24*(j+1)
+      for (let problemNum=0; problemNum<num.length;){ 
+        for (let circleLength=0; circleLength<num[problemNum]; circleLength++){
+          var cx = 16 + 24*(circleLength)
           var orangeCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
           orangeCircle.setAttribute('cx', cx);
-          orangeCircle.setAttribute('cy', 335);
+          orangeCircle.setAttribute('cy', 176);
           orangeCircle.setAttribute('r', 5); // 반지름을 설정하세요.
           orangeCircle.setAttribute('fill', 'orange');
 
-          svg.appendChild(orangeCircle);
+          problemGroup.appendChild(orangeCircle);
+
+          var centerCalc = (1200 - (circleLength*24 + 68)) / 2
+          
+          problemGroup.setAttribute('transform', `matrix(1, 0, 0, 1, ${centerCalc}, 0)`)
 
           // 한 번만 그려도 되는 것들
-          if (j === 0) {
+          if (circleLength === 0) {
             // 파란 동그라미
             var blueCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            blueCircle.setAttribute('cx', 480);
-            blueCircle.setAttribute('cy', 335); 
+            var blueCirclex = 56 + 24*num[problemNum]    
+            blueCircle.setAttribute('cx', blueCirclex.toString());
+            blueCircle.setAttribute('cy', 176); 
             blueCircle.setAttribute('r', 5); // 반지름을 설정하세요.
             blueCircle.setAttribute('fill', 'blue');
-            svg.appendChild(blueCircle);
+            problemGroup.appendChild(blueCircle);
             
             // 왼쪽 테두리
             var leftRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            var leftRectWidth = 8 + 24*num[i]
+            var leftRectWidth = 8 + 24*num[problemNum]
             leftRect.setAttribute('width', leftRectWidth.toString())
             leftRect.setAttribute('height', '32')
             leftRect.setAttribute('fill', 'none')
@@ -153,46 +76,46 @@ const content = () => {
             leftRect.setAttribute('stroke-width', '2')
             leftRect.setAttribute('rx', '15')
             leftRect.setAttribute('ry', '15')
-            // 왼쪽 테두리의 x 좌표
-            var leftRectx = 420 - leftRectWidth  
-            leftRect.setAttribute('x', leftRectx.toString())
-            leftRect.setAttribute('y', '320')
-            svg.appendChild(leftRect);
+            leftRect.setAttribute('x', '0')
+            leftRect.setAttribute('y', '160')
+            problemGroup.appendChild(leftRect);
 
             // 오른쪽 테두리
             var rightRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
             rightRect.setAttribute('rx', '15')
-            rightRect.setAttribute('ry', '15')            
-            rightRect.setAttribute('x', '465')
-            rightRect.setAttribute('y', '320')
+            rightRect.setAttribute('ry', '15')
+            var rightRectx = 40 + 24*num[problemNum]      
+            rightRect.setAttribute('x', rightRectx.toString())
+            rightRect.setAttribute('y', '160')
             rightRect.setAttribute('width', '32')
             rightRect.setAttribute('height', '32')
             rightRect.setAttribute('fill', 'none')
             rightRect.setAttribute('stroke', 'skyblue')
             rightRect.setAttribute('stroke-width', '2')
-            svg.appendChild(rightRect);
+            problemGroup.appendChild(rightRect);
       
             // 가운데 커브
             var curve = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            curve.setAttribute('d', 'M412,320 Q442,280 472,320')
+            var curvex1 = blueCirclex - 56
+            curve.setAttribute('d', `M${curvex1},160 Q${curvex1+28},120 ${curvex1+56},160`)
             curve.setAttribute('stroke', 'skyblue')
             curve.setAttribute('fill', 'none')
             curve.setAttribute('stroke-width', '2')
             curve.setAttribute('stroke-linecap', 'round')
-            svg.appendChild(curve);
+            problemGroup.appendChild(curve);
 
             // 아래 문제 글씨
             var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             text.setAttribute('font-size', '40')
-            text.setAttribute('x', '360')
-            text.setAttribute('y', '450')
-            text.textContent = num[i] + ' + 1 ='
+            text.setAttribute('x', '536')
+            text.setAttribute('y', '290')
+            text.textContent = num[problemNum] + ' + 1 ='
             svg.appendChild(text)
 
             // 정답 담는 빨간 박스
             var redBox = document.createElementNS('http://www.w3.org/2000/svg', 'rect');       
-            redBox.setAttribute('x', '484')
-            redBox.setAttribute('y', '412')
+            redBox.setAttribute('x', '664')
+            redBox.setAttribute('y', '252')
             redBox.setAttribute('width', '48')
             redBox.setAttribute('height', '48')
             redBox.setAttribute('fill', 'none')
@@ -211,12 +134,13 @@ const content = () => {
         }
       }
 
-      
+      svg.appendChild(problemGroup)
       container.appendChild(svg);
 
       // app div에 container 추가
       document.querySelector("#app").appendChild(container);
       document.querySelector('#app').appendChild(Solving);
+
   }
 
 content()
