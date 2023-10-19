@@ -24,22 +24,58 @@ export const content = (pageIndex) => {
     "http://www.w3.org/2000/svg",
     "g"
   );
-  // const header = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  const header = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+
   const selectGroup = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "g"
   );
+
+  const problemText = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "text"
+  );
+  problemText.setAttribute("x", "8");
+  problemText.setAttribute("y", "120");
+  problemText.setAttribute("font-size", "28");
+  problemText.setAttribute("font-weight", "600");
+  problemText.textContent = "🔔 다음 덧셈을 하세요.";
+  svg.appendChild(problemText);
 
   // 태그들의 속성 설정
   svg.setAttribute("viewBox", "0 0 1200 800");
   svg.setAttribute("width", "1200");
   svg.setAttribute("height", "800");
 
-  // header.setAttribute('width', '1200')
-  // header.setAttribute('height', '80')
-  // header.setAttribute('fill', 'green')
-  // header.setAttribute('x', '0')
-  // header.setAttribute('y', '0')
+  header.setAttribute("width", "1200");
+  header.setAttribute("height", "80");
+  header.setAttribute("fill", "green");
+  header.setAttribute("x", "0");
+  header.setAttribute("y", "0");
+  svg.appendChild(header);
+
+  for (let i = 0; i < pageIndex; i++) {
+    const headerStar = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "text"
+    );
+    headerStar.setAttribute("x", (416 + i * 48).toString());
+    headerStar.setAttribute("y", "52");
+    headerStar.setAttribute("font-size", "48");
+    headerStar.textContent = "✮";
+    svg.appendChild(headerStar);
+  }
+  for (let i = pageIndex; i < 8; i++) {
+    const headerStar = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "text"
+    );
+    headerStar.setAttribute("x", (416 + i * 48).toString());
+    headerStar.setAttribute("y", "52");
+    headerStar.setAttribute("font-size", "48");
+    headerStar.textContent = "✰";
+    svg.appendChild(headerStar);
+  }
 
   let ans = "";
   const redBoxAns = document.createElementNS(
@@ -54,16 +90,46 @@ export const content = (pageIndex) => {
   svg.appendChild(redBoxAns);
 
   const changeRedBoxAns = (value) => {
+    // 결과 메시지를 UI에 표시
+    const resultMessage = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "text"
+    );
+    resultMessage.setAttribute("font-size", "24");
+    resultMessage.setAttribute("x", "676");
+    resultMessage.setAttribute("y", "332");
+    if (orangeNum + 1 === value) {
+      resultMessage.textContent = "정답! 👍🏻";
+      resultMessage.setAttribute("fill", "green");
+      resultMessage.setAttribute("z-index", "1");
+      // 여기에서 정답 처리 로직을 수행
+    } else {
+      resultMessage.textContent = "아쉬워요 😟";
+      resultMessage.setAttribute("fill", "red");
+      // 여기에서 오답 처리 로직을 수행
+    }
+    svg.appendChild(resultMessage);
+
+    // 정답 입력 UI
+    redBoxAns.textContent = value;
+
     // 결과 페이지로 이동
-    if (pageIndex + 1 > 2) {
+    if (pageIndex > 6) {
       handleLoadPage("1");
       return;
     }
-
-    redBoxAns.textContent = value;
+    const errorBlock = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "rect"
+    );
+    errorBlock.setAttribute("fill", "black");
+    errorBlock.setAttribute("opacity", "0.2");
+    errorBlock.setAttribute("width", "100%");
+    errorBlock.setAttribute("height", "100%");
+    svg.appendChild(errorBlock);
     setTimeout(function () {
       handleLoadPage("0", pageIndex + 1);
-    }, 1000);
+    }, 3000);
   };
 
   // 랜덤으로 돌아갈 문제 배열
@@ -74,7 +140,7 @@ export const content = (pageIndex) => {
   const num = randomArray();
   let problemNum = pageIndex; // 문제 번호
   let orangeNum = num[problemNum];
-  console.log(problemNum);
+  console.log(num);
 
   for (let circleLength = 0; circleLength < orangeNum; circleLength++) {
     var cx = 16 + 24 * circleLength;
@@ -216,13 +282,6 @@ export const content = (pageIndex) => {
       clickedValue = i;
       changeRedBoxAns(clickedValue);
       // console.log("클릭한 answerBox의 값: " + i);
-
-      // 정답/오답 확인
-      if (orangeNum + 1 === i) {
-        console.log("ok");
-      } else {
-        console.log("no");
-      }
     });
     selectText.addEventListener("click", function () {
       clickedValue = i;
@@ -230,8 +289,10 @@ export const content = (pageIndex) => {
       // console.log("클릭한 answerBox의 값: " + i);
       // 정답/오답 확인
       if (orangeNum + 1 === i) {
+        localStorage.setItem(pageIndex, "correct");
         console.log("ok");
       } else {
+        localStorage.setItem(pageIndex, "wrong");
         console.log("no");
       }
     });
