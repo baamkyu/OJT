@@ -115,7 +115,9 @@ export const content = (pageIndex) => {
 
     // 결과 페이지로 이동
     if (pageIndex > 6) {
-      handleLoadPage("1");
+      setTimeout(function () {
+        handleLoadPage("1");
+      }, 3000);
       return;
     }
     const errorBlock = document.createElementNS(
@@ -281,12 +283,18 @@ export const content = (pageIndex) => {
     selectBox.addEventListener("click", function () {
       clickedValue = i;
       changeRedBoxAns(clickedValue);
-      // console.log("클릭한 answerBox의 값: " + i);
+      // 정답/오답 확인
+      if (orangeNum + 1 === i) {
+        localStorage.setItem(pageIndex, "correct");
+        console.log("ok");
+      } else {
+        localStorage.setItem(pageIndex, "wrong");
+        console.log("no");
+      }
     });
     selectText.addEventListener("click", function () {
       clickedValue = i;
       changeRedBoxAns(clickedValue);
-      // console.log("클릭한 answerBox의 값: " + i);
       // 정답/오답 확인
       if (orangeNum + 1 === i) {
         localStorage.setItem(pageIndex, "correct");

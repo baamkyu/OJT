@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+<!-- M 100,100: 이 부분은 "M" 명령어로 시작점을 지정합니다. (100,100)은 시작점의 좌표
+m -30,0: "m" 명령어로 현재 위치에서 상대 좌표로 이동
+
+a 30,30 0 1,0 60,0: "a" 명령어로 호(arc)를 그리는 부분
+    첫 번째 30,30: x-축 반지름(rx)와 y-축 반지름(ry)을 나타냅니다.
+    0: x-축 회전 (0은 비회전을 의미).
+    1,0: 큰 호(1)와 시계방향(0) 호 방향을 나타냅니다.
+    60,0: 목표 지점의 좌표입니다. 호는 현재 위치에서 이 좌표로 그려집니다.
+
+a 30,30 0 1,0 -60,0: 이 부분은 두 번째 호(arc)를 그리는 부분으로 첫 번째 호와 반대 방향
+
+
+
+ -->
+    <circle cx="300" cy="300" r="200" stroke="red" fill="none" stroke-dasharray="20 8"></circle>
+
+<!-- 그려져야할 애한테 그려져있던 써클의 getTotalLength -->
+
+<!-- requestAnimationFrame를 이용해서 애니메이션 stroke-offset 0에 가깝게 점점 줄여야함 -->
+    <path id="circlePath" d="M 500,200 a -100,100 0 1,0 0,200 a 100,-100 0 1,0 0 -200" fill="none" stroke="gray" stroke-width="4px">
+    </path>
+    <!-- 원을 그릴 요소 -->
+    <text x="-32" y="0" font-size="32">✏️
+        <animateMotion repeatCount="1" dur="4s">
+            <mpath href="#circlePath" />
+        </animateMotion>
+    </text>
+</svg>
+
+

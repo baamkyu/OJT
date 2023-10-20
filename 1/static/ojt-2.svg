@@ -1,12 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
 <!-- 재사용할 요소들 -->
-    <defs>
+    <defs> <!-- definitions -->
         <!-- 주황색 동그라미 -->
         <circle id="orangeCircle" r="5" fill="orange" />
+
         <!-- 파란색 동그라미 -->
         <circle id="blueCircle" r="5" fill="blue" />
+
         <!-- 왼쪽 네모 (재사용 못했음)  -->
         <!-- <rect id="leftBox" rx="15" ry="15" fill="none" style="stroke: skyblue; stroke-width: 2px;"/> -->
+
         <!-- 오른쪽 네모 -->
         <rect id="rightBox" rx="15" ry="15" width="32" height="32" fill="none" style="stroke: skyblue; stroke-width: 2px;" />
         
@@ -15,7 +18,6 @@
 
         <!-- 정답 라인 -->
         <line id="underLine" x1="0" y1="32" x2="56" y2="32" stroke="skyblue" stroke-width="2" />
- 
     </defs>
 
 
