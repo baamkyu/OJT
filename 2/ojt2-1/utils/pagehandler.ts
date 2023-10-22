@@ -1,8 +1,9 @@
 import { DrawCircle } from "../pages/drawCircle";
+import { DrawingCircle } from "../pages/drawingCircle";
 
 let queryIndex = 0;
 let pageIndex = 0;
-export const handleLoadPage = (pageIndex, queryIndex) => {
+export const handleLoadPage = (pageIndex: any, queryIndex: any) => {
   const parent = document.querySelector("#main-section");
 
   queryIndex = 0;
@@ -13,7 +14,8 @@ export const handleLoadPage = (pageIndex, queryIndex) => {
 
   switch (pageIndex) {
     case "0":
-      parent.appendChild(DrawCircle(queryIndex));
+      parent.appendChild(DrawCircle());
+      parent.appendChild(DrawingCircle());
       break;
     // case "1":
     //   parent.appendChild(result());
