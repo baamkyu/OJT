@@ -1,4 +1,5 @@
 export const DrawingCircle = () => {
+  let isFinish: boolean = false;
   const secondGroup: SVGElement = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "g"
@@ -12,7 +13,7 @@ export const DrawingCircle = () => {
   dottedPath.setAttribute("y", "0");
   dottedPath.setAttribute("stroke", "gray");
   dottedPath.setAttribute("stroke-linecap", "round");
-  dottedPath.setAttribute("stroke-width", "2px");
+  dottedPath.setAttribute("stroke-width", "2");
   dottedPath.setAttribute("stroke-dasharray", "10, 10");
   dottedPath.setAttribute("fill", "none");
   dottedPath.setAttribute(
@@ -28,7 +29,7 @@ export const DrawingCircle = () => {
   );
   drawPath.setAttribute("x", "0");
   drawPath.setAttribute("y", "0");
-  drawPath.setAttribute("stroke", "red");
+  drawPath.setAttribute("stroke", "#DB555B");
   drawPath.setAttribute("stroke-linecap", "round");
   drawPath.setAttribute("stroke-width", "6");
   drawPath.setAttribute("fill", "none");
@@ -48,8 +49,8 @@ export const DrawingCircle = () => {
   circlePoint.setAttribute("r", "10");
   circlePoint.setAttribute("cx", "600");
   circlePoint.setAttribute("cy", "100");
-  circlePoint.setAttribute("fill", "pink");
-  circlePoint.setAttribute("stroke", "#111");
+  circlePoint.setAttribute("fill", "#DB555B");
+  circlePoint.setAttribute("stroke", "#DB555B");
   circlePoint.setAttribute("stroke-width", "1");
 
   const circlePointIcon: SVGElement = document.createElementNS(
@@ -63,12 +64,39 @@ export const DrawingCircle = () => {
   circlePointIcon.setAttribute("x", "590");
   circlePointIcon.setAttribute("y", "90");
 
-  let drawing = false;
-
   secondGroup.addEventListener("mousedown", startDrawing);
   secondGroup.addEventListener("mouseup", stopDrawing);
   secondGroup.addEventListener("mousemove", colorDottedPath);
 
+  const finishUI: SVGElement = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "g"
+  );
+  const correctUI: SVGElement = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "text"
+  );
+  correctUI.setAttribute("font-size", "36");
+  correctUI.setAttribute("font-weight", "bold");
+  correctUI.setAttribute("fill", "#01B41F");
+  correctUI.setAttribute("x", "718");
+  correctUI.setAttribute("y", "140");
+  correctUI.textContent = "O";
+
+  const speechBubbleIcon: SVGElement = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "image"
+  );
+  speechBubbleIcon.setAttribute("href", "../src/icons/speechBubble.png");
+  speechBubbleIcon.setAttribute("width", "64");
+  speechBubbleIcon.setAttribute("height", "64");
+  speechBubbleIcon.setAttribute("x", "700");
+  speechBubbleIcon.setAttribute("y", "100");
+
+  finishUI.appendChild(speechBubbleIcon);
+  finishUI.appendChild(correctUI);
+
+  let drawing = false;
   function startDrawing() {
     // 나중에 원과의 거리를 통해 유효한 클릭인지를 검토하는 로직 추가해야함
     drawing = true;
@@ -154,8 +182,10 @@ export const DrawingCircle = () => {
     }
   }
 
+  let prevLength: number = 22;
+
   function colorDottedPath(event: MouseEvent) {
-    if (drawing) {
+    if (drawing && !isFinish) {
       // svg 좌표로 변환
       const svg: any = document.getElementById("svg");
       // 마우스 이벤트의 클라이언트 좌표 가져오기
@@ -176,62 +206,66 @@ export const DrawingCircle = () => {
       const mouseY: number = transformedPoint.y;
 
       let best = closestPoint(dottedPath, [mouseX, mouseY]);
-      console.log(best);
-      if (best.distance < 50) {
+
+      // 뒤로 가는 거 방지
+      if (best.length < prevLength) return;
+      // 한 번에 많이 움직이는 거 방지
+      if (best.length - prevLength > 50) return;
+
+      // 테두리 길이값 초기화
+      prevLength = best.length;
+
+      // 마우스와 원과의 거리가 10 이하인 경우만 실행
+      if (best.distance < 10) {
         // 시작점 주변에서 움직일 경우 시작점으로
-        circlePoint.setAttribute(
-          "cx",
-          best.x < 150 && best.x > 90 && best.y < 40 && best.y > 0
-            ? "120"
-            : best.x.toString()
-        );
+        if (best.x < 620 && best.x > 590 && best.y < 110 && best.y > 95) {
+          circlePoint.setAttribute("cx", "600");
+          circlePoint.setAttribute("cy", "100");
+          circlePointIcon.setAttribute("x", "590");
+          circlePointIcon.setAttribute("y", "90");
+          drawPath.setAttribute("stroke-dashoffset", "0");
+          circlePointIcon.setAttribute(
+            "transform",
+            `rotate(0 ${best.x} ${best.y})`
+          );
+        } else {
+          circlePoint.setAttribute("cx", best.x.toString());
 
-        circlePoint.setAttribute(
-          "cy",
-          best.x < 150 && best.x > 90 && best.y < 40 && best.y > 0
-            ? " 20"
-            : best.y.toString()
-        );
+          circlePoint.setAttribute("cy", best.y.toString());
 
-        let agree = -(best.length / 628.4) * 360;
-        circlePointIcon.setAttribute(
-          "transform",
-          `rotate(${agree} ${best.x} ${best.y})`
-        );
+          let agree = -(best.length / 628.4) * 360;
+          circlePointIcon.setAttribute(
+            "transform",
+            `rotate(${agree} ${best.x} ${best.y})`
+          );
 
-        circlePointIcon.setAttribute("x", (best.x - 10).toString());
-        circlePointIcon.setAttribute("y", (best.y - 10).toString());
-        // console.log(best.x, best.y);
-        drawPath.setAttribute(
-          "stroke-dashoffset",
-          best.x < 140 && best.x > 100 && best.y < 30 && best.y > 10
-            ? "0"
-            : (628.4 - best.length).toString()
-        );
+          circlePointIcon.setAttribute("x", (best.x - 10).toString());
+          circlePointIcon.setAttribute("y", (best.y - 10).toString());
+          // console.log(best.x, best.y);
+          drawPath.setAttribute(
+            "stroke-dashoffset",
+            (628.4 - best.length).toString()
+          );
+        }
         drawPath.setAttribute("stroke-dasharray", "628.4");
 
         console.log("동작");
       }
 
-      // 짝수바퀴째 인 경우 = (1256.8 - best.length).toString()
+      if (best.length >= 620) {
+        isFinish = true;
+        drawing = false;
+      }
+      if (isFinish) {
+        secondGroup.appendChild(finishUI);
+      }
     }
   }
-
-  function calcAngle(x1: number, y1: number, x2: number, y2: number): number {
-    const x: number = x2 - x1;
-    const y: number = y2 - y1;
-    const angle: number = Math.atan2(x, y);
-    return angle;
-  }
-
-  console.log("calcAngle", calcAngle(600, 100, 505, 231));
 
   secondGroup.appendChild(dottedPath);
   secondGroup.appendChild(drawPath);
   secondGroup.appendChild(circlePoint);
   secondGroup.appendChild(circlePointIcon);
-
-  console.log("시ㄹ행");
 
   return secondGroup;
 };

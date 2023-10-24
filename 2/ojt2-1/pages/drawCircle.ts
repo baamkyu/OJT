@@ -13,8 +13,8 @@ export const DrawCircle = () => {
   dottedCircle.setAttribute("cy", "200");
   dottedCircle.setAttribute("r", "100");
   dottedCircle.setAttribute("fill", "none");
-  dottedCircle.setAttribute("stroke", "red");
-  dottedCircle.setAttribute("stroke-width", "3px");
+  dottedCircle.setAttribute("stroke", "gray");
+  dottedCircle.setAttribute("stroke-width", "2");
   dottedCircle.setAttribute("stroke-dasharray", "20 8");
 
   // 점으로 된 원을 기준으로 새로 생길 요소들
@@ -50,15 +50,15 @@ export const DrawCircle = () => {
   firstAnimationGroup.appendChild(pencil);
 
   // 연필의 회전 루트
-  const pencilLine: SVGElement = document.createElementNS(
+  const pencilLine: any = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "path"
   );
   pencilLine.setAttribute("x", "0");
   pencilLine.setAttribute("y", "0");
-  pencilLine.setAttribute("stroke", "red");
+  pencilLine.setAttribute("stroke", "#DB555B");
   pencilLine.setAttribute("stroke-linecap", "round");
-  pencilLine.setAttribute("stroke-width", "4");
+  pencilLine.setAttribute("stroke-width", "6");
   pencilLine.setAttribute("fill", "none");
   pencilLine.setAttribute(
     "d",
@@ -68,6 +68,38 @@ export const DrawCircle = () => {
   pencilLine.id = "pencilLine";
   pencilLine.setAttribute("fill", "none");
   pencilLine.classList.add("moving-circle");
+
+  pencilLine.onanimationend = () => {
+    firstAnimationGroup.removeChild(pencil);
+    const finishUI: SVGElement = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "g"
+    );
+    const correctUI: SVGElement = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "text"
+    );
+    correctUI.setAttribute("font-size", "36");
+    correctUI.setAttribute("font-weight", "bold");
+    correctUI.setAttribute("fill", "#01B41F");
+    correctUI.setAttribute("x", "320");
+    correctUI.setAttribute("y", "140");
+    correctUI.textContent = "O";
+
+    const speechBubbleIcon: SVGElement = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "image"
+    );
+    speechBubbleIcon.setAttribute("href", "../src/icons/speechBubble.png");
+    speechBubbleIcon.setAttribute("width", "64");
+    speechBubbleIcon.setAttribute("height", "64");
+    speechBubbleIcon.setAttribute("x", "302");
+    speechBubbleIcon.setAttribute("y", "100");
+
+    finishUI.appendChild(speechBubbleIcon);
+    finishUI.appendChild(correctUI);
+    firstGroup.appendChild(finishUI);
+  };
 
   // 원의 길이 탐색
   // console.log(pencilLine.getTotalLength());
