@@ -6,8 +6,19 @@ const App = () => {
 
   section.id = "main-section";
   document.querySelector<HTMLDivElement>("#app")?.appendChild(section);
-  section.appendChild(DrawCircle());
-  section.appendChild(DrawingCircle());
-  console.log("section에 drawcircle 넣는 함수 작동");
+
+  const svg: SVGElement = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
+
+  svg.setAttribute("width", "1000");
+  svg.setAttribute("height", "800");
+  svg.setAttribute("viewBox", "0 0 1000 800");
+  svg.id = "svg";
+  svg.appendChild(DrawCircle());
+  svg.appendChild(DrawingCircle());
+  section.append(svg);
+  console.log("section에 svg 넣는 함수 작동");
 };
 export default App;
