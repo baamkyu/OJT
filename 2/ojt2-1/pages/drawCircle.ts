@@ -17,7 +17,7 @@ export const DrawCircle = () => {
   dottedCircle.setAttribute("stroke-width", "2");
   dottedCircle.setAttribute("stroke-dasharray", "20 8");
 
-  // 점으로 된 원을 기준으로 새로 생길 요소들
+  // 애니메이션에 사용될 요소들 담을 그룹 생성
   const firstAnimationGroup: SVGElement = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "g"
@@ -31,6 +31,13 @@ export const DrawCircle = () => {
   pencil.setAttribute("y", "0");
   pencil.setAttribute("font-size", "24");
   pencil.textContent = "✏️";
+
+  let currentX: number = -24; // 초기 x 좌표
+  let currentY: number = 0; // 초기 y 좌표
+
+  // 애니메이션 시작 전에 초기 위치를 설정
+  pencil.setAttribute("x", currentX.toString());
+  pencil.setAttribute("y", currentY.toString());
 
   const pencilMotion: SVGElement = document.createElementNS(
     "http://www.w3.org/2000/svg",
@@ -70,8 +77,8 @@ export const DrawCircle = () => {
   pencilLine.classList.add("moving-circle");
 
   pencilLine.onanimationend = () => {
-    firstAnimationGroup.removeChild(pencil);
-    const finishUI: SVGElement = document.createElementNS(
+    // firstAnimationGroup.removeChild(pencil);
+    const finishUIGroup: SVGElement = document.createElementNS(
       "http://www.w3.org/2000/svg",
       "g"
     );
@@ -96,9 +103,9 @@ export const DrawCircle = () => {
     speechBubbleIcon.setAttribute("x", "302");
     speechBubbleIcon.setAttribute("y", "100");
 
-    finishUI.appendChild(speechBubbleIcon);
-    finishUI.appendChild(correctUI);
-    firstGroup.appendChild(finishUI);
+    finishUIGroup.appendChild(speechBubbleIcon);
+    finishUIGroup.appendChild(correctUI);
+    firstGroup.appendChild(finishUIGroup);
   };
 
   // 원의 길이 탐색

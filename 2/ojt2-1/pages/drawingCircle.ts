@@ -66,7 +66,7 @@ export const DrawingCircle = () => {
 
   secondGroup.addEventListener("mousedown", startDrawing);
   secondGroup.addEventListener("mouseup", stopDrawing);
-  secondGroup.addEventListener("mousemove", colorDottedPath);
+  secondGroup.addEventListener("mousemove", drawLine);
 
   const finishUI: SVGElement = document.createElementNS(
     "http://www.w3.org/2000/svg",
@@ -184,7 +184,7 @@ export const DrawingCircle = () => {
 
   let prevLength: number = 22;
 
-  function colorDottedPath(event: MouseEvent) {
+  function drawLine(event: MouseEvent) {
     if (drawing && !isFinish) {
       // svg 좌표로 변환
       const svg: any = document.getElementById("svg");
@@ -252,11 +252,9 @@ export const DrawingCircle = () => {
         console.log("동작");
       }
 
-      if (best.length >= 620) {
+      if (best.length >= 619) {
         isFinish = true;
         drawing = false;
-      }
-      if (isFinish) {
         secondGroup.appendChild(finishUI);
       }
     }
