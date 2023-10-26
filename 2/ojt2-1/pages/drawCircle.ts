@@ -53,11 +53,11 @@ export const DrawCircle = () => {
   mpath.setAttribute("href", "#pencilLine");
 
   pencilMotion.appendChild(mpath);
-  pencil.appendChild(pencilMotion);
+  pencil.appendChild(pencilMotion); // pencil에 애니메이션 적용
   firstAnimationGroup.appendChild(pencil);
 
-  // 연필의 회전 루트
-  const pencilLine: any = document.createElementNS(
+  // 빨간 테두리
+  const pencilLine: SVGElement = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "path"
   );
@@ -77,7 +77,7 @@ export const DrawCircle = () => {
   pencilLine.classList.add("moving-circle");
 
   pencilLine.onanimationend = () => {
-    // firstAnimationGroup.removeChild(pencil);
+    firstAnimationGroup.removeChild(pencil);
     const finishUIGroup: SVGElement = document.createElementNS(
       "http://www.w3.org/2000/svg",
       "g"
@@ -106,6 +106,8 @@ export const DrawCircle = () => {
     finishUIGroup.appendChild(speechBubbleIcon);
     finishUIGroup.appendChild(correctUI);
     firstGroup.appendChild(finishUIGroup);
+
+    window.parent.postMessage({ type: "firstGroupFinish" }, "*");
   };
 
   // 원의 길이 탐색

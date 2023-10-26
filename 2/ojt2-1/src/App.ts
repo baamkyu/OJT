@@ -19,6 +19,5 @@ const App = () => {
   svg.appendChild(DrawCircle());
   svg.appendChild(DrawingCircle());
   section.append(svg);
-  console.log("section에 svg 넣는 함수 작동");
 };
 export default App;

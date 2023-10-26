@@ -40,7 +40,6 @@ export const DrawingCircle = () => {
     "M 600 100 a -100, 100 0 1,0 0,200 a 100,-100 0 1,0 0 -200"
   );
   drawPath.id = "drawPath";
-  drawPath.classList.add("circle-line");
 
   const circlePoint: SVGElement = document.createElementNS(
     "http://www.w3.org/2000/svg",
@@ -58,15 +57,19 @@ export const DrawingCircle = () => {
     "image"
   );
   circlePointIcon.setAttribute("href", "../src/icons/arrowWhite.png");
-  // circlePointIcon.setAttribute("transform", "rotate(agree 600 100)");
   circlePointIcon.setAttribute("width", "20");
   circlePointIcon.setAttribute("height", "20");
   circlePointIcon.setAttribute("x", "590");
   circlePointIcon.setAttribute("y", "90");
 
-  secondGroup.addEventListener("mousedown", startDrawing);
-  secondGroup.addEventListener("mouseup", stopDrawing);
-  secondGroup.addEventListener("mousemove", drawLine);
+  // secondGroup
+  window.addEventListener("message", (event) => {
+    if (event.data.type === "firstGroupFinish") {
+      secondGroup.addEventListener("mousedown", startDrawing);
+      secondGroup.addEventListener("mouseup", stopDrawing);
+      secondGroup.addEventListener("mousemove", drawLine);
+    }
+  });
 
   const finishUI: SVGElement = document.createElementNS(
     "http://www.w3.org/2000/svg",
@@ -182,7 +185,7 @@ export const DrawingCircle = () => {
     }
   }
 
-  let prevLength: number = 22;
+  let prevLength: number = 20;
 
   function drawLine(event: MouseEvent) {
     if (drawing && !isFinish) {
@@ -191,7 +194,6 @@ export const DrawingCircle = () => {
       // 마우스 이벤트의 클라이언트 좌표 가져오기
       const clientX = event.clientX;
       const clientY = event.clientY;
-
       // 클라이언트 좌표를 SVG 좌표로 변환
       const svgPoint = svg.createSVGPoint();
       svgPoint.x = clientX;
@@ -204,9 +206,7 @@ export const DrawingCircle = () => {
       // 변환된 좌표 사용
       const mouseX: number = transformedPoint.x;
       const mouseY: number = transformedPoint.y;
-
       let best = closestPoint(dottedPath, [mouseX, mouseY]);
-
       // 뒤로 가는 거 방지
       if (best.length < prevLength) return;
       // 한 번에 많이 움직이는 거 방지
@@ -215,10 +215,17 @@ export const DrawingCircle = () => {
       // 테두리 길이값 초기화
       prevLength = best.length;
 
-      // 마우스와 원과의 거리가 10 이하인 경우만 실행
-      if (best.distance < 10) {
+      // 한 바퀴만 돌 수 있도록 로직 설정
+      if (best.length > 608) {
+        isFinish = true;
+        drawing = false;
+        secondGroup.appendChild(finishUI);
+      }
+
+      // 마우스와 원과의 거리가 20 이하인 경우만 실행
+      if (best.distance < 20) {
         // 시작점 주변에서 움직일 경우 시작점으로
-        if (best.x < 620 && best.x > 590 && best.y < 110 && best.y > 95) {
+        if (best.x < 620 && best.x > 585 && best.y < 110 && best.y > 90) {
           circlePoint.setAttribute("cx", "600");
           circlePoint.setAttribute("cy", "100");
           circlePointIcon.setAttribute("x", "590");
@@ -249,13 +256,7 @@ export const DrawingCircle = () => {
         }
         drawPath.setAttribute("stroke-dasharray", "628.4");
 
-        console.log("동작");
-      }
-
-      if (best.length >= 619) {
-        isFinish = true;
-        drawing = false;
-        secondGroup.appendChild(finishUI);
+        console.log(prevLength);
       }
     }
   }
