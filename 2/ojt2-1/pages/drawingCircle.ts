@@ -207,13 +207,14 @@ export const DrawingCircle = () => {
       const mouseX: number = transformedPoint.x;
       const mouseY: number = transformedPoint.y;
       let best = closestPoint(dottedPath, [mouseX, mouseY]);
+
+      // 테두리 길이값 초기화
+      prevLength = best.length;
+
       // 뒤로 가는 거 방지
       if (best.length < prevLength) return;
       // 한 번에 많이 움직이는 거 방지
       if (best.length - prevLength > 50) return;
-
-      // 테두리 길이값 초기화
-      prevLength = best.length;
 
       // 한 바퀴만 돌 수 있도록 로직 설정
       if (best.length > 608) {
