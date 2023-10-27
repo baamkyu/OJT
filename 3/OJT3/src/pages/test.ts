@@ -150,8 +150,8 @@ export const Test = () => {
     }
     if (y + dy < ballRadius) {
       dy = -dy;
-    } else if (y + dy > canvas.height - ballRadius) {
-      if (x > paddleX && x < paddleX + paddleWidth) {
+    } else if (y + dy > canvas.height - ballRadius) { // 윗부분 천장 맞는 경우
+      if (x > paddleX && x < paddleX + paddleWidth) { // 
         if ((y = y - paddleHeight)) {
           dy = -dy;
         }
