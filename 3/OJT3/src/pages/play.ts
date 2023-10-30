@@ -1,7 +1,11 @@
 import planeImage from "../images/plane.png";
-import bullet2 from "../objects/bullet";
-import bomb2 from "../objects/bullet";
-import money2 from "../objects/bullet";
+import bombImage from "../images/bomb.png";
+import bulletImage from "../images/bullet.png";
+import Bullet from "../objects/bullet";
+import Bomb from "../objects/bomb";
+import plane from "../objects/plane";
+import info from "../objects/info";
+import { BoomAni } from "../ani/boom";
 
 export const Play = () => {
   const canvas: any = document.getElementById("myCanvas");
@@ -9,48 +13,17 @@ export const Play = () => {
 
   const planeImg = new Image(); // 이미지 로딩을 한 번만 수행하도록 변경
   planeImg.src = planeImage;
-
-  planeImg.addEventListener(
-    "load",
-    () => {
-      draw();
-    },
-    false
-  );
-
-  let dx = Math.random() * (2 - -2) + -2; // -2 ~ 2 사이 랜덤값
-  let dy = Math.random() * (3 - 1) + 1; // 1 ~ 3 사이 랜덤값
-
-  // 점수
-  let money: number = 0;
-  function haveMoney() {
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "#0095DD";
-    ctx.fillText(`Money: ${money}`, 8, 20);
-  }
-  // 목숨
-  let lives: number = 5;
-  function haveLives() {
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "#0095DD";
-    ctx.fillText(`목숨*${lives}`, canvas.width - 65, 20);
-  }
+  const bombImg = new Image(); // 이미지 로딩을 한 번만 수행하도록 변경
+  bombImg.src = bombImage;
+  const bulletImg = new Image(); // 이미지 로딩을 한 번만 수행하도록 변경
+  bulletImg.src = bulletImage;
 
   // 패들 그리기
   let paddleWidth: number = 100;
   let paddleHeight: number = 80;
-  let paddleX: number = 100; // 나중에 여기 움직일 수 있도록 변경
+  let paddleX: number = (canvas.width - paddleWidth) / 2; // 나중에 여기 움직일 수 있도록 변경
   let paddleY: number = canvas.height - paddleHeight;
-  function drawPlane() {
-    // 이미지 그리기
-    ctx.drawImage(
-      planeImg,
-      paddleX,
-      canvas.height - paddleHeight,
-      paddleWidth,
-      paddleHeight
-    );
-  }
+
   // 패들 컨트롤러
   let rightPressed: boolean = false;
   let leftPressed: boolean = false;
@@ -59,12 +32,13 @@ export const Play = () => {
   function keyDownHandler(e: any) {
     // right, arrowright 둘 다 쓴 이유는 브라우저의 호환성때문임
     if (e.key === "Right" || e.key === "ArrowRight") {
+      console.log("right");
       rightPressed = true;
     } else if (e.key === "Left" || e.key === "ArrowLeft") {
+      console.log("left");
       leftPressed = true;
     }
   }
-
   function keyUpHandler(e: any) {
     if (e.key === "Right" || e.key === "ArrowRight") {
       rightPressed = false;
@@ -73,116 +47,131 @@ export const Play = () => {
     }
   }
 
-  // 폭탄 충돌 감지
-  // function touchBomb() {
-  //   if (
-  //     paddleX < bombX &&
-  //     paddleX + paddleWidth > bombX &&
-  //     paddleY < bombY &&
-  //     paddleY + paddleHeight > bombY
-  //   ) {
-  //     lives = 0;
-  //     alert("패배");
-  //     document.location.reload();
-  //   }
-  // }
-
-  // 총알 충돌 감지
-  // function touchBullet() {
-  //   if (
-  //     paddleX < bulletX &&
-  //     paddleX + paddleWidth > bulletX &&
-  //     paddleY < bulletY &&
-  //     paddleY + paddleHeight > bulletY
-  //   ) {
-  //     if (lives === 1) {
-  //       alert("패배");
-  //       document.location.reload();
-  //     } else {
-  //       lives -= 1;
-  //       bulletX = -999;
-  //       bulletY = -999;
-  //     }
-  //   }
-  // }
+  function paddleController() {
+    if (rightPressed && paddleX < canvas.width - paddleWidth) {
+      paddleX += 7;
+      _plane.move(7);
+    } else if (leftPressed && paddleX > 0) {
+      paddleX -= 7;
+      _plane.move(-7);
+    }
+  }
 
   // 최종 렌더링
-
-  const _bullet = bullet2(ctx, {
+  const _bullet = new Bullet(ctx, {
+    img: bulletImg,
     x: canvas.height / 2 + 50,
     y: 0,
     height: 40,
     width: 40,
   });
-  const _bomb = bomb2(ctx, {
+  const _bomb = new Bomb(ctx, {
+    img: bombImg,
     x: canvas.height / 2 - 100,
     y: 0,
     height: 40,
     width: 40,
   });
-  const _money = money2(ctx, {
-    x: canvas.height / 2,
-    y: 0,
-    height: 40,
-    width: 40,
+
+  const _plane = plane(ctx, {
+    x: paddleX,
+    y: paddleY,
+    width: paddleWidth,
+    height: paddleHeight,
+  });
+  const _info = info(ctx, {
+    moneyX: 8,
+    moneyY: 20,
+    liveX: canvas.width - 65,
+    liveY: 20,
   });
 
   _bullet.draw();
   _bomb.draw();
-  _money.draw();
+  let frameCount = 0;
 
   function draw() {
+    if (_info.haveLives() <= 0) {
+      _info.endGame();
+      console.log("끝");
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const bpt = _bullet.update(dx, dy);
-    const bpt2 = _bomb.update(dx, dy);
-    const bpt3 = _money.update(dx, dy);
+    // 폭탄 충돌 감지
+    function touchBomb() {
+      for (let i = 0; i < Bomb.bombs.length; i++) {
+        const bombObject = Bomb.bombs[i];
+        if (
+          paddleX < bombObject.x &&
+          paddleX + paddleWidth > bombObject.x &&
+          paddleY < bombObject.y &&
+          paddleY + paddleHeight > bombObject.y
+        ) {
+          _info.endGame();
 
-    if (bpt.y >= canvas.height) {
-      _bullet.init(400, 0);
+          // BoomAni(ctx, paddleX, paddleY, canvas.width, canvas.height);
+          alert("패배");
+          document.location.reload();
+        }
+      }
     }
-    if (bpt2.y >= canvas.height) {
-      _bomb.init(200, 0);
+    // 총알 충돌 감지
+    function touchBullet() {
+      for (let i = 0; i < Bullet.bullets.length; i++) {
+        const bulletObject = Bullet.bullets[i];
+        if (
+          paddleX < bulletObject.x &&
+          paddleX + paddleWidth > bulletObject.x &&
+          paddleY < bulletObject.y &&
+          paddleY + paddleHeight > bulletObject.y
+        ) {
+          alert("live-1");
+          // _bullet.init(300, 0);
+          _info.minusLives();
+        }
+      }
     }
-    if (bpt3.y >= canvas.height) {
-      _money.init(30, 0);
+
+    // if (bpt.y >= canvas.height) {
+    //   _bullet.init(400, 0); // 랜덤 좌표로 변경해야함
+    // }
+    // if (bpt2.y >= canvas.height) {
+    //   _bomb.init(200, 0);
+    // }
+    // if (bpt3.y >= canvas.height) {
+    //   _money.init(30, 0);
+    // }
+
+    // 패들 컨트롤러
+    _plane.draw();
+    paddleController();
+    frameCount += 1;
+    touchBomb();
+    touchBullet();
+    Bomb.updateAll(canvas.width, canvas.height);
+    Bullet.updateAll(canvas.width, canvas.height);
+    _info.haveMoney();
+    _info.haveLives();
+    console.log("frameCount", frameCount);
+    if (frameCount % 300 === 0) {
+      _bomb.addBomb(ctx, {
+        img: bombImg,
+        x: Math.random() * canvas.width,
+        y: 0,
+        width: 40,
+        height: 40,
+      });
+      _bullet.addBullet(ctx, {
+        img: bulletImg,
+        x: Math.random() * canvas.width,
+        y: 0,
+        width: 40,
+        height: 40,
+      });
+      alert("300");
     }
-    // haveMoney();
-    // haveLives();
-    // drawPlane(); // 이미지 그리기
-    // bulletItem();
-
-    // touchBomb();
-    // touchBullet();
-
-    // if (bombX + bombDX > canvas.width - 10 || bombX + bombDX < 10) {
-    //   bombDX = -bombDX;
-    // }
-    // // // 아래로 나가면
-    // // if (bombY + bombDY > canvas.height - 10) {
-    // //   drawItem();
-    // // }
-    // if (bulletX + bulletDX > canvas.width - 10 || bulletX + bulletDX < 10) {
-    //   bulletDX = -bulletDX;
-    // }
-    // // // 아래로 나가면
-    // // if (bulletY + bulletDY > canvas.height - 10) {
-    // //   drawItem();
-    // // }
-    // if (moneyX + moneyDX > canvas.width - 10 || moneyX + moneyDX < 10) {
-    //   moneyDX = -moneyDX;
-    // }
-    // // // 아래로 나가면
-    // // if (moneyY + moneyDY < 10) {
-    // //   drawItem();
-    // // }
-
-    // if (rightPressed && paddleX < canvas.width - paddleWidth) {
-    //   paddleX += 7;
-    // } else if (leftPressed && paddleX > 0) {
-    //   paddleX -= 7;
-    // }
 
     requestAnimationFrame(draw);
   }
+  draw();
 };
