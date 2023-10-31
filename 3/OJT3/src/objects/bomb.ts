@@ -22,7 +22,7 @@ export default class Bomb {
   dy: number;
   changeDirection: boolean;
 
-  static bombs: Bomb[] = [];
+  static objects: Bomb[] = [];
 
   constructor(ctx: CanvasRenderingContext2D, options: TOptions) {
     this.ctx = ctx;
@@ -41,8 +41,8 @@ export default class Bomb {
   }
 
   drawAll() {
-    for (let i = 0; i < Bomb.bombs.length; i++) {
-      Bomb.bombs[i].draw();
+    for (let i = 0; i < Bomb.objects.length; i++) {
+      Bomb.objects[i].draw();
     }
   }
 
@@ -69,17 +69,47 @@ export default class Bomb {
   }
 
   static updateAll(maxWidth: number, maxHeight: number) {
-    for (let i = 0; i < Bomb.bombs.length; i++) {
-      Bomb.bombs[i].update(maxWidth, maxHeight);
+    for (let i = 0; i < Bomb.objects.length; i++) {
+      Bomb.objects[i].update(maxWidth, maxHeight);
     }
   }
+  static addDefaultObj(ctx: CanvasRenderingContext2D) {
+    const defaultObjOptions: TOptions = {
+      img: bombImg,
+      x: 0, // Set your desired default x-coordinate
+      y: 0, // Set your desired default y-coordinate
+      width: 40,
+      height: 40,
+    };
+    const defaultObj = new Bomb(ctx, defaultObjOptions);
+    Bomb.objects.push(defaultObj);
+  }
+  // 하나의 기본 객체를 저장할 static 변수
+  static defaultObject: Bomb | null = null;
+  // 기본 객체를 생성하는 함수
+  static initialize(ctx: CanvasRenderingContext2D) {
+    // 이미 초기화되었다면 더 이상 실행하지 않음
+    if (Bomb.defaultObject) return;
+
+    const defaultObjOptions: TOptions = {
+      img: bombImg,
+      x: 0, // Set your desired default x-coordinate
+      y: 0, // Set your desired default y-coordinate
+      width: 40,
+      height: 40,
+    };
+
+    const defaultObj = new Bomb(ctx, defaultObjOptions);
+    Bomb.objects.push(defaultObj);
+  }
+
   init(ox: number, oy: number) {
     this.x = ox;
     this.y = oy;
   }
-  addBomb(ctx: CanvasRenderingContext2D, options: TOptions) {
+  addObject(ctx: CanvasRenderingContext2D, options: TOptions) {
     const newBomb = new Bomb(ctx, options);
-    Bomb.bombs.push(newBomb);
-    console.log(Bomb.bombs);
+    Bomb.objects.push(newBomb);
+    // console.log(Bomb.objects);
   }
 }

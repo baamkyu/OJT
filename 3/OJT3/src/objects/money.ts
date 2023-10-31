@@ -1,57 +1,115 @@
+import moneyImage from "../images/money.png";
+
 type TOptions = {
+  img: HTMLImageElement;
   x: number;
   y: number;
   width: number;
   height: number;
 };
 
-// x, y: 시작점
+const moneyImg = new Image();
+moneyImg.src = moneyImage;
 
-export default function bomb(ctx: CanvasRenderingContext2D, options: TOptions) {
-  let x = options.x;
-  let y = options.y;
-  let width = options.width;
-  let height = options.height;
+export default class Money {
+  ctx: CanvasRenderingContext2D;
+  img: HTMLImageElement;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  dx: number;
+  dy: number;
+  changeDirection: boolean;
 
-  const draw = () => {
-    ctx.beginPath();
-    ctx.arc(x, y, width, height, Math.PI * 2);
-    ctx.fillStyle = "green";
-    ctx.fill();
-    ctx.closePath();
-  };
+  static objects: Money[] = [];
 
-  let changeDirection: boolean = false;
+  constructor(ctx: CanvasRenderingContext2D, options: TOptions) {
+    this.ctx = ctx;
+    this.img = moneyImg;
+    this.x = options.x;
+    this.y = options.y;
+    this.width = options.width;
+    this.height = options.height;
+    this.changeDirection = false;
+    this.dx = Math.random() * (2 - -2) + -2;
+    this.dy = Math.random() * (3 - 1) + 1;
+  }
 
-  let dx = Math.random() * (2 - -2) + -2; // -2 ~ 2 사이 랜덤값
-  let dy = Math.random() * (3 - 1) + 1; // 1 ~ 3 사이 랜덤값
-  const update = (maxWidth: number, maxHeight: number) => {
-    // x축 벗어나면 방향전환
-    if (x + dx > maxWidth - 10 || x + dx < 10) {
-      changeDirection = !changeDirection;
+  draw() {
+    this.ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+  }
+  drawAll() {
+    for (let i = 0; i < Money.objects.length; i++) {
+      Money.objects[i].draw();
     }
-
-    if (changeDirection) {
-      x -= dx;
-      y += dy;
+  }
+  update(maxWidth: number, maxHeight: number) {
+    if (this.x + this.dx > maxWidth - 10 || this.x + this.dx < 10) {
+      this.changeDirection = !this.changeDirection;
+    }
+    if (this.changeDirection) {
+      this.x -= this.dx;
+      this.y += this.dy;
     } else {
-      x += dx;
-      y += dy;
-    }
-    if (y + dy > maxHeight - 10) {
-      init(100, 0);
-      dx = Math.random() * (2 - -2) + -2; // -2 ~ 2 사이 랜덤값
-      dy = Math.random() * (3 - 1) + 1; // 1 ~ 3 사이 랜덤값
+      this.x += this.dx;
+      this.y += this.dy;
     }
 
-    draw();
-    return { x, y };
-  };
+    if (this.y + this.dy > maxHeight - 10) {
+      this.init(100, 0); // 아래로 넘어갔을때 다시 시작
+      this.dx = Math.random() * (2 - -2) + -2;
+      this.dy = Math.random() * (3 - 1) + 1;
+    }
+    this.draw();
 
-  const init = (ox: number, oy: number) => {
-    x = ox;
-    y = oy;
-  };
+    return { x: this.x, y: this.y };
+  }
 
-  return { draw, update, init };
+  static updateAll(maxWidth: number, maxHeight: number) {
+    for (let i = 0; i < Money.objects.length; i++) {
+      Money.objects[i].update(maxWidth, maxHeight);
+    }
+  }
+
+  // static addDefaultObj(ctx: CanvasRenderingContext2D) {
+  //   const defaultObjOptions: TOptions = {
+  //     img: moneyImg,
+  //     x: 0, // Set your desired default x-coordinate
+  //     y: 0, // Set your desired default y-coordinate
+  //     width: 40,
+  //     height: 40,
+  //   };
+  //   const defaultObj = new Money(ctx, defaultObjOptions);
+  //   Money.objects.push(defaultObj);
+  // }
+
+  // 하나의 기본 객체를 저장할 static 변수
+  static defaultObject: Money | null = null;
+  // 기본 객체를 생성하는 함수
+  static initialize(ctx: CanvasRenderingContext2D) {
+    // 이미 초기화되었다면 더 이상 실행하지 않음
+    if (Money.defaultObject) return;
+
+    const defaultObjOptions: TOptions = {
+      img: moneyImg,
+      x: 0, // Set your desired default x-coordinate
+      y: 0, // Set your desired default y-coordinate
+      width: 40,
+      height: 40,
+    };
+    const defaultObj = new Money(ctx, defaultObjOptions);
+    Money.defaultObject = defaultObj;
+    Money.objects.push(defaultObj);
+  }
+
+  init(ox: number, oy: number) {
+    this.x = ox;
+    this.y = oy;
+  }
+  addObject(ctx: CanvasRenderingContext2D, options: TOptions) {
+    const newBullet = new Money(ctx, options);
+    Money.objects.push(newBullet);
+    console.log(Money.objects);
+  }
 }

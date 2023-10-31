@@ -1,22 +1,32 @@
 import planeImage from "../images/plane.png";
 import bombImage from "../images/bomb.png";
 import bulletImage from "../images/bullet.png";
+import moneyImage from "../images/money.png";
 import Bullet from "../objects/bullet";
 import Bomb from "../objects/bomb";
-import plane from "../objects/plane";
+import Money from "../objects/money";
+import Plane from "../objects/plane";
 import info from "../objects/info";
-import { BoomAni } from "../ani/boom";
+// import { BoomAni } from "../ani/boomani";
+import backgroundImage from "../images/background.png";
 
 export const Play = () => {
   const canvas: any = document.getElementById("myCanvas");
   const ctx = canvas.getContext("2d");
 
-  const planeImg = new Image(); // 이미지 로딩을 한 번만 수행하도록 변경
-  planeImg.src = planeImage;
-  const bombImg = new Image(); // 이미지 로딩을 한 번만 수행하도록 변경
-  bombImg.src = bombImage;
-  const bulletImg = new Image(); // 이미지 로딩을 한 번만 수행하도록 변경
-  bulletImg.src = bulletImage;
+  const images = {
+    plane: new Image(),
+    bomb: new Image(),
+    bullet: new Image(),
+    money: new Image(),
+    background: new Image(),
+  };
+
+  images.plane.src = planeImage;
+  images.bomb.src = bombImage;
+  images.bullet.src = bulletImage;
+  images.money.src = moneyImage;
+  images.background.src = backgroundImage;
 
   // 패들 그리기
   let paddleWidth: number = 100;
@@ -25,33 +35,46 @@ export const Play = () => {
   let paddleY: number = canvas.height - paddleHeight;
 
   // 패들 컨트롤러
-  let rightPressed: boolean = false;
-  let leftPressed: boolean = false;
-  document.addEventListener("keydown", keyDownHandler, false);
-  document.addEventListener("keyup", keyUpHandler, false);
-  function keyDownHandler(e: any) {
-    // right, arrowright 둘 다 쓴 이유는 브라우저의 호환성때문임
+  // 패들 컨트롤러 상태
+  let paddleControllerState = {
+    rightPressed: false,
+    leftPressed: false,
+  };
+  document.addEventListener(
+    "keydown",
+    (e: KeyboardEvent) => keyDownHandler(e),
+    false
+  );
+  document.addEventListener(
+    "keyup",
+    (e: KeyboardEvent) => keyUpHandler(e),
+    false
+  );
+
+  function keyDownHandler(e: KeyboardEvent) {
     if (e.key === "Right" || e.key === "ArrowRight") {
-      console.log("right");
-      rightPressed = true;
+      paddleControllerState.rightPressed = true;
     } else if (e.key === "Left" || e.key === "ArrowLeft") {
-      console.log("left");
-      leftPressed = true;
+      paddleControllerState.leftPressed = true;
     }
   }
+
   function keyUpHandler(e: any) {
     if (e.key === "Right" || e.key === "ArrowRight") {
-      rightPressed = false;
+      paddleControllerState.rightPressed = false;
     } else if (e.key === "Left" || e.key === "ArrowLeft") {
-      leftPressed = false;
+      paddleControllerState.leftPressed = false;
     }
   }
 
   function paddleController() {
-    if (rightPressed && paddleX < canvas.width - paddleWidth) {
+    if (
+      paddleControllerState.rightPressed &&
+      paddleX < canvas.width - paddleWidth
+    ) {
       paddleX += 7;
       _plane.move(7);
-    } else if (leftPressed && paddleX > 0) {
+    } else if (paddleControllerState.leftPressed && paddleX > 0) {
       paddleX -= 7;
       _plane.move(-7);
     }
@@ -59,26 +82,34 @@ export const Play = () => {
 
   // 최종 렌더링
   const _bullet = new Bullet(ctx, {
-    img: bulletImg,
+    img: images.bullet,
     x: canvas.height / 2 + 50,
     y: 0,
     height: 40,
     width: 40,
   });
   const _bomb = new Bomb(ctx, {
-    img: bombImg,
+    img: images.bomb,
+    x: canvas.height / 2 - 100,
+    y: 0,
+    height: 40,
+    width: 40,
+  });
+  const _money = new Money(ctx, {
+    img: images.money,
     x: canvas.height / 2 - 100,
     y: 0,
     height: 40,
     width: 40,
   });
 
-  const _plane = plane(ctx, {
+  const _plane = new Plane(ctx, {
     x: paddleX,
     y: paddleY,
-    width: paddleWidth,
-    height: paddleHeight,
+    height: paddleWidth,
+    width: paddleHeight,
   });
+
   const _info = info(ctx, {
     moneyX: 8,
     moneyY: 20,
@@ -88,90 +119,164 @@ export const Play = () => {
 
   _bullet.draw();
   _bomb.draw();
-  let frameCount = 0;
+  _money.draw();
+  let frameCount = 299;
 
   function draw() {
+    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.drawImage(images.background, 0, 0, canvas.width, canvas.height);
+    // 끝나는 로직
     if (_info.haveLives() <= 0) {
       _info.endGame();
-      console.log("끝");
     }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 폭탄 충돌 감지
-    function touchBomb() {
-      for (let i = 0; i < Bomb.bombs.length; i++) {
-        const bombObject = Bomb.bombs[i];
-        if (
-          paddleX < bombObject.x &&
-          paddleX + paddleWidth > bombObject.x &&
-          paddleY < bombObject.y &&
-          paddleY + paddleHeight > bombObject.y
-        ) {
-          _info.endGame();
+    // 충돌 감지
+    function checkCollision(obj: any) {
+      const objects = obj.objects;
 
-          // BoomAni(ctx, paddleX, paddleY, canvas.width, canvas.height);
-          alert("패배");
-          document.location.reload();
-        }
-      }
-    }
-    // 총알 충돌 감지
-    function touchBullet() {
-      for (let i = 0; i < Bullet.bullets.length; i++) {
-        const bulletObject = Bullet.bullets[i];
-        if (
-          paddleX < bulletObject.x &&
-          paddleX + paddleWidth > bulletObject.x &&
-          paddleY < bulletObject.y &&
-          paddleY + paddleHeight > bulletObject.y
-        ) {
-          alert("live-1");
-          // _bullet.init(300, 0);
-          _info.minusLives();
+      if (objects.length === 0) {
+        return;
+      } else {
+        for (let i = 0; i < objects.length; i++) {
+          const item = objects[i];
+          if (
+            paddleX < item.x &&
+            paddleX + paddleWidth > item.x &&
+            paddleY < item.y &&
+            paddleY + paddleHeight > item.y
+          ) {
+            setTimeout(() => objects.splice(i, 1), 300); // settimeout으로 약간 감싸줘서 한번에 두개 부딪힐때 문제가 생길듯??
+            _bullet.init(0, 0);
+
+            if (obj instanceof Bullet) {
+              _info.minusLives();
+              Bullet.objects.splice(i, 1);
+            } else if (obj instanceof Bomb) {
+              item.init(0, 0);
+              Bomb.objects.splice(i, 1);
+              alert("패배");
+              document.location.reload();
+            }
+          }
         }
       }
     }
 
-    // if (bpt.y >= canvas.height) {
-    //   _bullet.init(400, 0); // 랜덤 좌표로 변경해야함
-    // }
-    // if (bpt2.y >= canvas.height) {
-    //   _bomb.init(200, 0);
-    // }
-    // if (bpt3.y >= canvas.height) {
-    //   _money.init(30, 0);
+    checkCollision(Bullet);
+    checkCollision(Bomb);
+    checkCollision(Money);
+
+    function addRandomItem() {
+      const itemImages = [images.bomb, images.bullet, images.money];
+      const randomImage =
+        itemImages[Math.floor(Math.random() * itemImages.length)];
+      const item =
+        randomImage === images.bomb
+          ? _bomb
+          : randomImage === images.bullet
+          ? _bullet
+          : _money;
+      item.addObject(ctx, {
+        img: randomImage,
+        x: Math.random() * canvas.width,
+        y: 0,
+        width: 40,
+        height: 40,
+      });
+    }
+
+    // 총알 적중 감지
+    // function bulletToItem() {
+    //   for (let i = 0; i < Plane.shootedBullets.length; i++) {
+    //     const planeBulletObject = Plane.shootedBullets[i];
+    //     for (
+    //       let j = 0;
+    //       j <
+    //       Math.max(
+    //         Bullet.bullets.length,
+    //         Bomb.bombs.length,
+    //         Money.moneys.length,
+    //         1
+    //       );
+    //       j++
+    //     ) {
+    //       try {
+    //         const bulletObject = Bullet.bullets[j];
+    //         const BombObject = Bomb.bombs[j];
+    //         const MoneyObject = Money.moneys[j];
+    //         if (
+    //           planeBulletObject.x < bulletObject.x + bulletObject.width &&
+    //           planeBulletObject.x + 10 > bulletObject.x &&
+    //           planeBulletObject.y < bulletObject.y + bulletObject.height &&
+    //           planeBulletObject.y + 10 > bulletObject.y
+    //         ) {
+    //           Plane.shootedBullets.splice(i, 1);
+    //           Bullet.bullets.splice(j, 1);
+    //           console.log("bullet 충돌");
+    //         } else if (
+    //           planeBulletObject.x < BombObject.x + BombObject.width &&
+    //           planeBulletObject.x + 10 > BombObject.x &&
+    //           planeBulletObject.y < BombObject.y + BombObject.height &&
+    //           planeBulletObject.y + 10 > BombObject.y
+    //         ) {
+    //           Plane.shootedBullets.splice(i, 1);
+    //           Bomb.bombs.splice(j, 1);
+    //           console.log("BombObject 충돌");
+    //         } else if (
+    //           planeBulletObject.x < MoneyObject.x + MoneyObject.width &&
+    //           planeBulletObject.x + 10 > MoneyObject.x &&
+    //           planeBulletObject.y < MoneyObject.y + MoneyObject.height &&
+    //           planeBulletObject.y + 10 > MoneyObject.y
+    //         ) {
+    //           Plane.shootedBullets.splice(i, 1);
+    //           Money.moneys.splice(j, 1);
+    //           console.log("MoneyObject 충돌");
+    //         }
+    //       } catch {
+    //         console.log("catch로 빠짐");
+    //       }
+    //     }
+
+    //     // for (let i = 0; i < Bullet.bullets.length; i++) {
+    //     //   const bulletObject = Bullet.bullets[i];
+    //     //   if (
+    //     //     planeBulletObject.x < bulletObject.x + bulletObject.width &&
+    //     //     planeBulletObject.x + 10 > bulletObject.x &&
+    //     //     planeBulletObject.y < bulletObject.y + bulletObject.height &&
+    //     //     planeBulletObject.y + 10 > bulletObject.y
+    //     //   ) {
+    //     //     console.log("bullet 충돌");
+    //     //   }
+    //     // }
+    //   }
     // }
 
     // 패들 컨트롤러
     _plane.draw();
     paddleController();
+    _plane.shooting();
     frameCount += 1;
-    touchBomb();
-    touchBullet();
+    // touchBomb();
+    // touchBullet();
+    // bulletToItem();
     Bomb.updateAll(canvas.width, canvas.height);
     Bullet.updateAll(canvas.width, canvas.height);
+    Money.updateAll(canvas.width, canvas.height);
     _info.haveMoney();
     _info.haveLives();
-    console.log("frameCount", frameCount);
-    if (frameCount % 300 === 0) {
-      _bomb.addBomb(ctx, {
-        img: bombImg,
-        x: Math.random() * canvas.width,
-        y: 0,
-        width: 40,
-        height: 40,
-      });
-      _bullet.addBullet(ctx, {
-        img: bulletImg,
-        x: Math.random() * canvas.width,
-        y: 0,
-        width: 40,
-        height: 40,
-      });
-      alert("300");
-    }
 
+    // 아이템 추가
+    if (frameCount % 100 === 0) {
+      addRandomItem();
+    }
     requestAnimationFrame(draw);
   }
+
   draw();
 };
+
+// draw()함수 안에 clearRect 사용
+// requestAnimationFrame(draw)를 통해 빠르게 무한 반복
+// 배경을 draw()함수 안에 넣으면 이미지를 계속해서 렌더링 할 것임
+// draw()밖에 넣으면 clearRect에 묻혀서 배경이 렌더링이 되지 않음

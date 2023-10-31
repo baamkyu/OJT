@@ -22,7 +22,6 @@ export default function Info(ctx: CanvasRenderingContext2D, xy: typeXY) {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
     ctx.fillText(`목숨*${lives}`, xy.liveX, xy.liveY);
-    console.log(lives);
     return lives;
   };
   const minusLives = () => {

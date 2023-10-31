@@ -21,7 +21,7 @@ export default class Bullet {
   dy: number;
   changeDirection: boolean;
 
-  static bullets: Bullet[] = [];
+  static objects: Bullet[] = [];
 
   constructor(ctx: CanvasRenderingContext2D, options: TOptions) {
     this.ctx = ctx;
@@ -39,8 +39,8 @@ export default class Bullet {
     this.ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
   drawAll() {
-    for (let i = 0; i < Bullet.bullets.length; i++) {
-      Bullet.bullets[i].draw();
+    for (let i = 0; i < Bullet.objects.length; i++) {
+      Bullet.objects[i].draw();
     }
   }
   update(maxWidth: number, maxHeight: number) {
@@ -66,18 +66,50 @@ export default class Bullet {
   }
 
   static updateAll(maxWidth: number, maxHeight: number) {
-    for (let i = 0; i < Bullet.bullets.length; i++) {
-      Bullet.bullets[i].update(maxWidth, maxHeight);
+    for (let i = 0; i < Bullet.objects.length; i++) {
+      Bullet.objects[i].update(maxWidth, maxHeight);
     }
+  }
+
+  static addDefaultObj(ctx: CanvasRenderingContext2D) {
+    const defaultObjOptions: TOptions = {
+      img: bulletImg,
+      x: 0, // Set your desired default x-coordinate
+      y: 0, // Set your desired default y-coordinate
+      width: 40,
+      height: 40,
+    };
+    const defaultObj = new Bullet(ctx, defaultObjOptions);
+    Bullet.objects.push(defaultObj);
+    Bullet.objects.push(defaultObj);
+  }
+  // 하나의 기본 객체를 저장할 static 변수
+  static defaultObject: Bullet | null = null;
+  // 기본 객체를 생성하는 함수
+  static initialize(ctx: CanvasRenderingContext2D) {
+    // 이미 초기화되었다면 더 이상 실행하지 않음
+    if (Bullet.defaultObject) return;
+
+    const defaultObjOptions: TOptions = {
+      img: bulletImg,
+      x: 0, // Set your desired default x-coordinate
+      y: 0, // Set your desired default y-coordinate
+      width: 40,
+      height: 40,
+    };
+    const defaultObj = new Bullet(ctx, defaultObjOptions);
+    Bullet.defaultObject = defaultObj;
+
+    Bullet.objects.push(defaultObj);
   }
 
   init(ox: number, oy: number) {
     this.x = ox;
     this.y = oy;
   }
-  addBullet(ctx: CanvasRenderingContext2D, options: TOptions) {
+  addObject(ctx: CanvasRenderingContext2D, options: TOptions) {
     const newBullet = new Bullet(ctx, options);
-    Bullet.bullets.push(newBullet);
-    console.log(Bullet.bullets);
+    Bullet.objects.push(newBullet);
+    // console.log(Bullet.bullets);
   }
 }
