@@ -1,4 +1,6 @@
 import planeImage from "../images/plane.png";
+import planeBulletImage from "../images/planeBullet.png";
+import Sound from "../objects/sound";
 
 type TOptions = {
   x: number;
@@ -9,6 +11,12 @@ type TOptions = {
 
 const planeImg = new Image();
 planeImg.src = planeImage;
+
+const planeBulletImg = new Image();
+planeBulletImg.src = planeBulletImage;
+
+const soundManager = new Sound();
+export let shootCount = 0;
 
 export default class Plane {
   ctx: CanvasRenderingContext2D;
@@ -48,12 +56,13 @@ export default class Plane {
     for (let i = 0; i < Plane.shootedBullets.length; i++) {
       if (Plane.shootedBullets[i].y <= 0) {
         Plane.shootedBullets.splice(i, 1);
+        continue;
       }
       this.ctx.drawImage(
-        planeImg,
+        planeBulletImg,
         Plane.shootedBullets[i].x,
         Plane.shootedBullets[i].y,
-        30,
+        20,
         30
       );
     }
@@ -71,11 +80,14 @@ export default class Plane {
   //   }
 
   update() {
-    console.log(Plane.shootedBullets);
+    // console.log(Plane.shootedBullets);
     this.bulletTime += 1;
-    console.log(this.bulletTime);
+    // console.log(this.bulletTime);
     if (this.bulletTime >= 200) {
       if (this.isKeyDown === true) {
+        soundManager.playSound("shot");
+
+        shootCount += 1;
         Plane.shootedBullets.push({
           x: this.x + this.width / 2 - 5,
           y: this.y,
@@ -86,13 +98,13 @@ export default class Plane {
 
     for (let i = 0; i < Plane.shootedBullets.length; i++) {
       Plane.shootedBullets[i].y -= 2;
-      console.log(Plane.shootedBullets[i].y);
+      // console.log(Plane.shootedBullets[i].y);
     }
   }
 
   shooting() {
     this.update();
     this.draw();
-    setTimeout(() => this.shooting(), 300);
+    setTimeout(() => this.shooting(), 1000);
   }
 }

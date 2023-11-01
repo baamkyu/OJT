@@ -72,18 +72,6 @@ export default class Money {
     }
   }
 
-  // static addDefaultObj(ctx: CanvasRenderingContext2D) {
-  //   const defaultObjOptions: TOptions = {
-  //     img: moneyImg,
-  //     x: 0, // Set your desired default x-coordinate
-  //     y: 0, // Set your desired default y-coordinate
-  //     width: 40,
-  //     height: 40,
-  //   };
-  //   const defaultObj = new Money(ctx, defaultObjOptions);
-  //   Money.objects.push(defaultObj);
-  // }
-
   // 하나의 기본 객체를 저장할 static 변수
   static defaultObject: Money | null = null;
   // 기본 객체를 생성하는 함수
@@ -95,8 +83,8 @@ export default class Money {
       img: moneyImg,
       x: 0, // Set your desired default x-coordinate
       y: 0, // Set your desired default y-coordinate
-      width: 40,
-      height: 40,
+      width: 56,
+      height: 56,
     };
     const defaultObj = new Money(ctx, defaultObjOptions);
     Money.defaultObject = defaultObj;
@@ -108,8 +96,8 @@ export default class Money {
     this.y = oy;
   }
   addObject(ctx: CanvasRenderingContext2D, options: TOptions) {
-    const newBullet = new Money(ctx, options);
-    Money.objects.push(newBullet);
-    console.log(Money.objects);
+    const newMoney = new Money(ctx, options);
+    Money.objects.push(newMoney);
+    // console.log(Money.objects);
   }
 }

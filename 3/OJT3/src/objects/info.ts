@@ -6,7 +6,7 @@ type typeXY = {
 };
 export default function Info(ctx: CanvasRenderingContext2D, xy: typeXY) {
   // 점수
-  let money: number = 10;
+  let money: number = 0;
   let lives: number = 5;
   const haveMoney = () => {
     ctx.font = "16px Arial";

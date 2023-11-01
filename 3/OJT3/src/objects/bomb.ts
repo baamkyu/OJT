@@ -73,17 +73,7 @@ export default class Bomb {
       Bomb.objects[i].update(maxWidth, maxHeight);
     }
   }
-  static addDefaultObj(ctx: CanvasRenderingContext2D) {
-    const defaultObjOptions: TOptions = {
-      img: bombImg,
-      x: 0, // Set your desired default x-coordinate
-      y: 0, // Set your desired default y-coordinate
-      width: 40,
-      height: 40,
-    };
-    const defaultObj = new Bomb(ctx, defaultObjOptions);
-    Bomb.objects.push(defaultObj);
-  }
+
   // 하나의 기본 객체를 저장할 static 변수
   static defaultObject: Bomb | null = null;
   // 기본 객체를 생성하는 함수
@@ -93,13 +83,15 @@ export default class Bomb {
 
     const defaultObjOptions: TOptions = {
       img: bombImg,
-      x: 0, // Set your desired default x-coordinate
-      y: 0, // Set your desired default y-coordinate
-      width: 40,
-      height: 40,
+      x: 0,
+      y: 0,
+      width: 56,
+      height: 56,
     };
 
     const defaultObj = new Bomb(ctx, defaultObjOptions);
+    Bomb.defaultObject = defaultObj;
+
     Bomb.objects.push(defaultObj);
   }
 

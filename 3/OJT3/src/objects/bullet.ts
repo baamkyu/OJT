@@ -36,7 +36,12 @@ export default class Bullet {
   }
 
   draw() {
+    // this.ctx.save(); // 현재 그리기 상태 저장
+    // this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+    // this.ctx.rotate(0); // 회전 각도 설정
+
     this.ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+    // this.ctx.restore(); // 그리기 상태를 이전 상태로 복원
   }
   drawAll() {
     for (let i = 0; i < Bullet.objects.length; i++) {
@@ -71,18 +76,6 @@ export default class Bullet {
     }
   }
 
-  static addDefaultObj(ctx: CanvasRenderingContext2D) {
-    const defaultObjOptions: TOptions = {
-      img: bulletImg,
-      x: 0, // Set your desired default x-coordinate
-      y: 0, // Set your desired default y-coordinate
-      width: 40,
-      height: 40,
-    };
-    const defaultObj = new Bullet(ctx, defaultObjOptions);
-    Bullet.objects.push(defaultObj);
-    Bullet.objects.push(defaultObj);
-  }
   // 하나의 기본 객체를 저장할 static 변수
   static defaultObject: Bullet | null = null;
   // 기본 객체를 생성하는 함수
@@ -94,8 +87,8 @@ export default class Bullet {
       img: bulletImg,
       x: 0, // Set your desired default x-coordinate
       y: 0, // Set your desired default y-coordinate
-      width: 40,
-      height: 40,
+      width: 56,
+      height: 56,
     };
     const defaultObj = new Bullet(ctx, defaultObjOptions);
     Bullet.defaultObject = defaultObj;
