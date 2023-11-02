@@ -7,6 +7,7 @@ type TOptions = {
   y: number;
   width: number;
   height: number;
+  isGaming: boolean;
 };
 
 const planeImg = new Image();
@@ -24,6 +25,7 @@ export default class Plane {
   y: number;
   width: number;
   height: number;
+  isGaming: boolean;
   static shootedBullets: { x: number; y: number }[]; // Array to store bullets
   bulletTime: number = 0;
   isKeyDown: boolean = false;
@@ -34,22 +36,25 @@ export default class Plane {
     this.y = options.y;
     this.width = options.width;
     this.height = options.height;
+    this.isGaming = options.isGaming;
     Plane.shootedBullets = [];
 
     // 스페이스바 눌렀을 때
-    document.addEventListener("keydown", (event) => {
-      if (event.code === "Space") {
-        this.isKeyDown = true;
-        // console.log(this.isKeyDown, "Space keydown"); // whatever you want to do when space is pressed
-      }
-    });
+    if (this.isGaming) {
+      document.addEventListener("keydown", (event) => {
+        if (event.code === "Space") {
+          this.isKeyDown = true;
+          // console.log(this.isKeyDown, "Space keydown"); // whatever you want to do when space is pressed
+        }
+      });
 
-    document.addEventListener("keyup", (event) => {
-      if (event.code === "Space") {
-        this.isKeyDown = false;
-        // console.log(this.isKeyDown, "Space keyup"); // whatever you want to do when space is released
-      }
-    });
+      document.addEventListener("keyup", (event) => {
+        if (event.code === "Space") {
+          this.isKeyDown = false;
+          // console.log(this.isKeyDown, "Space keyup"); // whatever you want to do when space is released
+        }
+      });
+    }
   }
 
   draw() {
@@ -75,36 +80,44 @@ export default class Plane {
     return this.x;
   }
 
-  //   shootBullet() {
-  //     Plane.shootedBullets.push({ x: this.x + this.width / 2 - 5, y: this.y });
-  //   }
-
   update() {
-    // console.log(Plane.shootedBullets);
-    this.bulletTime += 1;
-    // console.log(this.bulletTime);
-    if (this.bulletTime >= 200) {
-      if (this.isKeyDown === true) {
-        soundManager.playSound("shot");
+    if (this.isGaming) {
+      // console.log(Plane.shootedBullets);
+      this.bulletTime += 1;
+      // console.log(this.bulletTime);
+      if (this.bulletTime >= 200) {
+        if (this.isKeyDown === true) {
+          soundManager.playSound("shot");
 
-        shootCount += 1;
-        Plane.shootedBullets.push({
-          x: this.x + this.width / 2 - 5,
-          y: this.y,
-        });
-        this.bulletTime = 0;
+          shootCount += 1;
+          Plane.shootedBullets.push({
+            x: this.x + this.width / 2 - 5,
+            y: this.y,
+          });
+          this.bulletTime = 0;
+        }
       }
-    }
 
-    for (let i = 0; i < Plane.shootedBullets.length; i++) {
-      Plane.shootedBullets[i].y -= 2;
-      // console.log(Plane.shootedBullets[i].y);
+      for (let i = 0; i < Plane.shootedBullets.length; i++) {
+        Plane.shootedBullets[i].y -= 2;
+        // console.log(Plane.shootedBullets[i].y);
+      }
     }
   }
 
   shooting() {
-    this.update();
-    this.draw();
-    setTimeout(() => this.shooting(), 1000);
+    if (this.isGaming) {
+      this.update();
+      this.draw();
+      setTimeout(() => this.shooting(), 300);
+    } else {
+      // 게임이 종료되었을 때, 총알 발사 중지
+      // 추가로, Plane.shootedBullets 배열을 비워서 이미 발사된 총알을 모두 제거합니다.
+      Plane.shootedBullets = [];
+    }
+  }
+  setIsGaming(isGaming: boolean) {
+    this.isGaming = isGaming;
+    // 게임 상태가 변경될 때 적절한 동작 수행
   }
 }

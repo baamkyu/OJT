@@ -10,16 +10,20 @@ import Plane from "../objects/plane";
 import info from "../objects/info";
 // import { BoomAni } from "../ani/boomani";
 import backgroundImage from "../images/background.png";
-// import { shootCount } from "../objects/plane";
+import { shootCount } from "../objects/plane";
 import { EndingModal } from "./endingmodal";
 
 export const Play = () => {
   const canvas: any = document.getElementById("myCanvas");
   const ctx = canvas.getContext("2d");
-  let isGaming: boolean = false;
-  let isFinish: boolean = false;
-
+  let isGaming: boolean = true;
   const soundManager = new Sound();
+  let hitBullet: number = 0;
+  let hitBomb: number = 0;
+  let hitMoney: number = 0;
+  let getMoney: number = 0;
+  let hitCount: number = 0;
+  let hitRate: number = 0;
 
   const images = {
     plane: new Image(),
@@ -38,7 +42,7 @@ export const Play = () => {
   // 패들 그리기
   let paddleWidth: number = 100;
   let paddleHeight: number = 80;
-  let paddleX: number = (canvas.width - paddleWidth) / 2; // 나중에 여기 움직일 수 있도록 변경
+  let paddleX: number = (canvas.width - paddleWidth) / 2;
   let paddleY: number = canvas.height - paddleHeight;
 
   // 패들 컨트롤러
@@ -77,11 +81,11 @@ export const Play = () => {
   function paddleController() {
     if (
       paddleControllerState.rightPressed &&
-      paddleX < canvas.width - paddleWidth
+      paddleX < canvas.width - paddleWidth + 40
     ) {
       paddleX += 7;
       _plane.move(7);
-    } else if (paddleControllerState.leftPressed && paddleX > 0) {
+    } else if (paddleControllerState.leftPressed && paddleX > -30) {
       paddleX -= 7;
       _plane.move(-7);
     }
@@ -90,21 +94,21 @@ export const Play = () => {
   // 최종 렌더링
   const _bullet = new Bullet(ctx, {
     img: images.bullet,
-    x: canvas.height / 2 + 50,
+    x: Math.floor(Math.random() * 601) + 100,
     y: 0,
     height: 56,
     width: 56,
   });
   const _bomb = new Bomb(ctx, {
     img: images.bomb,
-    x: canvas.height / 2 - 100,
+    x: Math.floor(Math.random() * 601) + 100,
     y: 0,
     height: 56,
     width: 56,
   });
   const _money = new Money(ctx, {
     img: images.money,
-    x: canvas.height / 2 - 100,
+    x: Math.floor(Math.random() * 601) + 100,
     y: 0,
     height: 56,
     width: 56,
@@ -115,13 +119,14 @@ export const Play = () => {
     y: paddleY,
     height: paddleWidth,
     width: paddleHeight,
+    isGaming: isGaming,
   });
 
   const _info = info(ctx, {
-    moneyX: 8,
-    moneyY: 20,
-    liveX: canvas.width - 65,
-    liveY: 20,
+    moneyX: canvas.width - 60,
+    moneyY: 80,
+    liveX: canvas.width - 60,
+    liveY: 40,
   });
 
   _bullet.draw();
@@ -149,7 +154,6 @@ export const Play = () => {
     });
   }
   // 총알 적중 감지
-  let hitCount = 0;
   function checkHitItem() {
     for (let i = 0; i < Plane.shootedBullets.length; i++) {
       const planeBulletObject = Plane.shootedBullets[i];
@@ -170,6 +174,7 @@ export const Play = () => {
           soundManager.playSound("hit");
           bulletHit = true;
           hitCount += 1;
+          hitBullet += 1;
           console.log("Bullet 적중");
           break;
         }
@@ -189,6 +194,7 @@ export const Play = () => {
           // Plane.shootedBullets.splice(i, 1);
           bombHit = true;
           hitCount += 1;
+          hitBomb += 1;
           console.log("Bomb 적중");
           break;
         }
@@ -207,6 +213,7 @@ export const Play = () => {
           // Plane.shootedBullets.splice(i, 1);
           moneyHit = true;
           hitCount += 1;
+          hitMoney += 1;
           console.log("Money 적중");
           break;
         }
@@ -217,6 +224,8 @@ export const Play = () => {
         continue;
       }
     }
+
+    hitRate = shootCount ? Math.round((hitCount / shootCount) * 100) : 0;
   }
 
   // 충돌 감지
@@ -245,11 +254,10 @@ export const Play = () => {
             item.init(0, 0);
             _info.endGame();
             objects.splice(i, 1);
-            // document.location.reload();
           } else if (obj === Money) {
             objects.splice(i, 1);
             _info.plusMoney();
-
+            getMoney += 1;
             soundManager.playSound("getMoney");
             console.log("money획득");
           }
@@ -257,12 +265,21 @@ export const Play = () => {
       }
     }
   }
+  function handleIsGamingChange(isGaming: boolean) {
+    _plane.setIsGaming(isGaming);
+  }
 
+  // 게임 다시 시작
+  function restartGame() {
+    isGaming = true;
+    draw(); // Start the game loop
+  }
   function draw() {
-    // soundManager.playSound("shot");
-    // ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     ctx.drawImage(images.background, 0, 0, canvas.width, canvas.height);
+
+    _info.haveMoney();
+    _info.haveLives();
+
     // 끝나는 로직
     if (_info.haveLives() <= 0) {
       soundManager.playSound("endGame");
@@ -272,30 +289,44 @@ export const Play = () => {
       // alert("게임 끝");
     }
 
-    checkCollision(Bullet);
-    checkCollision(Bomb);
-    checkCollision(Money);
-
-    // 패들 컨트롤러
-    _plane.draw();
-    _plane.shooting();
-    paddleController();
-    frameCount += 1;
-    checkHitItem();
-    Bomb.updateAll(canvas.width, canvas.height);
-    Bullet.updateAll(canvas.width, canvas.height);
-    Money.updateAll(canvas.width, canvas.height);
-    _info.haveMoney();
-    _info.haveLives();
-    // console.log("hitCount : ", hitCount, "shootCount : ", { shootCount });
-
     // 아이템 추가
     if (frameCount % 100 === 0) {
       addRandomItem();
     }
-    isGaming
-      ? requestAnimationFrame(draw)
-      : EndingModal(ctx, canvas.width, canvas.height, 10, 0.8);
+
+    // 게임 중 / 게임 끝난 상태 전달
+    handleIsGamingChange(isGaming);
+    // 게임 중 상태 / 게임 끝난 상태
+    if (isGaming) {
+      checkCollision(Bullet);
+      checkCollision(Bomb);
+      checkCollision(Money);
+
+      // 패들 컨트롤러
+      paddleController();
+      frameCount += 1;
+      checkHitItem();
+      Bomb.updateAll(canvas.width - 5, canvas.height - 5);
+      Bullet.updateAll(canvas.width - 5, canvas.height - 5);
+      Money.updateAll(canvas.width - 5, canvas.height - 5);
+      requestAnimationFrame(draw);
+      _plane.draw();
+      _plane.shooting();
+    }
+
+    if (!isGaming) {
+      EndingModal(
+        ctx,
+        canvas.width,
+        canvas.height,
+        getMoney,
+        hitRate,
+        hitBullet,
+        hitBomb,
+        hitMoney,
+        restartGame
+      );
+    }
   }
   draw();
 };

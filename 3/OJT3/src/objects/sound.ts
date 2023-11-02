@@ -36,33 +36,33 @@ export default class Sound {
   playSound(soundType: string) {
     switch (soundType) {
       case "shot":
-        this.shotAudio.pause();
-        this.shotAudio.currentTime = 0;
+        // this.shotAudio.pause();
+        // this.shotAudio.currentTime = 0;
 
         this.shotAudio.play();
 
         break;
       case "hit":
-        this.hitAudio.pause();
-        this.hitAudio.currentTime = 0;
+        // this.hitAudio.pause();
+        // this.hitAudio.currentTime = 0;
 
         this.hitAudio.play();
         break;
       case "auch":
-        this.auchAudio.pause();
-        this.auchAudio.currentTime = 0;
+        // this.auchAudio.pause();
+        // this.auchAudio.currentTime = 0;
 
         this.auchAudio.play();
         break;
       case "getMoney":
-        this.getMoneyAudio.pause();
-        this.getMoneyAudio.currentTime = 0;
+        // this.getMoneyAudio.pause();
+        // this.getMoneyAudio.currentTime = 0;
 
         this.getMoneyAudio.play();
         break;
       case "endGame":
-        this.endGameAudio.pause();
-        this.endGameAudio.currentTime = 0;
+        // this.endGameAudio.pause();
+        // this.endGameAudio.currentTime = 0;
 
         this.endGameAudio.play();
         break;
