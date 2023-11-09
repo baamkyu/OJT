@@ -14,12 +14,16 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("move1", "assets/map/move1x1.png");
     this.load.image("move4", "assets/map/move4x1.png");
     this.load.image("move6", "assets/map/move6x1.png");
+
     // 포이
     this.load.atlas(
       "player",
       "assets/player/poy.png",
       "assets/player/poy.json"
     );
+
+    // tile
+    this.load.image("tiles", "assets/map/tile.png");
 
     console.log("preloader preload");
   }
