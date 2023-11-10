@@ -17,10 +17,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.setOrigin(0, 1);
-
     this.setDisplayOrigin(0, 1);
     this.setCollideWorldBounds(true);
-    // stand
+
+    // stand animation
     this.anims.create({
       key: "stand",
       frames: scene.anims.generateFrameNames("player", {
@@ -32,7 +32,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       frameRate: 4,
       repeat: -1,
     });
-    // walk
+    // walk animation
     this.anims.create({
       key: "walk",
       frames: scene.anims.generateFrameNames("player", {
@@ -44,7 +44,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       frameRate: 8,
       repeat: -1,
     });
-    // climb
+    // climb animation
     this.anims.create({
       key: "climb",
       frames: scene.anims.generateFrameNames("player", {
@@ -56,7 +56,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       frameRate: 6,
       repeat: -1,
     });
-    // jumpstart
+    // jumpstart animation
     this.anims.create({
       key: "jumpstart",
       frames: scene.anims.generateFrameNames("player", {
@@ -72,7 +72,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     scene.tweens.add({
       targets: this,
-      x: 128 * 4,
+      x: 128,
       duration: 1000,
       delay: 500,
       onStart: () => {
@@ -82,7 +82,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this._firstWalking = false;
       },
     });
-    this.setDepth(100);
+    this.setDepth(100); // z-index
   }
 
   // 사다리
@@ -108,7 +108,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     if (cursors.space.isDown && this.body.blocked.down) {
       this.play("jumpstart", true);
-      this.setVelocityY(-3000);
+      this.setVelocityY(-1250);
     }
   }
 }

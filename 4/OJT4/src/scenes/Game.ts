@@ -1,15 +1,12 @@
 import { Background } from "../components/Background";
-
-// import Minimap from "../components/Minimap";
+import Minimap from "../components/Minimap";
 import Player from "../components/Player";
 import SceneKeys from "../constants/SceneKeys";
-
-// import { makeTileLayer } from "../util";
 
 export default class GameScene extends Phaser.Scene {
   player!: Player;
   cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-  // minimap!: Minimap;
+  minimap!: Minimap;
   background!: Background;
   platformsLayer!: Phaser.Tilemaps.TilemapLayer;
 
@@ -21,60 +18,52 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("tiles", "assets/map/tile.png");
     this.load.tilemapTiledJSON("map", "assets/map/tileset.json");
   }
+
   create() {
-    console.log("game.ts 실행");
-    const width: number = this.game.canvas.width;
-    const height: number = this.game.canvas.height;
+    // const width: number = this.game.canvas.width;
+    // const height: number = this.game.canvas.height;
 
+    // make map, background
     this.background = new Background(this);
+    // console.log(width, height);
 
-    // 맵 그리기
-    // const array = [
-    //   [0, 1, 2],
-    //   [0, 1, 2],
-    //   [0, 1, 2],
-    // ];
-    // const map = this.make.tilemap({
-    //   // key: "map",
-    //   data: array,
-    //   tileWidth: 70,
-    //   tileHeight: 70,
-    // });
-    // map.addTilesetImage("tiles");
-    // const layer = map.createLayer(0, "tiles", 0, 35);
-
-    // 맵 그리기 JSON
     const map = this.make.tilemap({
       key: "map",
-      tileWidth: 4,
-      tileHeight: 4,
+      tileWidth: 16,
+      tileHeight: 16,
     });
-    // (인자1: name of tileset in Tiled, 인자2: key from preload)
-    const tileset: any = map.addTilesetImage("tile", "tiles");
-    const platformsLayer: any = map.createLayer("tiles", tileset, 0, 0);
-    // console.log(layer);
 
-    // const cactusLayer = map.createLayer("cactus", tileset, 0, 0);
+    // player
+    this.player = new Player(this, 128, 1100, "player", "stand1");
+    this.player.body?.setSize(100, 150);
 
-    // 2번째 인자 -> platforms.png 가르키면 됨
-    // 3, 4번째 인자 -> assetKey: string, layerId: string
-    // const platformsLayer = makeTileLayer(map, "map", "tile", "tiles");
-    // this.platformsLayer = platformsLayer!;
+    // 카메라 설정
+    this.cameras.main.setBounds(0, 0, 2560, 1440); // 전체 맵 크기를 설정
+    this.cameras.main.startFollow(this.player, true); // 카메라가 플레이어를 따라다니도록 설정
+    this.physics.world.setBounds(0, 0, 2560, 1440);
 
+    // this.minimap.camera.ignore(this.background);
+
+    // platform 불러오기
+
+    ///@ts-ignore
+    const tileset = map.addTilesetImage("tile", "tiles");
+    ///@ts-ignore
+    const platformsLayer = map.createLayer("tileset", tileset, 0, 0);
+    this.platformsLayer = platformsLayer!;
+
+    // make platform
     const platformGroup = this.physics.add.staticGroup();
+
     const tileBodies = this.platformsLayer
-      // @ts-ignore
-      .filterTiles((tile?) => tile.properties.colpoint)
+      ///@ts-ignore
+      .filterTiles((tile) => tile.properties.colpoint)
       .map((tile) => {
         return this.add
-          .rectangle(
-            tile.x * 128,
-            tile.y * 128 + 128,
-            128,
-            tile.properties.height
-          )
-          .setOrigin(0, 1);
+          .rectangle(tile.x * 16, tile.y * 16 + 8, 16, 80)
+          .setOrigin(0);
       });
+
     platformGroup.addMultiple(tileBodies);
     tileBodies.forEach((el) => {
       ///@ts-ignore
@@ -87,25 +76,24 @@ export default class GameScene extends Phaser.Scene {
 
     this.physics.add.collider(platformGroup, this.player);
 
-    // this.add
-    //   .image(0, 0, "bg1")
-    //   .setOrigin(0)
-    //   .setDisplaySize(this.game.canvas.width, this.game.canvas.height);
-    this.player = new Player(this, 800, 500, "player", "stand");
-    this.player.body?.setSize(100, 150);
-    // this.minimap = new Minimap(this, 20, 80, width, height);
+    // 미니맵
+    this.minimap = new Minimap(
+      this,
+      20,
+      40,
+      map.widthInPixels,
+      map.heightInPixels,
+      map
+    );
+    this.minimap.camera.ignore(this.background); // 미니맵 배경 제거
 
     this.cursors = this.input.keyboard!.createCursorKeys();
-
-    console.log(width, height);
-
-    // this.physics.add.collider(this.player, layer);
-    // layer.setCollisionBetween;
   }
 
   update() {
     this.player.update(this.cursors);
-
+    this.minimap.update(this.player);
+    // console.log(this.player.x);
     // this.background.update();
   }
 }
