@@ -17,6 +17,11 @@ export default class Preloader extends Phaser.Scene {
       "assets/player/poy.json"
     );
 
+    // 아이템
+    this.load.image("shield", "assets/item/shield.png");
+    this.load.image("dash", "assets/item/dash.png");
+    this.load.image("superjump", "assets/item/superjump.png");
+
     // tile
     this.load.image("tiles", "assets/map/tile.png");
   }

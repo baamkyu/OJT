@@ -27,6 +27,11 @@ export default class GameScene extends Phaser.Scene {
     this.background = new Background(this);
     // console.log(width, height);
 
+    // make item
+    this.add.image(400, 300, "shield");
+    this.add.image(400, 300, "dash");
+    this.add.image(400, 300, "superjump");
+
     const map = this.make.tilemap({
       key: "map",
       tileWidth: 16,
