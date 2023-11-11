@@ -2,6 +2,7 @@ import { Background } from "../components/Background";
 import Minimap from "../components/Minimap";
 import Player from "../components/Player";
 import SceneKeys from "../constants/SceneKeys";
+import { collectItem } from "../util";
 
 export default class GameScene extends Phaser.Scene {
   player!: Player;
@@ -20,17 +21,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    // const width: number = this.game.canvas.width;
-    // const height: number = this.game.canvas.height;
+    const width: number = this.game.canvas.width;
+    const height: number = this.game.canvas.height;
 
     // make map, background
     this.background = new Background(this);
-    // console.log(width, height);
-
-    // make item
-    this.add.image(400, 300, "shield");
-    this.add.image(400, 300, "dash");
-    this.add.image(400, 300, "superjump");
 
     const map = this.make.tilemap({
       key: "map",
@@ -40,17 +35,14 @@ export default class GameScene extends Phaser.Scene {
 
     // player
     this.player = new Player(this, 128, 1100, "player", "stand1");
-    this.player.body?.setSize(100, 150);
+    this.player.body?.setSize(50, 130);
 
     // 카메라 설정
     this.cameras.main.setBounds(0, 0, 2560, 1440); // 전체 맵 크기를 설정
     this.cameras.main.startFollow(this.player, true); // 카메라가 플레이어를 따라다니도록 설정
     this.physics.world.setBounds(0, 0, 2560, 1440);
 
-    // this.minimap.camera.ignore(this.background);
-
     // platform 불러오기
-
     ///@ts-ignore
     const tileset = map.addTilesetImage("tile", "tiles");
     ///@ts-ignore
@@ -81,7 +73,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.physics.add.collider(platformGroup, this.player);
 
-    // 미니맵
+    // make minimap
     this.minimap = new Minimap(
       this,
       20,
@@ -91,8 +83,30 @@ export default class GameScene extends Phaser.Scene {
       map
     );
     this.minimap.camera.ignore(this.background); // 미니맵 배경 제거
+    this.cursors = this.input.keyboard!.createCursorKeys(); // 키보드 감지
 
-    this.cursors = this.input.keyboard!.createCursorKeys();
+    // make item
+    let items = this.physics.add.group();
+    let shield: Phaser.GameObjects.GameObject = items.create(
+      100,
+      height - 300,
+      "superjump"
+    );
+    let superjump: Phaser.GameObjects.GameObject = items.create(
+      300,
+      height - 300,
+      "superjump"
+    );
+    let dash: Phaser.GameObjects.GameObject = items.create(
+      500,
+      height - 300,
+      "dash"
+    );
+    this.physics.add.collider(shield, platformGroup);
+    this.physics.add.collider(dash, platformGroup);
+    this.physics.add.collider(superjump, platformGroup);
+
+    this.physics.add.overlap(this.player, items, collectItem, undefined, this);
   }
 
   update() {

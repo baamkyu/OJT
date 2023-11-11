@@ -108,7 +108,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     if (cursors.space.isDown && this.body.blocked.down) {
       this.play("jumpstart", true);
-      this.setVelocityY(-1250);
+      this.setVelocityY(-1000);
     }
   }
 }

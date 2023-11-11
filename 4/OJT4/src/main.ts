@@ -6,7 +6,7 @@ import Game from "./scenes/Game";
 new Phaser.Game({
   type: Phaser.WEBGL,
   width: "100%",
-  height: "100%",
+  height: "93%",
   physics: {
     default: "arcade",
     arcade: {
