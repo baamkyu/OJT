@@ -3,6 +3,7 @@ import Minimap from "../components/Minimap";
 import Player from "../components/Player";
 import SceneKeys from "../constants/SceneKeys";
 import { ItemList } from "../components/Item";
+import TimerComponent from "../components/Timer";
 
 export default class GameScene extends Phaser.Scene {
   player!: Player;
@@ -11,6 +12,8 @@ export default class GameScene extends Phaser.Scene {
   background!: Background;
   platformsLayer!: Phaser.Tilemaps.TilemapLayer;
   itemList!: ItemList;
+  timer!: TimerComponent;
+  timerText!: Phaser.GameObjects.Text;
 
   superjumpNum: number = 0;
   shieldNum: number = 0;
@@ -35,6 +38,21 @@ export default class GameScene extends Phaser.Scene {
       key: "map",
       tileWidth: 16,
       tileHeight: 16,
+    });
+
+    // make timer
+    this.timer = new TimerComponent(this);
+    // UI에 표시될 텍스트 생성
+    this.timerText = this.add.text(this.sys.canvas.width / 2, 30, "00:00", {
+      fontSize: "32px",
+      color: "#fff",
+    });
+    this.timerText.setOrigin(0.5);
+
+    // 게임 시작 시 타이머 설정
+    this.timer.startTimer((elapsedTime) => {
+      const formattedTime = this.formatTime(elapsedTime);
+      this.timerText.setText(formattedTime);
     });
 
     // make item
@@ -137,6 +155,15 @@ export default class GameScene extends Phaser.Scene {
     );
   }
 
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+    const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
+
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }
   // 아이템 관리 함수
   collectItem(_: any, item: any) {
     if (item.active) {
