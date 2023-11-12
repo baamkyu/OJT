@@ -1,5 +1,6 @@
 const SceneKeys = {
   Game: "Game",
+  BeforeGame: "BeforeGame",
   Preloader: "Preloader",
 };
 

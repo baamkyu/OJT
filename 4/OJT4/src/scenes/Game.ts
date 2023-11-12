@@ -2,7 +2,7 @@ import { Background } from "../components/Background";
 import Minimap from "../components/Minimap";
 import Player from "../components/Player";
 import SceneKeys from "../constants/SceneKeys";
-import { collectItem } from "../util";
+import { ItemList } from "../components/Item";
 
 export default class GameScene extends Phaser.Scene {
   player!: Player;
@@ -10,7 +10,11 @@ export default class GameScene extends Phaser.Scene {
   minimap!: Minimap;
   background!: Background;
   platformsLayer!: Phaser.Tilemaps.TilemapLayer;
+  itemList!: ItemList;
 
+  superjumpNum: number = 0;
+  shieldNum: number = 0;
+  dashNum: number = 0;
   constructor() {
     super({ key: SceneKeys.Game });
   }
@@ -33,8 +37,42 @@ export default class GameScene extends Phaser.Scene {
       tileHeight: 16,
     });
 
+    // make item
+    this.itemList = new ItemList(this);
+
+    let items = this.physics.add.group();
+    let shield1: Phaser.GameObjects.GameObject = items.create(
+      100,
+      height - 500,
+      "superjump"
+    );
+    let superjump1: Phaser.GameObjects.GameObject = items.create(
+      300,
+      height - 500,
+      "superjump"
+    );
+    let dash1: Phaser.GameObjects.GameObject = items.create(
+      500,
+      height - 500,
+      "dash"
+    );
+
+    items.children.iterate(function (child: any): boolean | null {
+      child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
+      return true;
+    });
+
     // player
-    this.player = new Player(this, 128, 1100, "player", "stand1");
+    this.player = new Player(
+      this,
+      128,
+      1100,
+      "player",
+      "stand1"
+      // this.shieldNum,
+      // this.superjumpNum,
+      // this.dashNum
+    );
     this.player.body?.setSize(50, 130);
 
     // 카메라 설정
@@ -85,33 +123,45 @@ export default class GameScene extends Phaser.Scene {
     this.minimap.camera.ignore(this.background); // 미니맵 배경 제거
     this.cursors = this.input.keyboard!.createCursorKeys(); // 키보드 감지
 
-    // make item
-    let items = this.physics.add.group();
-    let shield: Phaser.GameObjects.GameObject = items.create(
-      100,
-      height - 300,
-      "superjump"
-    );
-    let superjump: Phaser.GameObjects.GameObject = items.create(
-      300,
-      height - 300,
-      "superjump"
-    );
-    let dash: Phaser.GameObjects.GameObject = items.create(
-      500,
-      height - 300,
-      "dash"
-    );
-    this.physics.add.collider(shield, platformGroup);
-    this.physics.add.collider(dash, platformGroup);
-    this.physics.add.collider(superjump, platformGroup);
+    // item 충돌
+    this.physics.add.collider(items, platformGroup);
+    // this.physics.add.collider(dash, platformGroup);
+    // this.physics.add.collider(superjump, platformGroup);
 
-    this.physics.add.overlap(this.player, items, collectItem, undefined, this);
+    this.physics.add.overlap(
+      this.player,
+      items,
+      this.collectItem,
+      undefined,
+      this
+    );
   }
 
+  // 아이템 관리 함수
+  collectItem(_: any, item: any) {
+    if (item.active) {
+      item.setActive(false);
+      item.setVisible(false);
+      if (item.texture.key === "shield") {
+        this.shieldNum += 1;
+      } else if (item.texture.key === "dash") {
+        this.dashNum += 1;
+      } else if (item.texture.key === "superjump") {
+        this.superjumpNum += 1;
+      }
+
+      setTimeout(() => {
+        item.setActive(true);
+        item.setVisible(true);
+      }, 1000);
+    }
+  }
   update() {
     this.player.update(this.cursors);
     this.minimap.update(this.player);
+    this.itemList.update(this.shieldNum, this.superjumpNum, this.dashNum);
+
+    // console.log(this.shieldNum, this.superjumpNum, this.dashNum);
     // console.log(this.player.x);
     // this.background.update();
   }

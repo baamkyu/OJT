@@ -1,6 +1,7 @@
 import "./style.css";
 import Phaser from "phaser";
 import Preloader from "./scenes/Preloader";
+import BeforeGame from "./scenes/BeforeGame";
 import Game from "./scenes/Game";
 
 new Phaser.Game({
@@ -14,5 +15,5 @@ new Phaser.Game({
       gravity: { y: 2500 },
     },
   },
-  scene: [Preloader, Game], // 씬 추가
+  scene: [Preloader, BeforeGame, Game], // 씬 추가
 });

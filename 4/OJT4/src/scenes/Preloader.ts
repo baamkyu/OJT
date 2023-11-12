@@ -27,6 +27,6 @@ export default class Preloader extends Phaser.Scene {
   }
   create() {
     // preload가 모두 끝나면 게임 실행
-    this.game.scene.start(SceneKeys.Game);
+    this.game.scene.start(SceneKeys.BeforeGame);
   }
 }

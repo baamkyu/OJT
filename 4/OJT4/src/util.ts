@@ -10,9 +10,9 @@ export function makeTileLayer(
   return map.createLayer(layerId, tileset!);
 }
 
+let superjump: number = 0;
 let shield: number = 0;
 let dash: number = 0;
-let superjump: number = 0;
 export function collectItem(_: any, item: any) {
   if (item.active) {
     item.setActive(false);
@@ -25,12 +25,11 @@ export function collectItem(_: any, item: any) {
       superjump += 1;
     }
 
-    console.log("shield", shield, "dash", dash, "superjump", superjump);
     setTimeout(() => {
       item.setActive(true);
       item.setVisible(true);
     }, 10000);
   }
 
-  return { shield, dash, superjump };
+  return { superjump, shield, dash };
 }
