@@ -89,7 +89,7 @@ export default class GameScene extends Phaser.Scene {
 
     // platform 불러오기
     ///@ts-ignore
-    const tileset = map.addTilesetImage("tile", "tiles");
+    const tileset = map.addTilesetImage("tile", "tile");
     ///@ts-ignore
     const platformsLayer = map.createLayer("tileset", tileset, 0, 0);
     this.platformsLayer = platformsLayer!;
