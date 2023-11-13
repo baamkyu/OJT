@@ -15,9 +15,9 @@ export default class GameScene extends Phaser.Scene {
   timer!: TimerComponent;
   timerText!: Phaser.GameObjects.Text;
 
-  superjumpNum: number = 0;
-  shieldNum: number = 0;
-  dashNum: number = 0;
+  superjumpNum: number = 1000;
+  shieldNum: number = 100;
+  dashNum: number = 1000;
   constructor() {
     super({ key: SceneKeys.Game });
   }
@@ -42,18 +42,7 @@ export default class GameScene extends Phaser.Scene {
 
     // make timer
     this.timer = new TimerComponent(this);
-    // UI에 표시될 텍스트 생성
-    this.timerText = this.add.text(this.sys.canvas.width / 2, 30, "00:00", {
-      fontSize: "32px",
-      color: "#fff",
-    });
-    this.timerText.setOrigin(0.5);
-
-    // 게임 시작 시 타이머 설정
-    this.timer.startTimer((elapsedTime) => {
-      const formattedTime = this.formatTime(elapsedTime);
-      this.timerText.setText(formattedTime);
-    });
+    this.timer.create();
 
     // make item
     this.itemList = new ItemList(this);
@@ -91,7 +80,7 @@ export default class GameScene extends Phaser.Scene {
       // this.superjumpNum,
       // this.dashNum
     );
-    this.player.body?.setSize(50, 130);
+    this.player.body?.setSize(50, 50);
 
     // 카메라 설정
     this.cameras.main.setBounds(0, 0, 2560, 1440); // 전체 맵 크기를 설정
@@ -106,28 +95,41 @@ export default class GameScene extends Phaser.Scene {
     this.platformsLayer = platformsLayer!;
 
     // make platform
-    const platformGroup = this.physics.add.staticGroup();
+    // const platformGroup = this.physics.add.staticGroup();
 
-    const tileBodies = this.platformsLayer
-      ///@ts-ignore
-      .filterTiles((tile) => tile.properties.colpoint)
-      .map((tile) => {
-        return this.add
-          .rectangle(tile.x * 16, tile.y * 16 + 8, 16, 80)
-          .setOrigin(0);
-      });
+    // const isBlockedAllDirections = this.platformsLayer
+    //   .filterTiles(
+    //     (tile: Phaser.Tilemaps.Tile) => tile.properties.isBlockedAllDirections
+    //   )
+    //   .map((tile: Phaser.Tilemaps.Tile) => {
+    //     return this.add
+    //       .rectangle(tile.x * 16, tile.y * 16, 16, 16)
+    //       .setOrigin(0);
+    //   });
 
-    platformGroup.addMultiple(tileBodies);
-    tileBodies.forEach((el) => {
-      ///@ts-ignore
-      el.body.checkCollision.down = false;
-      ///@ts-ignore
-      el.body.checkCollision.left = false;
-      ///@ts-ignore
-      el.body.checkCollision.right = false;
-    });
+    // isBlockedAllDirections.forEach((el) => {
+    //   console.log(el);
+    // });
+    // const isTopBlocked = this.platformsLayer
+    //   .filterTiles((tile: Phaser.Tilemaps.Tile) => tile.properties.isTopBlocked)
+    //   .map((tile: Phaser.Tilemaps.Tile) => {
+    //     const body: any = this.add
+    //       .rectangle(tile.x * 16, tile.y * 16, 16, 16)
+    //       .setOrigin(0);
 
-    this.physics.add.collider(platformGroup, this.player);
+    //     body.body.checkCollision.down = false;
+    //     body.body.checkCollision.left = false;
+    //     body.body.checkCollision.right = false;
+
+    //     return body;
+    //   });
+
+    // const tileBodies = isBlockedAllDirections.concat(isTopBlocked);
+
+    // console.log(tileBodies);
+
+    // platformGroup.addMultiple(tileBodies);
+    // this.physics.add.collider(platformGroup, this.player);
 
     // make minimap
     this.minimap = new Minimap(
@@ -142,7 +144,7 @@ export default class GameScene extends Phaser.Scene {
     this.cursors = this.input.keyboard!.createCursorKeys(); // 키보드 감지
 
     // item 충돌
-    this.physics.add.collider(items, platformGroup);
+    // this.physics.add.collider(items, platformGroup);
     // this.physics.add.collider(dash, platformGroup);
     // this.physics.add.collider(superjump, platformGroup);
 
@@ -186,7 +188,7 @@ export default class GameScene extends Phaser.Scene {
   update() {
     this.player.update(this.cursors);
     this.minimap.update(this.player);
-    this.itemList.update(this.shieldNum, this.superjumpNum, this.dashNum);
+    this.itemList.update(this.shieldNum, 1000, 1000);
 
     // console.log(this.shieldNum, this.superjumpNum, this.dashNum);
     // console.log(this.player.x);

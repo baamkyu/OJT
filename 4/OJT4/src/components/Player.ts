@@ -102,21 +102,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   // 무적
 
   useItem(gameScene: GameScene) {
+    console.log("d", gameScene.dashNum);
     if (this.keyD.isDown) {
       if (gameScene.dashNum > 0) {
-        this.setVelocityX(-50000);
+        this.setVelocityX(-2000);
         this.setFlipX(true);
-        console.log("a");
+        console.log("dash");
 
         // 1초 후에 속도를 0으로 설정하여 멈춤
-        this.scene.time.delayedCall(1000, () => {
-          gameScene.dashNum -= 1;
-        });
+        // this.scene.time.delayedCall(1000, () => {
+        //   gameScene.dashNum -= 1;
+        // });
       }
     } else if (this.keyS.isDown) {
+      console.log("s", gameScene.superjumpNum);
       if (gameScene.superjumpNum > 0) {
         gameScene.superjumpNum -= 1;
         this.setVelocityY(-2000);
+        console.log("superjump");
       }
     }
   }
@@ -133,7 +136,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       this.setFlipX(false);
       if (this.body.blocked.down) this.play("walk", true);
     } else {
-      this.setVelocityX(0);
+      // this.setVelocityX(0);
       if (this.body.blocked.down) this.play("stand", true);
     }
     if (this.body.blocked.down) {
