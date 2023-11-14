@@ -5,29 +5,23 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   keyA: Phaser.Input.Keyboard.Key;
   keyS: Phaser.Input.Keyboard.Key;
   keyD: Phaser.Input.Keyboard.Key;
-  // superjumpNum: number;
-  // shieldNum: number;
-  // dashNum: number;
+
+  _dashing: boolean = false;
+  _superjumping: boolean = false;
+  _canDash: boolean = true;
+  _canSuperjump: boolean = true;
   constructor(
     scene: Phaser.Scene,
     x: number = 0,
     y: number = 0,
     texture: string,
     frame: string
-    // superjumpNum: number,
-    // shieldNum: number,
-    // dashNum: number
   ) {
     super(scene, x, y, texture, frame);
 
     this.keyA = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A);
     this.keyS = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.S);
     this.keyD = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-
-    // 추가된 부분: superjump, shield, dash 초기화
-    // this.superjumpNum = superjumpNum;
-    // this.shieldNum = shieldNum;
-    // this.dashNum = dashNum;
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -87,7 +81,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     scene.tweens.add({
       targets: this,
-      x: 128,
+      x: this.x,
       duration: 1000,
       delay: 500,
       onStart: () => {
@@ -97,29 +91,28 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setDepth(100); // z-index
   }
 
-  // 사다리
-  // 한대 맞았을 때 (총알, 송곳)
-  // 무적
-
   useItem(gameScene: GameScene) {
     console.log("d", gameScene.dashNum);
     if (this.keyD.isDown) {
-      if (gameScene.dashNum > 0) {
-        this.setVelocityX(-2000);
-        this.setFlipX(true);
+      if (gameScene.dashNum > 0 && this._canDash) {
+        this._dashing = true;
+        this._canDash = false;
+        gameScene.dashNum -= 1;
         console.log("dash");
-
-        // 1초 후에 속도를 0으로 설정하여 멈춤
-        // this.scene.time.delayedCall(1000, () => {
-        //   gameScene.dashNum -= 1;
-        // });
+        setTimeout(() => {
+          this._canDash = true;
+        }, 3000);
       }
     } else if (this.keyS.isDown) {
       console.log("s", gameScene.superjumpNum);
-      if (gameScene.superjumpNum > 0) {
+      if (gameScene.superjumpNum > 0 && this._canSuperjump) {
+        this._superjumping = true;
+        this._canSuperjump = false;
         gameScene.superjumpNum -= 1;
         this.setVelocityY(-2000);
-        console.log("superjump");
+        setTimeout(() => {
+          this._canSuperjump = true;
+        }, 3000);
       }
     }
   }
@@ -128,24 +121,39 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.useItem(this.scene.scene.get(SceneKeys.Game));
 
     if (cursors.left.isDown) {
-      this.setVelocityX(-500);
+      this.setVelocityX(-300);
       this.setFlipX(true);
       if (this.body.blocked.down) this.play("walk", true);
+      if (this._dashing) {
+        this.setVelocityX(-500);
+        setTimeout(() => {
+          this._dashing = false;
+          console.log("dash false");
+        }, 1500);
+      }
     } else if (cursors.right.isDown) {
-      this.setVelocityX(500);
+      this.setVelocityX(300);
       this.setFlipX(false);
       if (this.body.blocked.down) this.play("walk", true);
+      if (this._dashing) {
+        this.setVelocityX(500);
+        setTimeout(() => {
+          this._dashing = false;
+          console.log("dash false");
+        }, 1500);
+      }
     } else {
       this.setVelocityX(0);
+      this._dashing = false;
       if (this.body.blocked.down) this.play("stand", true);
     }
     if (this.body.blocked.down) {
-      this._doubleJump = false;
+      this._superjumping = false;
     }
 
     if (this.body.blocked.down && cursors.space.isDown) {
       this.play("jumpstart", true);
-      this.setVelocityY(-1000);
+      this.setVelocityY(-700);
     }
   }
 }

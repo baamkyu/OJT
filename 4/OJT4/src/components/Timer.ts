@@ -14,7 +14,7 @@ export default class TimerComponent {
   create() {
     //make a text field
 
-    this.timeText = this.scene.add.text(100, 600, "00:00", {
+    this.timeText = this.scene.add.text(100, 100, "00:00", {
       fontSize: "32px",
       color: "#000000",
     });
@@ -47,5 +47,11 @@ export default class TimerComponent {
     return num;
   }
 
+  update() {
+    this.timeText.x =
+      this.scene.cameras.main.scrollX + this.scene.cameras.main.width / 2;
+
+    this.timeText.y = this.scene.cameras.main.scrollY + 50;
+  }
   // 다른 타이머 관련 메서드를 추가할 수 있습니다.
 }

@@ -15,9 +15,9 @@ export default class GameScene extends Phaser.Scene {
   timer!: TimerComponent;
   timerText!: Phaser.GameObjects.Text;
 
-  superjumpNum: number = 1000;
-  shieldNum: number = 100;
-  dashNum: number = 1000;
+  superjumpNum: number = 0;
+  shieldNum: number = 0;
+  dashNum: number = 0;
   constructor() {
     super({ key: SceneKeys.Game });
   }
@@ -44,9 +44,10 @@ export default class GameScene extends Phaser.Scene {
     this.timer = new TimerComponent(this);
     this.timer.create();
 
-    // make item
+    // make item list
     this.itemList = new ItemList(this);
 
+    // make item
     let items = this.physics.add.group();
     let shield1: Phaser.GameObjects.GameObject = items.create(
       100,
@@ -72,15 +73,16 @@ export default class GameScene extends Phaser.Scene {
     // player
     this.player = new Player(
       this,
-      128,
-      1100,
+      200,
+      height - 500,
       "player",
       "stand1"
       // this.shieldNum,
       // this.superjumpNum,
       // this.dashNum
     );
-    this.player.body?.setSize(50, 50);
+    this.player.setScale(0.5);
+    this.player.body?.setSize(50, 130);
 
     // 카메라 설정
     this.cameras.main.setBounds(0, 0, 2560, 1440); // 전체 맵 크기를 설정
@@ -89,47 +91,52 @@ export default class GameScene extends Phaser.Scene {
 
     // platform 불러오기
     ///@ts-ignore
-    const tileset = map.addTilesetImage("tile", "tile");
+    const tileset = map.addTilesetImage("tile", "tiles");
     ///@ts-ignore
     const platformsLayer = map.createLayer("tileset", tileset, 0, 0);
     this.platformsLayer = platformsLayer!;
 
     // make platform
-    // const platformGroup = this.physics.add.staticGroup();
+    const platformGroup = this.physics.add.staticGroup();
+    const tileBodies = this.platformsLayer
+      ///@ts-ignore
+      .filterTiles((tile) => tile.properties.block)
+      .map((tile) => {
+        return this.add
+          .rectangle(tile.x * 16, tile.y * 16, 16, 16)
+          .setOrigin(0);
+      });
 
-    // const isBlockedAllDirections = this.platformsLayer
-    //   .filterTiles(
-    //     (tile: Phaser.Tilemaps.Tile) => tile.properties.isBlockedAllDirections
-    //   )
-    //   .map((tile: Phaser.Tilemaps.Tile) => {
-    //     return this.add
-    //       .rectangle(tile.x * 16, tile.y * 16, 16, 16)
-    //       .setOrigin(0);
-    //   });
+    const wallBodies = this.platformsLayer
+      ///@ts-ignore
+      .filterTiles((tile) => tile.properties.wall)
+      .map((tile) => {
+        return this.add
+          .rectangle(tile.x * 16, tile.y * 16, 16, 16)
+          .setOrigin(0);
+      });
 
-    // isBlockedAllDirections.forEach((el) => {
-    //   console.log(el);
-    // });
-    // const isTopBlocked = this.platformsLayer
-    //   .filterTiles((tile: Phaser.Tilemaps.Tile) => tile.properties.isTopBlocked)
-    //   .map((tile: Phaser.Tilemaps.Tile) => {
-    //     const body: any = this.add
-    //       .rectangle(tile.x * 16, tile.y * 16, 16, 16)
-    //       .setOrigin(0);
+    platformGroup.addMultiple(tileBodies);
+    platformGroup.addMultiple(wallBodies);
+    tileBodies.forEach((el) => {
+      ///@ts-ignore
+      el.body.checkCollision.down = false;
+      ///@ts-ignore
+      el.body.checkCollision.left = false;
+      ///@ts-ignore
+      el.body.checkCollision.right = false;
+    });
 
-    //     body.body.checkCollision.down = false;
-    //     body.body.checkCollision.left = false;
-    //     body.body.checkCollision.right = false;
+    wallBodies.forEach((el) => {
+      ///@ts-ignore
+      el.body.checkCollision.down = true;
+      ///@ts-ignore
+      el.body.checkCollision.left = true;
+      ///@ts-ignore
+      el.body.checkCollision.right = true;
+    });
 
-    //     return body;
-    //   });
-
-    // const tileBodies = isBlockedAllDirections.concat(isTopBlocked);
-
-    // console.log(tileBodies);
-
-    // platformGroup.addMultiple(tileBodies);
-    // this.physics.add.collider(platformGroup, this.player);
+    this.physics.add.collider(platformGroup, this.player);
 
     // make minimap
     this.minimap = new Minimap(
@@ -144,9 +151,7 @@ export default class GameScene extends Phaser.Scene {
     this.cursors = this.input.keyboard!.createCursorKeys(); // 키보드 감지
 
     // item 충돌
-    // this.physics.add.collider(items, platformGroup);
-    // this.physics.add.collider(dash, platformGroup);
-    // this.physics.add.collider(superjump, platformGroup);
+    this.physics.add.collider(items, platformGroup);
 
     this.physics.add.overlap(
       this.player,
@@ -188,10 +193,7 @@ export default class GameScene extends Phaser.Scene {
   update() {
     this.player.update(this.cursors);
     this.minimap.update(this.player);
-    this.itemList.update(this.shieldNum, 1000, 1000);
-
-    // console.log(this.shieldNum, this.superjumpNum, this.dashNum);
-    // console.log(this.player.x);
-    // this.background.update();
+    this.itemList.update(this.shieldNum, this.superjumpNum, this.dashNum);
+    this.timer.update();
   }
 }
