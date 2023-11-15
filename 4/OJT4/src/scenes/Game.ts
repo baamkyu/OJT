@@ -4,6 +4,7 @@ import Player from "../components/Player";
 import SceneKeys from "../constants/SceneKeys";
 import { ItemList } from "../components/Item";
 import TimerComponent from "../components/Timer";
+import { Portal, FinishPortal } from "../components/MapElement";
 
 export default class GameScene extends Phaser.Scene {
   player!: Player;
@@ -14,6 +15,10 @@ export default class GameScene extends Phaser.Scene {
   itemList!: ItemList;
   timer!: TimerComponent;
   timerText!: Phaser.GameObjects.Text;
+  blackholeSpot!: Portal;
+  startSpot!: Portal;
+  finishPortal!: FinishPortal;
+  // gameNPC!: GameNPC;
 
   superjumpNum: number = 0;
   shieldNum: number = 0;
@@ -40,30 +45,29 @@ export default class GameScene extends Phaser.Scene {
       tileHeight: 16,
     });
 
-    // make timer
-    this.timer = new TimerComponent(this);
-    this.timer.create();
-
     // make item list
     this.itemList = new ItemList(this);
 
     // make item
     let items = this.physics.add.group();
-    let shield1: Phaser.GameObjects.GameObject = items.create(
-      100,
-      height - 500,
-      "superjump"
-    );
     let superjump1: Phaser.GameObjects.GameObject = items.create(
-      300,
-      height - 500,
+      2500,
+      1200,
       "superjump"
     );
-    let dash1: Phaser.GameObjects.GameObject = items.create(
-      500,
-      height - 500,
-      "dash"
+
+    let superjump2: Phaser.GameObjects.GameObject = items.create(
+      1250,
+      730,
+      "superjump"
     );
+    let superjump3: Phaser.GameObjects.GameObject = items.create(
+      210,
+      910,
+      "superjump"
+    );
+    let dash1: Phaser.GameObjects.GameObject = items.create(1655, 520, "dash");
+    let dash2: Phaser.GameObjects.GameObject = items.create(580, 1180, "dash");
 
     items.children.iterate(function (child: any): boolean | null {
       child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
@@ -71,18 +75,29 @@ export default class GameScene extends Phaser.Scene {
     });
 
     // player
-    this.player = new Player(
-      this,
-      200,
-      height - 500,
-      "player",
-      "stand1"
-      // this.shieldNum,
-      // this.superjumpNum,
-      // this.dashNum
-    );
+    this.player = new Player(this, 2200, 1200, "player", "stand1");
     this.player.setScale(0.5);
     this.player.body?.setSize(50, 130);
+
+    // portal
+    this.blackholeSpot = new Portal(this, 2500, 1300, "blackhole");
+
+    this.physics.add.overlap(this.player, this.blackholeSpot, () =>
+      this.resetPlayerPosition(2200, 1200, true)
+    );
+
+    this.startSpot = new Portal(this, 220, 1100, "startspot");
+    // this.startSpot.body?.setSize(64, 64);
+    // this.startSpot.setOrigin(0.5, 0.5);
+    this.physics.add.overlap(this.player, this.startSpot, () =>
+      this.resetPlayerPosition(350, 1150, false)
+    );
+
+    // finish portal
+    this.finishPortal = new FinishPortal(this, 50, 150, "finishPortal");
+    this.physics.add.overlap(this.player, this.finishPortal, () =>
+      this.resetPlayerPosition(200, 150, false)
+    );
 
     // 카메라 설정
     this.cameras.main.setBounds(0, 0, 2560, 1440); // 전체 맵 크기를 설정
@@ -118,6 +133,7 @@ export default class GameScene extends Phaser.Scene {
 
     platformGroup.addMultiple(tileBodies);
     platformGroup.addMultiple(wallBodies);
+
     tileBodies.forEach((el) => {
       ///@ts-ignore
       el.body.checkCollision.down = false;
@@ -137,6 +153,10 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.physics.add.collider(platformGroup, this.player);
+    this.physics.add.collider(platformGroup, this.blackholeSpot);
+    this.physics.add.collider(platformGroup, this.startSpot);
+    // this.physics.add.collider(platformGroup, this.gameNPC);
+    this.physics.add.collider(platformGroup, this.finishPortal);
 
     // make minimap
     this.minimap = new Minimap(
@@ -160,8 +180,26 @@ export default class GameScene extends Phaser.Scene {
       undefined,
       this
     );
-  }
 
+    // make timer
+    this.timer = new TimerComponent(this);
+    this.timer.create();
+  }
+  resetPlayerPosition = (x: number, y: number, shake: boolean) => {
+    this.player.setX(x);
+    this.player.setY(y);
+
+    if (shake) {
+      let shakeConfig: any = {
+        duration: 500, // 흔들림 지속 시간 (밀리초)
+        intensity: 0.5, // 흔들림 강도
+        stagger: 10, // 각 흔들림 간격 (밀리초)
+        force: true, // true로 설정하면 현재 흔들림 애니메이션을 중지하고 바로 새로운 애니메이션을 시작함
+      };
+
+      this.cameras.main.shake(200, 0.05);
+    }
+  };
   formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.floor(seconds % 60);

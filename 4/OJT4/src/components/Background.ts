@@ -18,6 +18,6 @@ export class Background extends Phaser.GameObjects.Group {
     this.add(this.bg1);
   }
   update() {
-    // this.bg1.tilePositionX = this.scene.cameras.main.worldView.x * 0.2;
+    this.bg1.tilePositionX = this.scene.cameras.main.worldView.x * 0.2;
   }
 }

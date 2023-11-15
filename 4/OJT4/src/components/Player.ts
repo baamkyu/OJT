@@ -92,24 +92,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   useItem(gameScene: GameScene) {
-    console.log("d", gameScene.dashNum);
     if (this.keyD.isDown) {
       if (gameScene.dashNum > 0 && this._canDash) {
         this._dashing = true;
         this._canDash = false;
         gameScene.dashNum -= 1;
-        console.log("dash");
         setTimeout(() => {
           this._canDash = true;
         }, 3000);
       }
     } else if (this.keyS.isDown) {
-      console.log("s", gameScene.superjumpNum);
       if (gameScene.superjumpNum > 0 && this._canSuperjump) {
         this._superjumping = true;
         this._canSuperjump = false;
         gameScene.superjumpNum -= 1;
-        this.setVelocityY(-2000);
+        this.setVelocityY(-1850);
         setTimeout(() => {
           this._canSuperjump = true;
         }, 3000);
@@ -128,7 +125,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityX(-500);
         setTimeout(() => {
           this._dashing = false;
-          console.log("dash false");
         }, 1500);
       }
     } else if (cursors.right.isDown) {

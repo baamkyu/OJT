@@ -12,21 +12,18 @@ export default class TimerComponent {
   }
 
   create() {
-    //make a text field
-
     this.timeText = this.scene.add.text(100, 100, "00:00", {
       fontSize: "32px",
       color: "#000000",
     });
 
-    // 타이머 이벤트를 설정
+    // 타이머 이벤트
     this.timer = this.scene.time.addEvent({
-      delay: 1000, // 1초마다 호출
+      delay: 1000,
       callback: this.updateTimer,
       callbackScope: this,
       loop: true,
     });
-    console.log("timer create");
   }
 
   updateTimer() {
@@ -50,8 +47,6 @@ export default class TimerComponent {
   update() {
     this.timeText.x =
       this.scene.cameras.main.scrollX + this.scene.cameras.main.width / 2;
-
     this.timeText.y = this.scene.cameras.main.scrollY + 50;
   }
-  // 다른 타이머 관련 메서드를 추가할 수 있습니다.
 }

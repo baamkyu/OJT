@@ -11,9 +11,9 @@ export default class Minimap {
     this.camera = scene.cameras
       .add(x, y, width / 10, height / 10)
       .setZoom(0.1)
-      .setBackgroundColor(0x8171e0f9)
+      .setBackgroundColor(0x81000000)
       .setBounds(0, 0, map.widthInPixels, map.heightInPixels)
-      .setAlpha(0.9)
+      .setAlpha(0.75)
       .setName("minimap");
   }
 
