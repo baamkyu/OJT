@@ -135,7 +135,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityX(500);
         setTimeout(() => {
           this._dashing = false;
-          console.log("dash false");
         }, 2000);
       }
     } else {

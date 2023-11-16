@@ -44,6 +44,14 @@ export default class TimerComponent {
     return num;
   }
 
+  getCurrentTime() {
+    return this.timeText.text;
+  }
+
+  stopTimer() {
+    this.timer.paused = true;
+  }
+
   update() {
     this.timeText.x =
       this.scene.cameras.main.scrollX + this.scene.cameras.main.width / 2 - 50;

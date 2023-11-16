@@ -113,13 +113,20 @@ export default class BeforeGame extends Phaser.Scene {
     modal.style.transform = "translate(-50%, -50%)";
     modal.style.padding = "20px";
     modal.style.backgroundColor = "#fff";
-    modal.style.border = "1px solid #000";
+    modal.style.borderRadius = "20px";
+    modal.style.boxShadow = "0px 0px 10px 0px rgba(0, 0, 0, 0.5)";
 
     // 모달 내용을 추가합니다.
     modal.innerHTML = `
-        <p style="font-size: 16px;">레이스를 시작하시겠습니까?</p>
-        <button id="xButton" style="background-color: #ff0000; color: #fff; padding: 10px 20px; margin-right: 10px; border: none; cursor: pointer; font-size: 14px;">빨간색 X</button>
-        <button id="oButton" style="background-color: #00ff00; color: #fff; padding: 10px 20px; border: none; cursor: pointer; font-size: 14px;">초록색 O</button>
+      <p style="font-size: 24px; color: black; text-align: center;">레이스를 시작할까요?</p>
+      <div style="text-align: center;">
+        <button id="xButton" style="background-color: #A9D2EE; color: #fff; padding: 10px 20px; width: 96px; border: none; cursor: pointer; font-size: 20px; margin: 0 10px;">
+          <div style="height: 100%; display: flex; align-items: center; justify-content: center;">아니오</div>
+        </button>
+        <button id="oButton" style="background-color: #1E9CD7; color: #fff; padding: 10px 20px; width: 56px; border: none; cursor: pointer; font-size: 20px; margin: 0 10px;">
+            <div style="height: 100%; display: flex; align-items: center; justify-content: center;">네</div>
+        </button>
+      </div>
     `;
 
     // 모달을 body에 추가합니다.
@@ -143,6 +150,7 @@ export default class BeforeGame extends Phaser.Scene {
       this.closeModal();
     } else if (option === "O") {
       this.closeModal();
+      this.scene.stop();
       this.game.scene.start("Game");
     }
   }
@@ -154,6 +162,7 @@ export default class BeforeGame extends Phaser.Scene {
     }
   }
   update() {
+    // console.log("beforegame update");
     this.player.update(this.cursors);
   }
 }

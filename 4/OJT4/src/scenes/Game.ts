@@ -31,6 +31,9 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     // make map, background
+    const width: number = this.game.canvas.width;
+    const height: number = this.game.canvas.height;
+
     this.background = new Background(this);
 
     const map = this.make.tilemap({
@@ -55,11 +58,11 @@ export default class GameScene extends Phaser.Scene {
       730,
       "superjump"
     );
-    let superjump3: Phaser.GameObjects.GameObject = items.create(
-      210,
-      910,
-      "superjump"
-    );
+    // let superjump3: Phaser.GameObjects.GameObject = items.create(
+    //   210,
+    //   910,
+    //   "superjump"
+    // );
     let dash1: Phaser.GameObjects.GameObject = items.create(1655, 520, "dash");
     let dash2: Phaser.GameObjects.GameObject = items.create(580, 1180, "dash");
 
@@ -69,7 +72,7 @@ export default class GameScene extends Phaser.Scene {
     });
 
     // player
-    this.player = new Player(this, 2200, 1200, "player", "stand1");
+    this.player = new Player(this, 100, 1100, "player", "stand1");
     this.player.setScale(0.5);
     this.player.body?.setSize(50, 130);
 
@@ -95,7 +98,11 @@ export default class GameScene extends Phaser.Scene {
     );
 
     this.physics.add.overlap(this.player, this.finishPortal, () =>
-      this.resetPlayerPosition(200, 150, false)
+      // this.resetPlayerPosition(200, 150, false)
+      {
+        this.timer.stopTimer();
+        this.game.scene.start("Ending");
+      }
     );
 
     // 카메라 설정
@@ -199,15 +206,7 @@ export default class GameScene extends Phaser.Scene {
       this.cameras.main.shake(200, 0.05);
     }
   };
-  formatTime(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
 
-    const formattedMinutes = minutes.toString().padStart(2, "0");
-    const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
-
-    return `${formattedMinutes}:${formattedSeconds}`;
-  }
   // 아이템 관리 함수
   collectItem(_: any, item: any) {
     if (item.active) {
@@ -224,10 +223,12 @@ export default class GameScene extends Phaser.Scene {
       setTimeout(() => {
         item.setActive(true);
         item.setVisible(true);
-      }, 1000);
+      }, 5000);
     }
   }
+
   update() {
+    // console.log("game update");
     this.player.update(this.cursors);
     this.minimap.update(this.player);
     this.itemList.update(this.shieldNum, this.superjumpNum, this.dashNum);

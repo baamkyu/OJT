@@ -85,7 +85,7 @@ export class NPCChat extends Phaser.Physics.Arcade.Sprite {
         { key: "npcChat", frame: "chat2.png" },
         { key: "npcChat", frame: "chat3.png" },
       ],
-      frameRate: 1,
+      frameRate: 0.3,
       repeat: -1,
     });
 

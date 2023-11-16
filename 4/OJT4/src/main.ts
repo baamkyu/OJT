@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import Preloader from "./scenes/Preloader";
 import BeforeGame from "./scenes/BeforeGame";
 import Game from "./scenes/Game";
+import Ending from "./scenes/Ending";
 
 new Phaser.Game({
   type: Phaser.WEBGL,
@@ -15,9 +16,9 @@ new Phaser.Game({
   physics: {
     default: "arcade",
     arcade: {
-      debug: import.meta.env.DEV,
+      // debug: import.meta.env.DEV,
       gravity: { y: 2500 },
     },
   },
-  scene: [Preloader, BeforeGame, Game], // 씬 추가
+  scene: [Preloader, BeforeGame, Game, Ending], // 씬 추가
 });
