@@ -118,17 +118,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.useItem(this.scene.scene.get(SceneKeys.Game));
 
     if (cursors.left.isDown) {
-      this.setVelocityX(-300);
+      this.setVelocityX(-200);
       this.setFlipX(true);
       if (this.body.blocked.down) this.play("walk", true);
       if (this._dashing) {
         this.setVelocityX(-500);
         setTimeout(() => {
           this._dashing = false;
-        }, 1500);
+        }, 2000);
       }
     } else if (cursors.right.isDown) {
-      this.setVelocityX(300);
+      this.setVelocityX(200);
       this.setFlipX(false);
       if (this.body.blocked.down) this.play("walk", true);
       if (this._dashing) {
@@ -136,7 +136,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         setTimeout(() => {
           this._dashing = false;
           console.log("dash false");
-        }, 1500);
+        }, 2000);
       }
     } else {
       this.setVelocityX(0);

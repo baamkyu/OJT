@@ -27,20 +27,14 @@ export default class GameScene extends Phaser.Scene {
     super({ key: SceneKeys.Game });
   }
 
-  preload() {
-    this.load.image("tiles", "assets/map/tile.png");
-    this.load.tilemapTiledJSON("map", "assets/map/tileset.json");
-  }
+  preload() {}
 
   create() {
-    const width: number = this.game.canvas.width;
-    const height: number = this.game.canvas.height;
-
     // make map, background
     this.background = new Background(this);
 
     const map = this.make.tilemap({
-      key: "map",
+      key: "gameMap",
       tileWidth: 16,
       tileHeight: 16,
     });
@@ -80,21 +74,26 @@ export default class GameScene extends Phaser.Scene {
     this.player.body?.setSize(50, 130);
 
     // portal
-    this.blackholeSpot = new Portal(this, 2500, 1300, "blackhole");
-
+    this.blackholeSpot = new Portal(this, 2520, 1380, "blackhole");
+    (this.blackholeSpot.body as Phaser.Physics.Arcade.Body).setAllowGravity(
+      false
+    );
     this.physics.add.overlap(this.player, this.blackholeSpot, () =>
       this.resetPlayerPosition(2200, 1200, true)
     );
 
-    this.startSpot = new Portal(this, 220, 1100, "startspot");
-    // this.startSpot.body?.setSize(64, 64);
-    // this.startSpot.setOrigin(0.5, 0.5);
+    this.startSpot = new Portal(this, 240, 1180, "startspot");
+    (this.startSpot.body as Phaser.Physics.Arcade.Body).setAllowGravity(false);
     this.physics.add.overlap(this.player, this.startSpot, () =>
       this.resetPlayerPosition(350, 1150, false)
     );
 
     // finish portal
-    this.finishPortal = new FinishPortal(this, 50, 150, "finishPortal");
+    this.finishPortal = new FinishPortal(this, 50, 350, "finishPortal");
+    (this.finishPortal.body as Phaser.Physics.Arcade.Body).setAllowGravity(
+      false
+    );
+
     this.physics.add.overlap(this.player, this.finishPortal, () =>
       this.resetPlayerPosition(200, 150, false)
     );

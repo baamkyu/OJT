@@ -1,0 +1,87 @@
+{
+  "frames": {
+    "chat1.png": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 175,
+        "h": 73
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 175,
+        "h": 73
+      },
+      "sourceSize": {
+        "w": 175,
+        "h": 73
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "chat2.png": {
+      "frame": {
+        "x": 175,
+        "y": 0,
+        "w": 175,
+        "h": 73
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 175,
+        "h": 73
+      },
+      "sourceSize": {
+        "w": 175,
+        "h": 73
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "chat3.png": {
+      "frame": {
+        "x": 350,
+        "y": 0,
+        "w": 175,
+        "h": 73
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 175,
+        "h": 73
+      },
+      "sourceSize": {
+        "w": 175,
+        "h": 73
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "npcChat.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 525,
+      "h": 73
+    },
+    "scale": 1
+  }
+}

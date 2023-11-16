@@ -34,42 +34,73 @@ export class Portal extends Phaser.Physics.Arcade.Sprite {
   }
 }
 
-// export class GameNPC extends Phaser.Physics.Arcade.Sprite {
-//   constructor(scene: Phaser.Scene, x: number, y: number, frame: string) {
-//     super(scene, x, y, frame);
+export class GameNPC extends Phaser.Physics.Arcade.Sprite {
+  constructor(scene: Phaser.Scene, x: number, y: number, frame: string) {
+    super(scene, x, y, frame);
 
-//     scene.add.existing(this);
-//     scene.physics.add.existing(this);
+    scene.add.existing(this);
+    scene.physics.add.existing(this);
 
-//     // 종료 NPC
-//     this.anims.create({
-//       key: "gameNPC",
-//       frames: [
-//         { key: "gameNPC", frame: "bear1.png" },
-//         { key: "gameNPC", frame: "bear2.png" },
-//         { key: "gameNPC", frame: "bear3.png" },
-//         { key: "gameNPC", frame: "bear4.png" },
-//       ],
-//       frameRate: 1,
-//       repeat: -1,
-//     });
+    // 게임 전 NPC
+    this.anims.create({
+      key: "gameNPC",
+      frames: [
+        { key: "gameNPC", frame: "bear1.png" },
+        { key: "gameNPC", frame: "bear2.png" },
+        { key: "gameNPC", frame: "bear3.png" },
+        { key: "gameNPC", frame: "bear4.png" },
+      ],
+      frameRate: 1,
+      repeat: -1,
+    });
 
-//     // body의 오프셋을 중앙으로 설정
-//     this.setOffset(this.width / 2 + 10, this.height / 2 + 30);
-//     this.setDepth(99);
+    // body의 오프셋을 중앙으로 설정
+    this.setOffset(this.width / 2 + 10, this.height / 2 + 30);
+    this.setDepth(99);
 
-//     scene.tweens.add({
-//       targets: this,
-//       x: x,
-//       y: y,
-//       duration: 1000,
-//       delay: 500,
-//       onstart: () => {
-//         this.play("gameNPC");
-//       },
-//     });
-//   }
-// }
+    scene.tweens.add({
+      targets: this,
+      x: x,
+      y: y,
+      duration: 1000,
+      delay: 500,
+      onstart: () => {
+        this.play("gameNPC");
+      },
+    });
+  }
+}
+
+export class NPCChat extends Phaser.Physics.Arcade.Sprite {
+  constructor(scene: Phaser.Scene, x: number, y: number, frame: string) {
+    super(scene, x, y, frame);
+
+    scene.add.existing(this);
+    scene.physics.add.existing(this);
+
+    this.anims.create({
+      key: "npcChat",
+      frames: [
+        { key: "npcChat", frame: "chat1.png" },
+        { key: "npcChat", frame: "chat2.png" },
+        { key: "npcChat", frame: "chat3.png" },
+      ],
+      frameRate: 1,
+      repeat: -1,
+    });
+
+    scene.tweens.add({
+      targets: this,
+      x: x,
+      y: y,
+      duration: 1000,
+      delay: 500,
+      onstart: () => {
+        this.play("npcChat");
+      },
+    });
+  }
+}
 
 export class FinishPortal extends Phaser.Physics.Arcade.Sprite {
   constructor(scene: Phaser.Scene, x: number, y: number, frame: string) {

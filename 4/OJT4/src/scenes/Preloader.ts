@@ -20,22 +20,29 @@ export default class Preloader extends Phaser.Scene {
     // 포탈
     this.load.atlas(
       "portal",
-      "assets/map/portal.png",
-      "assets/map/portal.json"
+      "assets/map/sprite/portal.png",
+      "assets/map/sprite/portal.json"
     );
 
-    // 게임중 NPC
+    // 게임전 NPC
     this.load.atlas(
       "gameNPC",
-      "assets/map/gameNPC.png",
-      "assets/map/gameNPC.json"
+      "assets/map/sprite/gameNPC.png",
+      "assets/map/sprite/gameNPC.json"
+    );
+
+    // NPC 채팅
+    this.load.atlas(
+      "npcChat",
+      "assets/map/sprite/npcChat.png",
+      "assets/map/sprite/npcChat.json"
     );
 
     // 종료 포탈
     this.load.atlas(
       "finishPortal",
-      "assets/map/finishPortal.png",
-      "assets/map/finishPortal.json"
+      "assets/map/sprite/finishPortal.png",
+      "assets/map/sprite/finishPortal.json"
     );
 
     // 아이템
@@ -45,6 +52,8 @@ export default class Preloader extends Phaser.Scene {
 
     // tile
     this.load.image("tiles", "assets/map/tile.png");
+    this.load.tilemapTiledJSON("entranceMap", "assets/map/entrancemap.json"); // 입장맵
+    this.load.tilemapTiledJSON("gameMap", "assets/map/tileset.json"); // 게임맵
   }
   create() {
     // preload가 모두 끝나면 게임 실행

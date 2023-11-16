@@ -46,7 +46,7 @@ export default class TimerComponent {
 
   update() {
     this.timeText.x =
-      this.scene.cameras.main.scrollX + this.scene.cameras.main.width / 2;
+      this.scene.cameras.main.scrollX + this.scene.cameras.main.width / 2 - 50;
     this.timeText.y = this.scene.cameras.main.scrollY + 50;
   }
 }
