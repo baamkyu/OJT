@@ -81,9 +81,11 @@ export default class GameScene extends Phaser.Scene {
     (this.blackholeSpot.body as Phaser.Physics.Arcade.Body).setAllowGravity(
       false
     );
-    this.physics.add.overlap(this.player, this.blackholeSpot, () =>
-      this.resetPlayerPosition(2200, 1200, true)
-    );
+    this.physics.add.overlap(this.player, this.blackholeSpot, () => {
+      this.resetPlayerPosition(2200, 1200, true);
+      const blackholeAudio = this.sound.add("blackhole");
+      blackholeAudio.play();
+    });
 
     this.startSpot = new Portal(this, 240, 1180, "startspot");
     (this.startSpot.body as Phaser.Physics.Arcade.Body).setAllowGravity(false);
@@ -102,6 +104,8 @@ export default class GameScene extends Phaser.Scene {
       {
         this.timer.stopTimer();
         this.game.scene.start("Ending");
+
+        audio.stop();
       }
     );
 
@@ -190,6 +194,11 @@ export default class GameScene extends Phaser.Scene {
     // make timer
     this.timer = new TimerComponent(this);
     this.timer.create();
+
+    // bgm
+    const audio = this.sound.add("bgm");
+    audio.play();
+    audio.setLoop(true);
   }
   resetPlayerPosition = (x: number, y: number, shake: boolean) => {
     this.player.setX(x);
@@ -213,10 +222,21 @@ export default class GameScene extends Phaser.Scene {
       item.setActive(false);
       item.setVisible(false);
       if (item.texture.key === "shield") {
+        //@ts-ignore
+        const getItem = this.sound.add("getItem");
+        getItem.play();
         this.shieldNum += 1;
       } else if (item.texture.key === "dash") {
+        //@ts-ignore
+        const getItem = this.sound.add("getItem");
+
+        getItem.play();
+
         this.dashNum += 1;
       } else if (item.texture.key === "superjump") {
+        //@ts-ignore
+        const getItem = this.sound.add("getItem");
+        getItem.play();
         this.superjumpNum += 1;
       }
 

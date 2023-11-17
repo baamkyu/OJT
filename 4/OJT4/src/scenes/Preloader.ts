@@ -54,7 +54,13 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("tiles", "assets/map/tile.png");
     this.load.tilemapTiledJSON("entranceMap", "assets/map/entrancemap.json"); // 입장맵
     this.load.tilemapTiledJSON("gameMap", "assets/map/tileset.json"); // 게임맵
+
+    // audio
+    this.load.audio("bgm", "assets/sounds/adventure.mp3");
+    this.load.audio("getItem", "assets/sounds/collect.mp3");
+    this.load.audio("blackhole", "assets/sounds/error.mp3");
   }
+
   create() {
     // preload가 모두 끝나면 게임 실행
     this.game.scene.start(SceneKeys.BeforeGame);
