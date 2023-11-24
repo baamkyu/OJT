@@ -1,7 +1,7 @@
 const StrokeDash = ({ onSelectDash }) => {
   const strokeDashList = [
-    [1, 1],
-    [5, 5],
+    [3, 3],
+    [6, 6],
     [10, 10],
     [15, 15],
     [7, 5, 3, 5],
