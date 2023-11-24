@@ -8,8 +8,10 @@ import FormatColorTextIcon from "@mui/icons-material/FormatColorText";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import LineWeightIcon from "@mui/icons-material/LineWeight";
 import LineStyleIcon from "@mui/icons-material/LineStyle";
+import HeightIcon from "@mui/icons-material/Height";
+import SettingsEthernetIcon from "@mui/icons-material/SettingsEthernet";
 
-import { textBold, textItalic, textUnderline } from "../util/textbox";
+import { textBold, textItalic, textUnderline } from "../../util/textbox";
 
 type PropertyButtonProps = {
   canvas: fabric.Canvas | null;
@@ -23,6 +25,10 @@ type PropertyButtonProps = {
   setFillPaletteOpen: React.Dispatch<React.SetStateAction<boolean>>;
   strokePaletteOpen: boolean;
   setStrokePaletteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  strokeWidthOpen: boolean;
+  setStrokeWidthOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  strokeDashOpen: boolean;
+  setStrokeDashOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const PropertyTool = ({
@@ -32,14 +38,32 @@ const PropertyTool = ({
   setFillPaletteOpen,
   strokePaletteOpen,
   setStrokePaletteOpen,
+  strokeWidthOpen,
+  setStrokeWidthOpen,
+  strokeDashOpen,
+  setStrokeDashOpen,
 }: PropertyButtonProps) => {
-  const paletteOpenState = (type: string, paletteState: boolean) => {
+  const paletteOpenState = (type: string, openState: boolean) => {
     if (type === "fill") {
       setStrokePaletteOpen(false);
-      setFillPaletteOpen(!paletteState);
+      setStrokeWidthOpen(false);
+      setStrokeDashOpen(false);
+      setFillPaletteOpen(!openState);
     } else if (type === "stroke") {
       setFillPaletteOpen(false);
-      setStrokePaletteOpen(!paletteState);
+      setStrokeWidthOpen(false);
+      setStrokeDashOpen(false);
+      setStrokePaletteOpen(!openState);
+    } else if (type === "strokewidth") {
+      setFillPaletteOpen(false);
+      setStrokePaletteOpen(false);
+      setStrokeDashOpen(false);
+      setStrokeWidthOpen(!openState);
+    } else if (type === "strokedash") {
+      setFillPaletteOpen(false);
+      setStrokePaletteOpen(false);
+      setStrokeWidthOpen(false);
+      setStrokeDashOpen(!openState);
     }
   };
 
@@ -47,15 +71,65 @@ const PropertyTool = ({
     console.log("selectedType RECT");
     console.log(activeObject);
     return (
-      <IconButton
-        size="large"
-        onClick={() => {
-          paletteOpenState("fill", fillPaletteOpen);
-          canvas!.renderAll();
-        }}
-      >
-        <FormatColorFillIcon fontSize="inherit" />
-      </IconButton>
+      <>
+        <IconButton
+          size="large"
+          onClick={() => {
+            paletteOpenState("fill", fillPaletteOpen);
+            canvas!.renderAll();
+          }}
+        >
+          <FormatColorFillIcon fontSize="inherit" />
+        </IconButton>
+        <IconButton
+          size="large"
+          onClick={() => {
+            paletteOpenState("stroke", strokePaletteOpen);
+            canvas!.renderAll();
+          }}
+        >
+          <BorderColorIcon fontSize="inherit" />
+        </IconButton>
+        <IconButton
+          size="large"
+          onClick={() => {
+            paletteOpenState("strokewidth", strokeWidthOpen);
+            canvas!.renderAll();
+          }}
+        >
+          <LineWeightIcon fontSize="inherit" />
+        </IconButton>
+        {/* <IconButton
+          size="large"
+          onClick={() => {
+            activeObject.set("height", 120);
+            canvas!.renderAll();
+          }}
+        >
+          <HeightIcon fontSize="inherit" />
+        </IconButton>
+        <IconButton
+          size="large"
+          onClick={() => {
+            activeObject.set("width", 125);
+            canvas!.renderAll();
+          }}
+        >
+          <SettingsEthernetIcon fontSize="inherit" />
+        </IconButton> */}
+
+        <IconButton
+          size="large"
+          onClick={() => {
+            paletteOpenState("strokedash", strokeDashOpen);
+            canvas!.renderAll();
+          }}
+        >
+          <LineStyleIcon fontSize="inherit" />
+        </IconButton>
+
+        {/* <InputNumber /> */}
+      </>
     );
   } else if (activeObject instanceof fabric.Circle) {
     console.log("selectedType CIRCLE");
@@ -80,6 +154,26 @@ const PropertyTool = ({
         >
           <BorderColorIcon fontSize="inherit" />
         </IconButton>
+
+        <IconButton
+          size="large"
+          onClick={() => {
+            paletteOpenState("strokewidth", strokeWidthOpen);
+            canvas!.renderAll();
+          }}
+        >
+          <LineWeightIcon fontSize="inherit" />
+        </IconButton>
+
+        <IconButton
+          size="large"
+          onClick={() => {
+            paletteOpenState("strokedash", strokeDashOpen);
+            canvas!.renderAll();
+          }}
+        >
+          <LineStyleIcon fontSize="inherit" />
+        </IconButton>
       </>
     );
   } else if (activeObject instanceof fabric.Line) {
@@ -100,7 +194,7 @@ const PropertyTool = ({
         <IconButton
           size="large"
           onClick={() => {
-            console.log("weight");
+            paletteOpenState("strokewidth", strokeWidthOpen);
             canvas!.renderAll();
           }}
         >
@@ -109,7 +203,7 @@ const PropertyTool = ({
         <IconButton
           size="large"
           onClick={() => {
-            console.log("linestyle");
+            paletteOpenState("strokedash", strokeDashOpen);
             canvas!.renderAll();
           }}
         >

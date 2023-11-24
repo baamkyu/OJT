@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useAtom } from "jotai";
 import { fabric } from "fabric";
-import { canvasAtom } from "../store/store";
+import { canvasAtom } from "../../store/store";
 
 const FabricCanvas = () => {
   const [canvas, setCanvas] = useAtom(canvasAtom);
@@ -9,8 +9,8 @@ const FabricCanvas = () => {
 
   const initCanvas = () =>
     new fabric.Canvas(canvasRef.current, {
-      width: 1600,
-      height: 900,
+      width: 1200,
+      height: 675,
       backgroundColor: "#d9d9d9",
     });
 
