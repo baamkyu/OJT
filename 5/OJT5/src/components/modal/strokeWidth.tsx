@@ -1,9 +1,10 @@
-const StrokeWidth = ({ onSelectWidth }) => {
+const StrokeWidth = ({ onSelectWidth, setStrokeWidthOpen }) => {
   const strokeWidthList = [1, 2, 3, 4, 8, 12, 16, 24];
 
   const handleSelect = (width: number) => {
     const index = strokeWidthList.indexOf(width);
     onSelectWidth(strokeWidthList[index]);
+    setStrokeWidthOpen(false);
   };
 
   return (
@@ -23,18 +24,5 @@ const StrokeWidth = ({ onSelectWidth }) => {
       </ul>
     </div>
   );
-
-  // return (
-  //   <div>
-  //     <p>Select Line Weight:</p>
-  //     <ul>
-  //       {strokeWidthList.map((width) => (
-  //         <li key={width} onClick={() => handleSelect(width)}>
-  //           {width}
-  //         </li>
-  //       ))}
-  //     </ul>
-  //   </div>
-  // );
 };
 export default StrokeWidth;

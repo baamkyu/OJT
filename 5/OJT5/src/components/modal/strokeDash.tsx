@@ -41,18 +41,5 @@ const StrokeDash = ({ onSelectDash }) => {
       </ul>
     </div>
   );
-
-  // return (
-  //   <div>
-  //     <p>Select Line Weight:</p>
-  //     <ul>
-  //       {strokeWidthList.map((width) => (
-  //         <li key={width} onClick={() => handleSelect(width)}>
-  //           {width}
-  //         </li>
-  //       ))}
-  //     </ul>
-  //   </div>
-  // );
 };
 export default StrokeDash;

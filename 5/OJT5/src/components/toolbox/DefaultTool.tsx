@@ -1,7 +1,7 @@
 import { fabric } from "fabric";
 import { useAtom } from "jotai";
-import { useState, useEffect } from "react";
-import { canvasAtom } from "../../store/store";
+import { useState, useEffect, useRef } from "react";
+import { canvasAtom, images } from "../../store/store";
 
 import IconButton from "@mui/material/IconButton";
 import TitleIcon from "@mui/icons-material/Title";
@@ -9,11 +9,13 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CropDinIcon from "@mui/icons-material/CropDin";
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
+import SaveIcon from "@mui/icons-material/Save";
 
 import PropertyTool from "./PropertyTool";
-import FillPalette from "./fillPalette";
-import StrokeWidth from "./strokeWidth";
-import StrokeDash from "./strokeDash";
+import FillPalette from "../modal/fillPalette";
+import StrokeWidth from "../modal/strokeWidth";
+import StrokeDash from "../modal/strokeDash";
+import ImageSelector from "../modal/imageSelector";
 
 const DefaultTool = () => {
   const [canvas] = useAtom(canvasAtom);
@@ -21,8 +23,20 @@ const DefaultTool = () => {
   const [strokePaletteOpen, setStrokePaletteOpen] = useState<boolean>(false);
   const [strokeWidthOpen, setStrokeWidthOpen] = useState<boolean>(false);
   const [strokeDashOpen, setStrokeDashOpen] = useState<boolean>(false);
+  const [imageSelectorOpen, setImageSelectorOpen] = useState<boolean>(false);
+  const [positions, setPositions] = useState({
+    fillPalette: 0,
+    strokePalette: 0,
+    strokeWidth: 0,
+    strokeDash: 0,
+  });
 
-  // const [strokeStyleOpen, setStrokeStyleOpen] = useState<boolean>(false);
+  const fillPaletteRef = useRef<HTMLDivElement>(null);
+  const strokePaletteRef = useRef<HTMLDivElement>(null);
+  const strokeWidthRef = useRef<HTMLDivElement>(null);
+  const strokeDashRef = useRef<HTMLDivElement>(null);
+  const opacityRef = useRef<HTMLDivElement>(null);
+
   const [activeObject, setActiveObject] = useState<any>(
     canvas?.getActiveObject()
   );
@@ -41,6 +55,7 @@ const DefaultTool = () => {
       setFillPaletteOpen(false);
     }
   };
+
   /** 색깔을 고르면 stroke 변경해주는 함수 */
   const handleStrokeColor = (color: string) => {
     if (canvas && activeObject) {
@@ -52,9 +67,7 @@ const DefaultTool = () => {
 
   /** 선 두께를 고르면 strokewidth 변경해주는 함수 */
   const handleStrokeWidth = (strokewidth: number) => {
-    console.log("123123");
     if (canvas && activeObject) {
-      console.log("go");
       activeObject.set("strokeWidth", strokewidth);
       canvas.renderAll();
       setStrokeWidthOpen(false);
@@ -63,7 +76,6 @@ const DefaultTool = () => {
 
   /** 선 스타일을 고르면 strokewidth 변경해주는 함수 */
   const handleStrokeDash = (strokeDash: Array<number>) => {
-    console.log("strokedasharray");
     if (canvas && activeObject) {
       activeObject.set("strokeDashArray", strokeDash);
       canvas.renderAll();
@@ -89,8 +101,18 @@ const DefaultTool = () => {
     }
   };
 
-  /** fabric에 Text 추가하는 함수 */
-  const addImage = () => {};
+  /** fabric에 Image 추가하는 함수 */
+  const addImage = (selectedImage: string) => {
+    if (canvas) {
+      fabric.Image.fromURL(selectedImage, (img) => {
+        canvas.add(img);
+        setImageSelectorOpen(false);
+      });
+      canvas.on("selection:created", handleSelection);
+      canvas.on("selection:updated", handleSelection);
+      canvas.on("selection:cleared", handleSelection);
+    }
+  };
 
   /** fabric에 Rect 추가하는 함수 */
   const addRect = () => {
@@ -139,6 +161,14 @@ const DefaultTool = () => {
     }
   };
 
+  const getPosition = (ref) => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      return rect.left; // 또는 다른 필요한 좌표 값
+    }
+    return 100; // 만약 ref가 null인 경우 기본값
+  };
+
   useEffect(() => {
     console.log(activeObject);
     console.log("renderAll");
@@ -147,27 +177,32 @@ const DefaultTool = () => {
     setStrokePaletteOpen(false);
     setStrokeWidthOpen(false);
     setStrokeDashOpen(false);
+    canvas?.renderAll();
+    console.log(positions);
   }, [activeObject]);
 
   return (
-    <div>
-      <span>생성</span>
-      <IconButton size="large" onClick={addText}>
-        <TitleIcon fontSize="inherit" />
+    <div className="ml-2">
+      <IconButton size="large">
+        <SaveIcon fontSize="inherit" />
       </IconButton>
-      <IconButton size="large" onClick={addImage}>
-        <AddPhotoAlternateIcon fontSize="inherit" />
-      </IconButton>
-      <IconButton size="large" onClick={addRect}>
-        <CropDinIcon fontSize="inherit" />
-      </IconButton>
-      <IconButton size="large" onClick={addCircle}>
-        <PanoramaFishEyeIcon fontSize="inherit" />
-      </IconButton>
-      <IconButton size="large" onClick={addLine}>
-        <HorizontalRuleIcon fontSize="inherit" />
-      </IconButton>
-      <span>구분선</span>
+      <div className="inline-block ml-4">
+        <IconButton size="large" onClick={addText}>
+          <TitleIcon fontSize="inherit" />
+        </IconButton>
+        <IconButton size="large" onClick={() => setImageSelectorOpen(true)}>
+          <AddPhotoAlternateIcon fontSize="inherit" />
+        </IconButton>
+        <IconButton size="large" onClick={addRect}>
+          <CropDinIcon fontSize="inherit" />
+        </IconButton>
+        <IconButton size="large" onClick={addCircle}>
+          <PanoramaFishEyeIcon fontSize="inherit" />
+        </IconButton>
+        <IconButton size="large" onClick={addLine}>
+          <HorizontalRuleIcon fontSize="inherit" />
+        </IconButton>
+      </div>
       <PropertyTool
         canvas={canvas}
         activeObject={activeObject}
@@ -179,58 +214,66 @@ const DefaultTool = () => {
         setStrokeWidthOpen={setStrokeWidthOpen}
         strokeDashOpen={strokeDashOpen}
         setStrokeDashOpen={setStrokeDashOpen}
+        fillPaletteRef={fillPaletteRef}
+        strokePaletteRef={strokePaletteRef}
+        strokeWidthRef={strokeWidthRef}
+        strokeDashRef={strokeDashRef}
+        opacityRef={opacityRef}
       />
+
+      {/* 모달창 */}
+      {imageSelectorOpen === true ? (
+        <ImageSelector
+          images={images}
+          addImage={addImage}
+          onClose={() => setImageSelectorOpen(false)}
+        />
+      ) : (
+        <></>
+      )}
       {fillPaletteOpen === true ? (
-        <div className="absolute top-10 left-[292px] z-10">
+        <div
+          className={`absolute top-10 left-[${positions.fillPalette}px] z-10`}
+          // ref={fillPaletteRef}
+        >
           <FillPalette onSelectColor={handleFillColor} />
         </div>
       ) : (
         <></>
       )}
       {strokePaletteOpen === true ? (
-        <div className="absolute top-10 left-[348px] z-10">
+        <div
+          className={`absolute top-10 left-[${positions.strokePalette}px] z-10`}
+          // ref={strokePaletteRef}
+        >
           <FillPalette onSelectColor={handleStrokeColor} />
         </div>
       ) : (
         <></>
       )}
       {strokeWidthOpen === true ? (
-        <div className="absolute top-10 left-[400px] z-10">
-          <StrokeWidth onSelectWidth={handleStrokeWidth} />
+        <div
+          className={`absolute top-10 left-[${positions.strokeWidth}px] z-10`}
+          // ref={strokeWidthRef}
+        >
+          <StrokeWidth
+            onSelectWidth={handleStrokeWidth}
+            setStrokeWidthOpen={setStrokeWidthOpen}
+          />
         </div>
       ) : (
         <></>
       )}
       {strokeDashOpen === true ? (
-        <div className="absolute top-10 left-[480px] z-10">
+        <div
+          className={`absolute top-10 left-[${positions.strokeDash}px] z-10`}
+          // ref={strokeDashRef}
+        >
           <StrokeDash onSelectDash={handleStrokeDash} />
         </div>
       ) : (
         <></>
       )}
-      <button
-        onClick={() => {
-          // const g = new fabric.Group(activeObject._objects, {
-          //   originX: "center",
-          //   originY: "center",
-          // });
-          // canvas?.add(g);
-          // canvas?.remove(activeObject); // 기존 객체는 제거 (선택 해제)
-          // canvas?.setActiveObject(g); // 새로운 그룹을 선택 상태로 만듦
-          // canvas?.renderAll();
-          // const allObjects = canvas?.getObjects();
-          // // 그룹으로 묶인 객체 확인
-          // const groupedObjects = allObjects?.filter(
-          //   (obj) => obj.type === "group"
-          // );
-          // // 그룹으로 묶인 객체들을 출력
-          // console.log(groupedObjects);
-        }}
-      >
-        그룹으로 묶기
-      </button>
-      {/* {strokeWeightOpen === true ? <div>d</div> : <></>} */}
-      {/* {strokeStyleOpen === true ? <div>d</div> : <></>} */}
     </div>
   );
 };

@@ -8,10 +8,10 @@ import FormatColorTextIcon from "@mui/icons-material/FormatColorText";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import LineWeightIcon from "@mui/icons-material/LineWeight";
 import LineStyleIcon from "@mui/icons-material/LineStyle";
-import HeightIcon from "@mui/icons-material/Height";
-import SettingsEthernetIcon from "@mui/icons-material/SettingsEthernet";
+import OpacityIcon from "@mui/icons-material/Opacity";
 
 import { textBold, textItalic, textUnderline } from "../../util/textbox";
+import { useEffect } from "react";
 
 type PropertyButtonProps = {
   canvas: fabric.Canvas | null;
@@ -20,6 +20,7 @@ type PropertyButtonProps = {
     | fabric.Circle
     | fabric.Line
     | fabric.Textbox
+    | fabric.Image
     | undefined;
   fillPaletteOpen: boolean;
   setFillPaletteOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,6 +30,11 @@ type PropertyButtonProps = {
   setStrokeWidthOpen: React.Dispatch<React.SetStateAction<boolean>>;
   strokeDashOpen: boolean;
   setStrokeDashOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  fillPaletteRef: any;
+  strokePaletteRef: any;
+  strokeWidthRef: any;
+  strokeDashRef: any;
+  opacityRef: any;
 };
 
 const PropertyTool = ({
@@ -42,6 +48,11 @@ const PropertyTool = ({
   setStrokeWidthOpen,
   strokeDashOpen,
   setStrokeDashOpen,
+  fillPaletteRef,
+  strokePaletteRef,
+  strokeWidthRef,
+  strokeDashRef,
+  opacityRef,
 }: PropertyButtonProps) => {
   const paletteOpenState = (type: string, openState: boolean) => {
     if (type === "fill") {
@@ -64,20 +75,21 @@ const PropertyTool = ({
       setStrokePaletteOpen(false);
       setStrokeWidthOpen(false);
       setStrokeDashOpen(!openState);
+    } else {
+      console.log("error");
     }
   };
 
   if (activeObject instanceof fabric.Rect) {
-    console.log("selectedType RECT");
-    console.log(activeObject);
     return (
-      <>
+      <div className="inline-block ml-4">
         <IconButton
           size="large"
           onClick={() => {
             paletteOpenState("fill", fillPaletteOpen);
             canvas!.renderAll();
           }}
+          ref={fillPaletteRef}
         >
           <FormatColorFillIcon fontSize="inherit" />
         </IconButton>
@@ -87,6 +99,7 @@ const PropertyTool = ({
             paletteOpenState("stroke", strokePaletteOpen);
             canvas!.renderAll();
           }}
+          ref={strokePaletteRef}
         >
           <BorderColorIcon fontSize="inherit" />
         </IconButton>
@@ -96,52 +109,39 @@ const PropertyTool = ({
             paletteOpenState("strokewidth", strokeWidthOpen);
             canvas!.renderAll();
           }}
+          ref={strokeWidthRef}
         >
           <LineWeightIcon fontSize="inherit" />
         </IconButton>
-        {/* <IconButton
-          size="large"
-          onClick={() => {
-            activeObject.set("height", 120);
-            canvas!.renderAll();
-          }}
-        >
-          <HeightIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            activeObject.set("width", 125);
-            canvas!.renderAll();
-          }}
-        >
-          <SettingsEthernetIcon fontSize="inherit" />
-        </IconButton> */}
-
         <IconButton
           size="large"
           onClick={() => {
             paletteOpenState("strokedash", strokeDashOpen);
             canvas!.renderAll();
           }}
+          ref={strokeDashRef}
         >
           <LineStyleIcon fontSize="inherit" />
         </IconButton>
-
-        {/* <InputNumber /> */}
-      </>
+        <IconButton
+          size="large"
+          onClick={() => console.log("opacity")}
+          ref={opacityRef}
+        >
+          <OpacityIcon fontSize="inherit" />
+        </IconButton>
+      </div>
     );
   } else if (activeObject instanceof fabric.Circle) {
-    console.log("selectedType CIRCLE");
-    console.log(activeObject);
     return (
-      <>
+      <div className="inline-block ml-4">
         <IconButton
           size="large"
           onClick={() => {
             paletteOpenState("fill", fillPaletteOpen);
             canvas!.renderAll();
           }}
+          ref={fillPaletteRef}
         >
           <FormatColorFillIcon fontSize="inherit" />
         </IconButton>
@@ -151,43 +151,49 @@ const PropertyTool = ({
             paletteOpenState("stroke", strokePaletteOpen);
             canvas!.renderAll();
           }}
+          ref={strokePaletteRef}
         >
           <BorderColorIcon fontSize="inherit" />
         </IconButton>
-
         <IconButton
           size="large"
           onClick={() => {
             paletteOpenState("strokewidth", strokeWidthOpen);
             canvas!.renderAll();
           }}
+          ref={strokeWidthRef}
         >
           <LineWeightIcon fontSize="inherit" />
         </IconButton>
-
         <IconButton
           size="large"
           onClick={() => {
             paletteOpenState("strokedash", strokeDashOpen);
             canvas!.renderAll();
           }}
+          ref={strokeDashRef}
         >
           <LineStyleIcon fontSize="inherit" />
         </IconButton>
-      </>
+        <IconButton
+          size="large"
+          onClick={() => console.log("opacity")}
+          ref={opacityRef}
+        >
+          <OpacityIcon fontSize="inherit" />
+        </IconButton>
+      </div>
     );
   } else if (activeObject instanceof fabric.Line) {
-    console.log("selectedType LINE");
-    console.log(activeObject);
     return (
-      <>
-        {" "}
+      <div className="inline-block ml-4">
         <IconButton
           size="large"
           onClick={() => {
             paletteOpenState("stroke", strokePaletteOpen);
             canvas!.renderAll();
           }}
+          ref={strokePaletteRef}
         >
           <BorderColorIcon fontSize="inherit" />
         </IconButton>
@@ -197,6 +203,7 @@ const PropertyTool = ({
             paletteOpenState("strokewidth", strokeWidthOpen);
             canvas!.renderAll();
           }}
+          ref={strokeWidthRef}
         >
           <LineWeightIcon fontSize="inherit" />
         </IconButton>
@@ -206,22 +213,29 @@ const PropertyTool = ({
             paletteOpenState("strokedash", strokeDashOpen);
             canvas!.renderAll();
           }}
+          ref={strokeDashRef}
         >
           <LineStyleIcon fontSize="inherit" />
         </IconButton>
-      </>
+        <IconButton
+          size="large"
+          onClick={() => console.log("opacity")}
+          ref={opacityRef}
+        >
+          <OpacityIcon fontSize="inherit" />
+        </IconButton>
+      </div>
     );
   } else if (activeObject instanceof fabric.Textbox) {
-    console.log("selectedType textbox");
-    console.log(activeObject);
     return (
-      <>
+      <div className="inline-block ml-4">
         <IconButton
           size="large"
           onClick={() => {
             paletteOpenState("fill", fillPaletteOpen);
             canvas!.renderAll();
           }}
+          ref={fillPaletteRef}
         >
           <FormatColorTextIcon fontSize="inherit" />
         </IconButton>
@@ -252,8 +266,29 @@ const PropertyTool = ({
         >
           <FormatUnderlinedIcon fontSize="inherit" />
         </IconButton>
-      </>
+        <IconButton
+          size="large"
+          onClick={() => console.log("opacity")}
+          ref={opacityRef}
+        >
+          <OpacityIcon fontSize="inherit" />
+        </IconButton>
+      </div>
     );
+  } else if (activeObject instanceof fabric.Image) {
+    return (
+      <div className="inline-block ml-4">
+        <IconButton
+          size="large"
+          onClick={() => console.log("opacity")}
+          ref={opacityRef}
+        >
+          <OpacityIcon fontSize="inherit" />
+        </IconButton>
+      </div>
+    );
+  } else {
+    <></>;
   }
 };
 export default PropertyTool;
