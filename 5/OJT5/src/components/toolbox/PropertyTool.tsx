@@ -11,284 +11,307 @@ import LineStyleIcon from "@mui/icons-material/LineStyle";
 import OpacityIcon from "@mui/icons-material/Opacity";
 
 import { textBold, textItalic, textUnderline } from "../../util/textbox";
-import { useEffect } from "react";
+import { useAtomValue } from "jotai";
+import { activeObjectAtom, canvasAtom } from "../../store/store";
 
 type PropertyButtonProps = {
-  canvas: fabric.Canvas | null;
-  activeObject:
-    | fabric.Rect
-    | fabric.Circle
-    | fabric.Line
-    | fabric.Textbox
-    | fabric.Image
-    | undefined;
-  fillPaletteOpen: boolean;
-  setFillPaletteOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  strokePaletteOpen: boolean;
-  setStrokePaletteOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  strokeWidthOpen: boolean;
-  setStrokeWidthOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  strokeDashOpen: boolean;
-  setStrokeDashOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  fillPaletteRef: any;
-  strokePaletteRef: any;
-  strokeWidthRef: any;
-  strokeDashRef: any;
-  opacityRef: any;
+  modalState: any;
+  setModalState: any;
+  iconPositionRef: any;
 };
 
 const PropertyTool = ({
-  canvas,
-  activeObject,
-  fillPaletteOpen,
-  setFillPaletteOpen,
-  strokePaletteOpen,
-  setStrokePaletteOpen,
-  strokeWidthOpen,
-  setStrokeWidthOpen,
-  strokeDashOpen,
-  setStrokeDashOpen,
-  fillPaletteRef,
-  strokePaletteRef,
-  strokeWidthRef,
-  strokeDashRef,
-  opacityRef,
+  modalState,
+  setModalState,
+  iconPositionRef,
 }: PropertyButtonProps) => {
-  const paletteOpenState = (type: string, openState: boolean) => {
-    if (type === "fill") {
-      setStrokePaletteOpen(false);
-      setStrokeWidthOpen(false);
-      setStrokeDashOpen(false);
-      setFillPaletteOpen(!openState);
-    } else if (type === "stroke") {
-      setFillPaletteOpen(false);
-      setStrokeWidthOpen(false);
-      setStrokeDashOpen(false);
-      setStrokePaletteOpen(!openState);
-    } else if (type === "strokewidth") {
-      setFillPaletteOpen(false);
-      setStrokePaletteOpen(false);
-      setStrokeDashOpen(false);
-      setStrokeWidthOpen(!openState);
-    } else if (type === "strokedash") {
-      setFillPaletteOpen(false);
-      setStrokePaletteOpen(false);
-      setStrokeWidthOpen(false);
-      setStrokeDashOpen(!openState);
-    } else {
-      console.log("error");
+  const canvas = useAtomValue(canvasAtom);
+  const activeObject = useAtomValue(activeObjectAtom);
+
+  /**
+   * 모달 오픈 함수
+   * @param type
+   * fill : 채우기 색상
+   * stroke : 테두리 색상
+   * strokewidth : 테두리 두께
+   * strokedash : 테두리 종류
+   */
+  const paletteOpenState = (type: string) => {
+    switch (type) {
+      case "fill":
+        setModalState((prev: Record<string, boolean>) => ({
+          ...prev,
+          strokePaletteOpen: false,
+          strokeWidthOpen: false,
+          strokeDashOpen: false,
+          fillPaletteOpen: !modalState.fillPaletteOpen,
+        }));
+        break;
+      case "stroke":
+        setModalState((prev: Record<string, boolean>) => ({
+          ...prev,
+          fillPaletteOpen: false,
+          strokeWidthOpen: false,
+          strokeDashOpen: false,
+          strokePaletteOpen: !modalState.strokePaletteOpen,
+        }));
+        break;
+      case "strokewidth":
+        setModalState((prev: Record<string, boolean>) => ({
+          ...prev,
+          fillPaletteOpen: false,
+          strokePaletteOpen: false,
+          strokeDashOpen: false,
+          strokeWidthOpen: !modalState.strokeWidthOpen,
+        }));
+        break;
+      case "strokedash":
+        setModalState((prev: Record<string, boolean>) => ({
+          ...prev,
+          fillPaletteOpen: false,
+          strokePaletteOpen: false,
+          strokeWidthOpen: false,
+          strokeDashOpen: !modalState.strokeDashOpen,
+        }));
+        break;
     }
   };
 
-  if (activeObject instanceof fabric.Rect) {
-    return (
-      <div className="inline-block ml-4">
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("fill", fillPaletteOpen);
-            canvas!.renderAll();
-          }}
-          ref={fillPaletteRef}
-        >
-          <FormatColorFillIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("stroke", strokePaletteOpen);
-            canvas!.renderAll();
-          }}
-          ref={strokePaletteRef}
-        >
-          <BorderColorIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("strokewidth", strokeWidthOpen);
-            canvas!.renderAll();
-          }}
-          ref={strokeWidthRef}
-        >
-          <LineWeightIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("strokedash", strokeDashOpen);
-            canvas!.renderAll();
-          }}
-          ref={strokeDashRef}
-        >
-          <LineStyleIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => console.log("opacity")}
-          ref={opacityRef}
-        >
-          <OpacityIcon fontSize="inherit" />
-        </IconButton>
-      </div>
-    );
-  } else if (activeObject instanceof fabric.Circle) {
-    return (
-      <div className="inline-block ml-4">
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("fill", fillPaletteOpen);
-            canvas!.renderAll();
-          }}
-          ref={fillPaletteRef}
-        >
-          <FormatColorFillIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("stroke", strokePaletteOpen);
-            canvas!.renderAll();
-          }}
-          ref={strokePaletteRef}
-        >
-          <BorderColorIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("strokewidth", strokeWidthOpen);
-            canvas!.renderAll();
-          }}
-          ref={strokeWidthRef}
-        >
-          <LineWeightIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("strokedash", strokeDashOpen);
-            canvas!.renderAll();
-          }}
-          ref={strokeDashRef}
-        >
-          <LineStyleIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => console.log("opacity")}
-          ref={opacityRef}
-        >
-          <OpacityIcon fontSize="inherit" />
-        </IconButton>
-      </div>
-    );
-  } else if (activeObject instanceof fabric.Line) {
-    return (
-      <div className="inline-block ml-4">
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("stroke", strokePaletteOpen);
-            canvas!.renderAll();
-          }}
-          ref={strokePaletteRef}
-        >
-          <BorderColorIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("strokewidth", strokeWidthOpen);
-            canvas!.renderAll();
-          }}
-          ref={strokeWidthRef}
-        >
-          <LineWeightIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("strokedash", strokeDashOpen);
-            canvas!.renderAll();
-          }}
-          ref={strokeDashRef}
-        >
-          <LineStyleIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => console.log("opacity")}
-          ref={opacityRef}
-        >
-          <OpacityIcon fontSize="inherit" />
-        </IconButton>
-      </div>
-    );
-  } else if (activeObject instanceof fabric.Textbox) {
-    return (
-      <div className="inline-block ml-4">
-        <IconButton
-          size="large"
-          onClick={() => {
-            paletteOpenState("fill", fillPaletteOpen);
-            canvas!.renderAll();
-          }}
-          ref={fillPaletteRef}
-        >
-          <FormatColorTextIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            textBold(activeObject);
-            canvas?.renderAll();
-          }}
-        >
-          <FormatBoldIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            textItalic(activeObject);
-            canvas?.renderAll();
-          }}
-        >
-          <FormatItalicIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => {
-            textUnderline(activeObject);
-            canvas?.renderAll();
-          }}
-        >
-          <FormatUnderlinedIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => console.log("opacity")}
-          ref={opacityRef}
-        >
-          <OpacityIcon fontSize="inherit" />
-        </IconButton>
-      </div>
-    );
-  } else if (activeObject instanceof fabric.Image) {
-    return (
-      <div className="inline-block ml-4">
-        <IconButton
-          size="large"
-          onClick={() => console.log("opacity")}
-          ref={opacityRef}
-        >
-          <OpacityIcon fontSize="inherit" />
-        </IconButton>
-      </div>
-    );
-  } else {
-    <></>;
+  /** rect 속성 변경을 위한 버튼 */
+  const rectPropertyButtons = (
+    <>
+      <IconButton
+        size="large"
+        onClick={(e) => {
+          // e.stopPropagation();
+
+          paletteOpenState("fill");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.fillPalette}
+      >
+        <FormatColorFillIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => {
+          paletteOpenState("stroke");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.strokePalette}
+      >
+        <BorderColorIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => {
+          paletteOpenState("strokewidth");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.strokeWidth}
+      >
+        <LineWeightIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => {
+          paletteOpenState("strokedash");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.strokeDash}
+      >
+        <LineStyleIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => console.log("opacity")}
+        ref={iconPositionRef.opacity}
+      >
+        <OpacityIcon fontSize="inherit" />
+      </IconButton>
+    </>
+  );
+  /** circle 속성 변경을 위한 버튼 */
+  const circlePropertyButtons = (
+    <>
+      <IconButton
+        size="large"
+        onClick={() => {
+          paletteOpenState("fill");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.fillPalette}
+      >
+        <FormatColorFillIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => {
+          paletteOpenState("stroke");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.strokePalette}
+      >
+        <BorderColorIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => {
+          paletteOpenState("strokewidth");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.strokeWidth}
+      >
+        <LineWeightIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => {
+          paletteOpenState("strokedash");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.strokeDash}
+      >
+        <LineStyleIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => console.log("opacity")}
+        ref={iconPositionRef.opacity}
+      >
+        <OpacityIcon fontSize="inherit" />
+      </IconButton>
+    </>
+  );
+  /** line 속성 변경을 위한 버튼 */
+  const linePropertyButtons = (
+    <>
+      <IconButton
+        size="large"
+        onClick={() => {
+          paletteOpenState("stroke");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.strokePalette}
+      >
+        <BorderColorIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => {
+          paletteOpenState("strokewidth");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.strokeWidth}
+      >
+        <LineWeightIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => {
+          paletteOpenState("strokedash");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.strokeDash}
+      >
+        <LineStyleIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => console.log("opacity")}
+        ref={iconPositionRef.opacity}
+      >
+        <OpacityIcon fontSize="inherit" />
+      </IconButton>
+    </>
+  );
+  /** text 속성 변경을 위한 버튼 */
+  const textboxPropertyButtons = (activeObject: fabric.Object) => (
+    <>
+      <IconButton
+        size="large"
+        onClick={() => {
+          paletteOpenState("fill");
+          canvas!.renderAll();
+        }}
+        ref={iconPositionRef.fillPalette}
+      >
+        <FormatColorTextIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => {
+          textBold(activeObject);
+          canvas?.renderAll();
+        }}
+      >
+        <FormatBoldIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => {
+          textItalic(activeObject);
+          canvas?.renderAll();
+        }}
+      >
+        <FormatItalicIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => {
+          textUnderline(activeObject);
+          canvas?.renderAll();
+        }}
+      >
+        <FormatUnderlinedIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        size="large"
+        onClick={() => console.log("opacity")}
+        ref={iconPositionRef.opacity}
+      >
+        <OpacityIcon fontSize="inherit" />
+      </IconButton>
+    </>
+  );
+  /** image 속성 변경을 위한 버튼 */
+  const imagePropertyButtons = (
+    <>
+      <IconButton
+        size="large"
+        onClick={() => console.log("opacity")}
+        ref={iconPositionRef.opacity}
+      >
+        <OpacityIcon fontSize="inherit" />
+      </IconButton>
+    </>
+  );
+
+  let propertyButtons;
+  switch (true) {
+    case activeObject instanceof fabric.Rect:
+      propertyButtons = rectPropertyButtons;
+      console.log("Rect");
+      break;
+    case activeObject instanceof fabric.Circle:
+      propertyButtons = circlePropertyButtons;
+      console.log("Circle");
+      break;
+    case activeObject instanceof fabric.Line:
+      propertyButtons = linePropertyButtons;
+      console.log("Line");
+      break;
+    case activeObject instanceof fabric.Textbox:
+      propertyButtons = textboxPropertyButtons(activeObject!);
+      console.log("Textbox");
+      break;
+    case activeObject instanceof fabric.Image:
+      propertyButtons = imagePropertyButtons;
+      console.log("Image");
+      break;
+    default:
+      propertyButtons = <></>;
   }
+  return propertyButtons;
 };
 export default PropertyTool;

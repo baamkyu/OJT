@@ -1,4 +1,3 @@
-import { Image } from "fabric/fabric-impl";
 import { useState } from "react";
 
 const ImageSelector = ({ images, addImage, onClose }) => {

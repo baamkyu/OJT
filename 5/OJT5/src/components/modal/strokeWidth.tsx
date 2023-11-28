@@ -1,10 +1,9 @@
-const StrokeWidth = ({ onSelectWidth, setStrokeWidthOpen }) => {
+const StrokeWidth = ({ onSelectWidth }) => {
   const strokeWidthList = [1, 2, 3, 4, 8, 12, 16, 24];
 
   const handleSelect = (width: number) => {
     const index = strokeWidthList.indexOf(width);
     onSelectWidth(strokeWidthList[index]);
-    setStrokeWidthOpen(false);
   };
 
   return (

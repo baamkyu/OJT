@@ -1,14 +1,14 @@
 import "./App.css";
 import { Provider } from "jotai";
 import FabricCanvas from "./components/toolbox/FabricCanvas";
-import DefaultTool from "./components/toolbox/DefaultTool";
+import ToolBox from "./components/toolbox/ToolBox";
 import AddButton from "./components/answer/AddButton";
 import AnswerSelections from "./components/answer/AnswerSelections";
 
 function App() {
   return (
     <Provider>
-      <DefaultTool />
+      <ToolBox />
       <FabricCanvas />
       <AddButton />
       <AnswerSelections />
