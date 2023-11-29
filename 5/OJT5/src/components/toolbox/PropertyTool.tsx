@@ -15,9 +15,15 @@ import { useAtomValue } from "jotai";
 import { activeObjectAtom, canvasAtom } from "../../store/store";
 
 type PropertyButtonProps = {
-  modalState: any;
-  setModalState: any;
-  iconPositionRef: any;
+  modalState: Record<string, boolean>;
+  setModalState: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  iconPositionRef: {
+    fillPalette: React.RefObject<HTMLButtonElement>;
+    strokePalette: React.RefObject<HTMLButtonElement>;
+    strokeWidth: React.RefObject<HTMLButtonElement>;
+    strokeDash: React.RefObject<HTMLButtonElement>;
+    opacity: React.RefObject<HTMLButtonElement>;
+  };
 };
 
 const PropertyTool = ({
@@ -35,6 +41,7 @@ const PropertyTool = ({
    * stroke : 테두리 색상
    * strokewidth : 테두리 두께
    * strokedash : 테두리 종류
+   * opacity : 투명도
    */
   const paletteOpenState = (type: string) => {
     switch (type) {
@@ -44,6 +51,7 @@ const PropertyTool = ({
           strokePaletteOpen: false,
           strokeWidthOpen: false,
           strokeDashOpen: false,
+          opacityOpen: false,
           fillPaletteOpen: !modalState.fillPaletteOpen,
         }));
         break;
@@ -53,6 +61,7 @@ const PropertyTool = ({
           fillPaletteOpen: false,
           strokeWidthOpen: false,
           strokeDashOpen: false,
+          opacityOpen: false,
           strokePaletteOpen: !modalState.strokePaletteOpen,
         }));
         break;
@@ -62,6 +71,7 @@ const PropertyTool = ({
           fillPaletteOpen: false,
           strokePaletteOpen: false,
           strokeDashOpen: false,
+          opacityOpen: false,
           strokeWidthOpen: !modalState.strokeWidthOpen,
         }));
         break;
@@ -71,9 +81,22 @@ const PropertyTool = ({
           fillPaletteOpen: false,
           strokePaletteOpen: false,
           strokeWidthOpen: false,
+          opacityOpen: false,
           strokeDashOpen: !modalState.strokeDashOpen,
         }));
         break;
+      case "opacity":
+        setModalState((prev: Record<string, boolean>) => ({
+          ...prev,
+          fillPaletteOpen: false,
+          strokePaletteOpen: false,
+          strokeWidthOpen: false,
+          strokeDashOpen: false,
+          opacityOpen: !modalState.opacityOpen,
+        }));
+        break;
+      default:
+        console.log("setModalState error");
     }
   };
 
@@ -124,7 +147,10 @@ const PropertyTool = ({
       </IconButton>
       <IconButton
         size="large"
-        onClick={() => console.log("opacity")}
+        onClick={() => {
+          paletteOpenState("opacity");
+          canvas!.renderAll();
+        }}
         ref={iconPositionRef.opacity}
       >
         <OpacityIcon fontSize="inherit" />
@@ -176,7 +202,10 @@ const PropertyTool = ({
       </IconButton>
       <IconButton
         size="large"
-        onClick={() => console.log("opacity")}
+        onClick={() => {
+          paletteOpenState("opacity");
+          canvas!.renderAll();
+        }}
         ref={iconPositionRef.opacity}
       >
         <OpacityIcon fontSize="inherit" />
@@ -218,7 +247,10 @@ const PropertyTool = ({
       </IconButton>
       <IconButton
         size="large"
-        onClick={() => console.log("opacity")}
+        onClick={() => {
+          paletteOpenState("opacity");
+          canvas!.renderAll();
+        }}
         ref={iconPositionRef.opacity}
       >
         <OpacityIcon fontSize="inherit" />
@@ -267,7 +299,10 @@ const PropertyTool = ({
       </IconButton>
       <IconButton
         size="large"
-        onClick={() => console.log("opacity")}
+        onClick={() => {
+          paletteOpenState("opacity");
+          canvas!.renderAll();
+        }}
         ref={iconPositionRef.opacity}
       >
         <OpacityIcon fontSize="inherit" />
@@ -279,7 +314,10 @@ const PropertyTool = ({
     <>
       <IconButton
         size="large"
-        onClick={() => console.log("opacity")}
+        onClick={() => {
+          paletteOpenState("opacity");
+          canvas!.renderAll();
+        }}
         ref={iconPositionRef.opacity}
       >
         <OpacityIcon fontSize="inherit" />

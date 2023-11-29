@@ -1,7 +1,12 @@
 import { fabric } from "fabric";
 import { useAtom, useAtomValue } from "jotai";
 import { useState, useEffect, useRef } from "react";
-import { canvasAtom, images, activeObjectAtom } from "../../store/store";
+import {
+  canvasAtom,
+  images,
+  activeObjectAtom,
+  // canvasSavePointAtom,
+} from "../../store/store";
 
 import IconButton from "@mui/material/IconButton";
 import TitleIcon from "@mui/icons-material/Title";
@@ -9,23 +14,30 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CropDinIcon from "@mui/icons-material/CropDin";
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
-import SaveIcon from "@mui/icons-material/Save";
+// import SaveIcon from "@mui/icons-material/Save";
+// import UndoIcon from "@mui/icons-material/Undo";
+// import RedoIcon from "@mui/icons-material/Redo";
 
 import PropertyTool from "./PropertyTool";
 import FillPalette from "../modal/fillPalette";
 import StrokeWidth from "../modal/strokeWidth";
 import StrokeDash from "../modal/strokeDash";
 import ImageSelector from "../modal/imageSelector";
+import Opacity from "../modal/opacity";
 
 const ToolBox = () => {
   const canvas = useAtomValue(canvasAtom);
   const [activeObject, setActiveObject] = useAtom(activeObjectAtom);
+  // const [canvasSavePoint, setCanvasSavePoint] = useAtom(canvasSavePointAtom);
+  // const [currentSavePointIndex, setCurrentSavePointIndex] = useState(0);
+
   const [modalState, setModalState] = useState<Record<string, boolean>>({
     fillPaletteOpen: false,
     strokePaletteOpen: false,
     strokeWidthOpen: false,
     strokeDashOpen: false,
     imageSelectorOpen: false,
+    opacityOpen: false,
   });
   const [positions, setPositions] = useState<Record<string, number>>({
     fillPalette: 0,
@@ -36,19 +48,33 @@ const ToolBox = () => {
   });
 
   const iconPositionRef = {
-    fillPalette: useRef<HTMLDivElement>(null),
-    strokePalette: useRef<HTMLDivElement>(null),
-    strokeWidth: useRef<HTMLDivElement>(null),
-    strokeDash: useRef<HTMLDivElement>(null),
-    opacity: useRef<HTMLDivElement>(null),
+    fillPalette: useRef<HTMLButtonElement>(null),
+    strokePalette: useRef<HTMLButtonElement>(null),
+    strokeWidth: useRef<HTMLButtonElement>(null),
+    strokeDash: useRef<HTMLButtonElement>(null),
+    opacity: useRef<HTMLButtonElement>(null),
   };
 
-  console.log(canvas, "canvas");
-  /** 선택된 객체를 state로 관리하는 함수 */
-  const handleSelection = () => {
-    if (!canvas) return;
-    setActiveObject(canvas.getActiveObject());
-  };
+  // /** 현재 canvas를 저장하는 함수 */
+  // const addSavePoint = (canvas: fabric.Canvas) => {
+  //   if (!canvas) return;
+  //   setCanvasSavePoint((prev) => [...prev, canvas]);
+  // };
+
+  // /** 현재 canvas를 저장하는 함수 */
+  // const moveToPrevSavePoint = () => {
+  //   if (currentSavePointIndex > 0) {
+  //     setCurrentSavePointIndex((prevIndex) => prevIndex - 1);
+  //   }
+  // };
+  // /** 현재 canvas를 저장하는 함수 */
+  // const moveToNextSavePoint = () => {
+  //   if (currentSavePointIndex < canvasSavePoint.length - 1) {
+  //     setCurrentSavePointIndex((prevIndex) => prevIndex + 1);
+  //   }
+  // };
+
+  // const currentSavePoint = canvasSavePoint[currentSavePointIndex];
 
   /** 색깔을 고르면 fill 변경해주는 함수 */
   const handleFillColor = (color: string) => {
@@ -98,6 +124,18 @@ const ToolBox = () => {
     }
   };
 
+  /** 투명도를 고르면 opcaity 변경해주는 함수 */
+  const handleOpacity = (opacity: number) => {
+    if (canvas && activeObject) {
+      activeObject.set("opacity", opacity);
+      canvas.renderAll();
+      setModalState((prev) => ({
+        ...prev,
+        opacityOpen: false,
+      }));
+    }
+  };
+
   /** fabric에 Text 추가하는 함수 */
   const addText = () => {
     if (!canvas) return;
@@ -112,9 +150,7 @@ const ToolBox = () => {
     canvas.add(text);
     // 캔버스가 정의되는 시점에
 
-    canvas.on("selection:created", handleSelection);
-    canvas.on("selection:updated", handleSelection);
-    canvas.on("selection:cleared", handleSelection);
+    canvas.on("selection:created", updateActiveObject);
   };
 
   /** fabric에 Image 추가할 때 CORS 정책 우회하기 위한 함수 */
@@ -141,9 +177,7 @@ const ToolBox = () => {
         imageSelectorOpen: false,
       }));
     });
-    canvas.on("selection:created", handleSelection);
-    canvas.on("selection:updated", handleSelection);
-    canvas.on("selection:cleared", handleSelection);
+    canvas.on("selection:created", updateActiveObject);
   };
 
   /** fabric에 Rect 추가하는 함수 */
@@ -157,9 +191,7 @@ const ToolBox = () => {
       top: 10,
     });
     canvas.add(rect);
-    canvas.on("selection:created", handleSelection);
-    canvas.on("selection:updated", handleSelection);
-    canvas.on("selection:cleared", handleSelection);
+    canvas.on("selection:created", updateActiveObject);
   };
 
   /** fabric에 Circle 추가하는 함수 */
@@ -172,9 +204,7 @@ const ToolBox = () => {
       top: 50,
     });
     canvas.add(circle);
-    canvas.on("selection:created", handleSelection);
-    canvas.on("selection:updated", handleSelection);
-    canvas.on("selection:cleared", handleSelection);
+    canvas.on("selection:created", updateActiveObject);
   };
 
   /** fabric에 Line 추가하는 함수 */
@@ -185,9 +215,7 @@ const ToolBox = () => {
       strokeWidth: 8,
     });
     canvas.add(line);
-    canvas.on("selection:created", handleSelection);
-    canvas.on("selection:updated", handleSelection);
-    canvas.on("selection:cleared", handleSelection);
+    canvas.on("selection:created", updateActiveObject);
   };
 
   const getPosition = (ref) => {
@@ -201,7 +229,8 @@ const ToolBox = () => {
   /** 선택된 object를 전역에서 관리하기 위한 함수 */
   const updateActiveObject = () => {
     if (!canvas) return;
-    setActiveObject(canvas.getActiveObject());
+    const activeObject = canvas.getActiveObject();
+    setActiveObject(activeObject);
     console.log("updateActiveObject");
   };
 
@@ -211,7 +240,10 @@ const ToolBox = () => {
       return;
     }
     console.log("renderAll");
-    canvas?.renderAll();
+    // canvasSavePoint[currentSavePointIndex]?.renderAll();
+    // currentSavePoint?.renderAll();
+    // console.log("canvasSavePoint", canvasSavePoint);
+    // console.log("currentSavePoint", currentSavePoint);
 
     setModalState({
       fillPaletteOpen: false,
@@ -219,6 +251,7 @@ const ToolBox = () => {
       strokeWidthOpen: false,
       strokeDashOpen: false,
       imageSelectorOpen: false,
+      opacityOpen: false,
     });
 
     const strokePalettePos = getPosition(iconPositionRef.strokePalette);
@@ -233,24 +266,36 @@ const ToolBox = () => {
       strokeDash: strokeDashPos,
       opacity: opacityPos,
     });
-    console.log(activeObjectAtom);
+    // console.log(activeObjectAtom);
+    // console.log(currentSavePointIndex);
 
     canvas.on("selection:created", updateActiveObject);
     canvas.on("selection:updated", updateActiveObject);
     canvas.on("selection:cleared", updateActiveObject);
+    canvas.on("selection:scaling", updateActiveObject);
+    canvas.on("selection:rotating", updateActiveObject);
 
     return () => {
       canvas.off("selection:created", updateActiveObject);
       canvas.off("selection:updated", updateActiveObject);
       canvas.off("selection:cleared", updateActiveObject);
+      canvas.off("selection:scaling", updateActiveObject);
+      canvas.off("selection:rotating", updateActiveObject);
     };
+    // }, [activeObject, currentSavePointIndex]);
   }, [activeObject]);
 
   return (
     <div className="ml-2">
-      <IconButton size="large">
+      {/* <IconButton size="large" onClick={() => addSavePoint(canvas!)}>
         <SaveIcon fontSize="inherit" />
       </IconButton>
+      <IconButton size="large" onClick={moveToPrevSavePoint}>
+        <UndoIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton size="large" onClick={moveToNextSavePoint}>
+        <RedoIcon fontSize="inherit" />
+      </IconButton> */}
       <div className="inline-block ml-4">
         <IconButton size="large" onClick={addText}>
           <TitleIcon fontSize="inherit" />
@@ -272,18 +317,10 @@ const ToolBox = () => {
         </IconButton>
       </div>
       <PropertyTool
-        // canvas={canvas}
-        // activeObject={activeObject}
         modalState={modalState}
         setModalState={setModalState}
         iconPositionRef={iconPositionRef}
-        // fillPaletteRef={fillPaletteRef}
-        // strokePaletteRef={strokePaletteRef}
-        // strokeWidthRef={strokeWidthRef}
-        // strokeDashRef={strokeDashRef}
-        // opacityRef={opacityRef}
       />
-
       {/* 모달창 */}
       {modalState.imageSelectorOpen && (
         <ImageSelector
@@ -343,6 +380,18 @@ const ToolBox = () => {
           }}
         >
           <StrokeDash onSelectDash={handleStrokeDash} />
+        </div>
+      )}
+      {modalState.opacityOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: "44px",
+            left: `${positions.opacity}px`,
+            zIndex: 10,
+          }}
+        >
+          <Opacity onSelectOpacity={handleOpacity} />
         </div>
       )}
     </div>
