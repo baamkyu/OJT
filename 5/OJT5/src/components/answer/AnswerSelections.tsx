@@ -1,4 +1,10 @@
+import AnswerBox from "./answerBox";
+
 const AnswerSelections = () => {
-  return <div className="w-96 h-96 bg-gray-300"></div>;
+  return (
+    <div className="w-[520px] h-60 bg-gray-300">
+      <AnswerBox />
+    </div>
+  );
 };
 export default AnswerSelections;

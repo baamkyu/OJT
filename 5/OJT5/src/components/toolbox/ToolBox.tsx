@@ -117,11 +117,25 @@ const ToolBox = () => {
     canvas.on("selection:cleared", handleSelection);
   };
 
+  /** fabric에 Image 추가할 때 CORS 정책 우회하기 위한 함수 */
+  const corsURL = (imageURL: string) => {
+    fetch(imageURL)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const imageDataURL = URL.createObjectURL(blob);
+        fabric.Image.fromURL(imageDataURL, (img) => {
+          canvas?.add(img);
+        });
+      })
+      .catch((error) => {
+        console.log("error corsURL", error);
+      });
+  };
   /** fabric에 Image 추가하는 함수 */
   const addImage = (selectedImage: string) => {
     if (!canvas) return;
-    fabric.Image.fromURL(selectedImage, (img) => {
-      canvas.add(img);
+    fabric.Image.fromURL(selectedImage, () => {
+      corsURL(selectedImage);
       setModalState((prev) => ({
         ...prev,
         imageSelectorOpen: false,
