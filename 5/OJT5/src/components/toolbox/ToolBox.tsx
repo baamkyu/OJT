@@ -25,6 +25,7 @@ import StrokeWidth from "../modal/strokeWidth";
 import StrokeDash from "../modal/strokeDash";
 import ImageSelector from "../modal/imageSelector";
 import Opacity from "../modal/opacity";
+import Preview from "../modal/Preview";
 
 const ToolBox = () => {
   const canvas = useAtomValue(canvasAtom);
@@ -55,6 +56,8 @@ const ToolBox = () => {
     strokeDash: useRef<HTMLButtonElement>(null),
     opacity: useRef<HTMLButtonElement>(null),
   };
+
+  const [previewOpen, setPreviewOpen] = useState<boolean>(false);
 
   // /** 현재 canvas를 저장하는 함수 */
   // const addSavePoint = (canvas: fabric.Canvas) => {
@@ -289,25 +292,24 @@ const ToolBox = () => {
     if (!canvas) {
       return null;
     }
-    // fabric.js Canvas 객체를 JSON으로 변환
-    const canvasJSON = canvas.toJSON();
 
-    fabric.Canvas.loadFromJSON(canvasJSON, (newCanvas: fabric.Canvas) => {
-      // JSON 데이터를 로드한 후에 실행되는 콜백
-      console.log("Canvas loaded from JSON");
-
-      // 새로운 Canvas 객체를 DOM에 추가하거나 다른 작업을 수행할 수 있습니다.
-      document.body.appendChild(newCanvas.getElement());
-
-      // 다시 생성된 Canvas에 대한 작업을 수행할 수 있습니다.
-      // 예: 특정 위치에 배치, 특정 스타일 적용 등
-      newCanvas.renderAll();
-    });
+    const canvasJSON = JSON.stringify(canvas);
+    canvas.loadFromJSON(
+      canvasJSON,
+      function () {
+        setPreviewOpen(true);
+        canvas.renderAll();
+      },
+      function (o, object) {
+        console.log(o, object);
+      }
+    );
 
     return canvasJSON;
   };
   return (
     <div className="bg-F2F5F5">
+      {previewOpen && <Preview />}
       {/* <IconButton size="large" onClick={() => addSavePoint(canvas!)}>
         <SaveIcon fontSize="inherit" />
       </IconButton>
