@@ -23,9 +23,20 @@ const AddButton = () => {
 
   return (
     <>
-      <IconButton className="w-10 h-56" onClick={toAnswerList}>
-        <AddCircleOutlineIcon />
-      </IconButton>
+      {activeObject ? (
+        // activeObject가 있을 때의 버튼 UI
+        <div className="bg-answernumber w-10 h-56 rounded-xl">
+          <IconButton className="w-10 h-56 " onClick={toAnswerList}>
+            <AddCircleOutlineIcon
+              style={{ color: "white", fontSize: "32px", fontWeight: "bold" }}
+            />
+          </IconButton>
+        </div>
+      ) : (
+        <IconButton className="w-10 h-56" disabled>
+          <AddCircleOutlineIcon style={{ fontSize: "32px" }} />
+        </IconButton>
+      )}
     </>
   );
 };

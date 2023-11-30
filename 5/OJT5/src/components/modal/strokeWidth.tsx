@@ -1,5 +1,5 @@
 const StrokeWidth = ({ onSelectWidth }) => {
-  const strokeWidthList = [1, 2, 3, 4, 8, 12, 16, 24];
+  const strokeWidthList = [0, 1, 2, 3, 4, 8, 12, 16, 24];
 
   const handleSelect = (width: number) => {
     const index = strokeWidthList.indexOf(width);
@@ -17,7 +17,7 @@ const StrokeWidth = ({ onSelectWidth }) => {
             }
             onClick={() => handleSelect(width)}
           >
-            <button>{width}px</button>
+            <button>{width === 0 ? "없음" : `${width}px`}</button>
           </li>
         ))}
       </ul>

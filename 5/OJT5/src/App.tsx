@@ -9,7 +9,7 @@ function App() {
   return (
     <Provider>
       <ToolBox />
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap bg-F2F5F5">
         <FabricCanvas />
         <AddButton />
         <AnswerBox />

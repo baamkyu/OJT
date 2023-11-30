@@ -7,6 +7,7 @@ import {
   activeObjectAtom,
   // canvasSavePointAtom,
 } from "../../store/store";
+// import ExportCanvas from "../../util/exportCanvas";
 
 import IconButton from "@mui/material/IconButton";
 import TitleIcon from "@mui/icons-material/Title";
@@ -206,7 +207,6 @@ const ToolBox = () => {
     canvas.add(circle);
     canvas.on("selection:created", updateActiveObject);
   };
-
   /** fabric에 Line 추가하는 함수 */
   const addLine = () => {
     if (!canvas) return;
@@ -285,8 +285,29 @@ const ToolBox = () => {
     // }, [activeObject, currentSavePointIndex]);
   }, [activeObject]);
 
+  const exportCanvas = () => {
+    if (!canvas) {
+      return null;
+    }
+    // fabric.js Canvas 객체를 JSON으로 변환
+    const canvasJSON = canvas.toJSON();
+
+    fabric.Canvas.loadFromJSON(canvasJSON, (newCanvas: fabric.Canvas) => {
+      // JSON 데이터를 로드한 후에 실행되는 콜백
+      console.log("Canvas loaded from JSON");
+
+      // 새로운 Canvas 객체를 DOM에 추가하거나 다른 작업을 수행할 수 있습니다.
+      document.body.appendChild(newCanvas.getElement());
+
+      // 다시 생성된 Canvas에 대한 작업을 수행할 수 있습니다.
+      // 예: 특정 위치에 배치, 특정 스타일 적용 등
+      newCanvas.renderAll();
+    });
+
+    return canvasJSON;
+  };
   return (
-    <div className="ml-2">
+    <div className="bg-F2F5F5">
       {/* <IconButton size="large" onClick={() => addSavePoint(canvas!)}>
         <SaveIcon fontSize="inherit" />
       </IconButton>
@@ -394,6 +415,7 @@ const ToolBox = () => {
           <Opacity onSelectOpacity={handleOpacity} />
         </div>
       )}
+      <button onClick={exportCanvas}>export button</button>
     </div>
   );
 };

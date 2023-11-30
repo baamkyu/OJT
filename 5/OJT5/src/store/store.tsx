@@ -16,4 +16,6 @@ export const answerListAtom = atom<string[]>([]);
 
 export const canvasSavePointAtom = atom<(fabric.Canvas | null)[]>([]);
 
+export const answer = 2;
+
 // export const answerList = atom<fabric.Canvas
