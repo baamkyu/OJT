@@ -27,6 +27,7 @@ const FabricCanvas = () => {
             activeObject instanceof fabric.Textbox &&
             activeObject.isEditing
           ) {
+            // activeObject.setSelectionStyles()
             break;
           }
 
