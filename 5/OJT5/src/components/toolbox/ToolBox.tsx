@@ -288,28 +288,31 @@ const ToolBox = () => {
     // }, [activeObject, currentSavePointIndex]);
   }, [activeObject]);
 
-  const exportCanvas = () => {
-    if (!canvas) {
-      return null;
-    }
+  // const exportCanvas = () => {
+  //   if (!canvas) {
+  //     return null;
+  //   }
+  //   const canvasJSON = canvas.toJSON();
+  //   return canvasJSON;
+  // };
+  // const canvasJSON = exportCanvas();
 
-    const canvasJSON = JSON.stringify(canvas);
-    canvas.loadFromJSON(
-      canvasJSON,
-      function () {
-        setPreviewOpen(true);
-        canvas.renderAll();
-      },
-      function (o, object) {
-        console.log(o, object);
-      }
-    );
+  //   const canvasJSON = JSON.stringify(canvas);
+  //   canvas.loadFromJSON(
+  //     canvasJSON,
+  //     function () {
+  //       setPreviewOpen(true);
+  //       canvas.renderAll();
+  //     },
+  //     function (o, object) {
+  //       console.log(o, object);
+  //     }
+  //   );
 
-    return canvasJSON;
-  };
+  //   return canvasJSON;
+  // };
   return (
     <div className="bg-F2F5F5">
-      {previewOpen && <Preview />}
       {/* <IconButton size="large" onClick={() => addSavePoint(canvas!)}>
         <SaveIcon fontSize="inherit" />
       </IconButton>
@@ -417,7 +420,11 @@ const ToolBox = () => {
           <Opacity onSelectOpacity={handleOpacity} />
         </div>
       )}
-      <button onClick={exportCanvas}>export button</button>
+
+      <button onClick={() => setPreviewOpen(!previewOpen)}>
+        export button
+      </button>
+      {previewOpen && <Preview />}
     </div>
   );
 };

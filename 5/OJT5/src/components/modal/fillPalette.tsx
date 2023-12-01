@@ -1,33 +1,33 @@
-const FillPalette = ({ onSelectColor }) => {
-  const colors = [
-    "transparent",
-    "#000000",
-    "#808080",
-    "#0000ff",
-    "#ffffff",
-    "#ff0000",
-    "#ffc0cb",
-    "#ffa500",
-    "#ffff00",
-    "#008000",
-    "#4b0082",
-    "#800080",
-  ];
-  const colorSelectBox = [
-    "transparent",
-    "bg-black",
-    "bg-gray-500",
-    "bg-blue-300",
-    "bg-white",
-    "bg-red-500",
-    "bg-pink-300",
-    "bg-orange-300",
-    "bg-yellow-300",
-    "bg-green-300",
-    "bg-indigo-300",
-    "bg-purple-300",
-  ];
+const colors = [
+  "transparent",
+  "#000000",
+  "#808080",
+  "#0000ff",
+  "#ffffff",
+  "#ff0000",
+  "#ffc0cb",
+  "#ffa500",
+  "#ffff00",
+  "#008000",
+  "#4b0082",
+  "#800080",
+];
+const colorSelectBox = [
+  "transparent",
+  "bg-black",
+  "bg-gray-500",
+  "bg-blue-300",
+  "bg-white",
+  "bg-red-500",
+  "bg-pink-300",
+  "bg-orange-300",
+  "bg-yellow-300",
+  "bg-green-300",
+  "bg-indigo-300",
+  "bg-purple-300",
+];
 
+const FillPalette = ({ onSelectColor }) => {
   const handleColor = (color: string) => {
     const selectedColor = getColorCode(color);
     console.log(`Selected color code: ${selectedColor}`);
