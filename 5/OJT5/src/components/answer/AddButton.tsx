@@ -25,10 +25,10 @@ const AddButton = () => {
   };
 
   return (
-    <>
+    <div className="flex h-56">
       {activeObject ? (
         // activeObject가 있을 때의 버튼 UI
-        <div className="bg-answernumber w-10 h-56 rounded-xl">
+        <div className="bg-answernumber rounded-xl">
           <IconButton className="w-10 h-56 " onClick={toAnswerList}>
             <AddCircleOutlineIcon
               style={{ color: "white", fontSize: "32px", fontWeight: "bold" }}
@@ -40,7 +40,7 @@ const AddButton = () => {
           <AddCircleOutlineIcon style={{ fontSize: "32px" }} />
         </IconButton>
       )}
-    </>
+    </div>
   );
 };
 export default AddButton;

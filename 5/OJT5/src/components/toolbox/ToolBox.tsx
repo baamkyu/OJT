@@ -1,12 +1,7 @@
 import { fabric } from "fabric";
 import { useAtom, useAtomValue } from "jotai";
 import { useState, useEffect, useRef } from "react";
-import {
-  canvasAtom,
-  images,
-  activeObjectAtom,
-  // canvasSaveAtom,
-} from "../../store/store";
+import { canvasAtom, images, activeObjectAtom } from "../../store/store";
 
 import IconButton from "@mui/material/IconButton";
 import TitleIcon from "@mui/icons-material/Title";
@@ -14,9 +9,7 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CropDinIcon from "@mui/icons-material/CropDin";
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
-// import SaveIcon from "@mui/icons-material/Save";
-// import UndoIcon from "@mui/icons-material/Undo";
-// import RedoIcon from "@mui/icons-material/Redo";
+import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
 
 import PropertyTool from "./PropertyTool";
 import FillPalette from "../modal/fillPalette";
@@ -29,8 +22,6 @@ import Preview from "../modal/Preview";
 const ToolBox = () => {
   const canvas = useAtomValue(canvasAtom);
   const [activeObject, setActiveObject] = useAtom(activeObjectAtom);
-  // const [canvasSave, setCanvasSave] = useAtom(canvasSaveAtom);
-  // const [currentSavePointIndex, setCurrentSavePointIndex] = useState(0);
 
   const [modalState, setModalState] = useState<Record<string, boolean>>({
     fillPaletteOpen: false,
@@ -57,27 +48,6 @@ const ToolBox = () => {
   };
 
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
-
-  // /** 현재 canvas를 저장하는 함수 */
-  const addSavePoint = (canvas: fabric.Canvas) => {
-    if (!canvas) return;
-    setCanvasSave((prev) => [...prev, canvas]);
-  };
-
-  // /** 현재 canvas를 저장하는 함수 */
-  // const moveToPrevSavePoint = () => {
-  //   if (currentSavePointIndex > 0) {
-  //     setCurrentSavePointIndex((prevIndex) => prevIndex - 1);
-  //   }
-  // };
-  // /** 현재 canvas를 저장하는 함수 */
-  // const moveToNextSavePoint = () => {
-  //   if (currentSavePointIndex < canvasSavePoint.length - 1) {
-  //     setCurrentSavePointIndex((prevIndex) => prevIndex + 1);
-  //   }
-  // };
-
-  // const currentSavePoint = canvasSavePoint[currentSavePointIndex];
 
   /** 색깔을 고르면 fill 변경해주는 함수 */
   const handleFillColor = (color: string) => {
@@ -151,7 +121,6 @@ const ToolBox = () => {
       top: 50,
     });
     canvas.add(text);
-    // 캔버스가 정의되는 시점에
 
     canvas.on("selection:created", updateActiveObject);
   };
@@ -242,10 +211,6 @@ const ToolBox = () => {
       return;
     }
     console.log("renderAll");
-    // canvasSavePoint[currentSavePointIndex]?.renderAll();
-    // currentSavePoint?.renderAll();
-    // console.log("canvasSavePoint", canvasSavePoint);
-    // console.log("currentSavePoint", currentSavePoint);
 
     setModalState({
       fillPaletteOpen: false,
@@ -268,8 +233,6 @@ const ToolBox = () => {
       strokeDash: strokeDashPos,
       opacity: opacityPos,
     });
-    // console.log(activeObjectAtom);
-    // console.log(currentSavePointIndex);
 
     canvas.on("selection:created", updateActiveObject);
     canvas.on("selection:updated", updateActiveObject);
@@ -284,68 +247,43 @@ const ToolBox = () => {
       canvas.off("selection:scaling", updateActiveObject);
       canvas.off("selection:rotating", updateActiveObject);
     };
-    // }, [activeObject, currentSavePointIndex]);
   }, [activeObject]);
 
-  // const exportCanvas = () => {
-  //   if (!canvas) {
-  //     return null;
-  //   }
-  //   const canvasJSON = canvas.toJSON();
-  //   return canvasJSON;
-  // };
-  // const canvasJSON = exportCanvas();
-
-  //   const canvasJSON = JSON.stringify(canvas);
-  //   canvas.loadFromJSON(
-  //     canvasJSON,
-  //     function () {
-  //       setPreviewOpen(true);
-  //       canvas.renderAll();
-  //     },
-  //     function (o, object) {
-  //       console.log(o, object);
-  //     }
-  //   );
-
-  //   return canvasJSON;
-  // };
   return (
-    <div className="bg-F2F5F5">
-      {/* <IconButton size="large" onClick={() => addSavePoint(canvas!)}>
-        <SaveIcon fontSize="inherit" />
-      </IconButton> */}
-      {/* <IconButton size="large" onClick={moveToPrevSavePoint}>
-        <UndoIcon fontSize="inherit" />
-      </IconButton>
-      <IconButton size="large" onClick={moveToNextSavePoint}>
-        <RedoIcon fontSize="inherit" />
-      </IconButton> */}
+    // <div className="bg-F2F5F5 w-full">
+    <div>
       <div className="inline-block ml-4">
-        <IconButton size="large" onClick={addText}>
-          <TitleIcon fontSize="inherit" />
+        <IconButton size="large" onClick={() => setPreviewOpen(!previewOpen)}>
+          <SystemUpdateAltIcon fontSize="inherit" />
         </IconButton>
-        <IconButton
-          size="large"
-          onClick={() => setModalState({ imageSelectorOpen: true })}
-        >
-          <AddPhotoAlternateIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton size="large" onClick={addRect}>
-          <CropDinIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton size="large" onClick={addCircle}>
-          <PanoramaFishEyeIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton size="large" onClick={addLine}>
-          <HorizontalRuleIcon fontSize="inherit" />
-        </IconButton>
+        <div className="inline-block ml-4">
+          <IconButton size="large" onClick={addText}>
+            <TitleIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton
+            size="large"
+            onClick={() => setModalState({ imageSelectorOpen: true })}
+          >
+            <AddPhotoAlternateIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton size="large" onClick={addRect}>
+            <CropDinIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton size="large" onClick={addCircle}>
+            <PanoramaFishEyeIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton size="large" onClick={addLine}>
+            <HorizontalRuleIcon fontSize="inherit" />
+          </IconButton>
+        </div>
       </div>
-      <PropertyTool
-        modalState={modalState}
-        setModalState={setModalState}
-        iconPositionRef={iconPositionRef}
-      />
+      <div className="ml-4 inline-block">
+        <PropertyTool
+          modalState={modalState}
+          setModalState={setModalState}
+          iconPositionRef={iconPositionRef}
+        />
+      </div>
       {/* 모달창 */}
       {modalState.imageSelectorOpen && (
         <ImageSelector
@@ -420,9 +358,6 @@ const ToolBox = () => {
         </div>
       )}
 
-      <button onClick={() => setPreviewOpen(!previewOpen)}>
-        export button
-      </button>
       {previewOpen && (
         <>
           <div

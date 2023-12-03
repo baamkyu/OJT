@@ -82,15 +82,13 @@ const FabricCanvas = () => {
     }
     document.addEventListener("keydown", handleKeyDown);
 
-    // document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      // document.body.style.overflow = "visible";
     };
   }, [canvas, setCanvas, activeObject]);
 
   return (
-    <div className="h-screen">
+    <div>
       <canvas ref={canvasRef}></canvas>
     </div>
   );
