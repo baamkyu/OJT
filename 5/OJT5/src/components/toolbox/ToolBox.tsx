@@ -5,9 +5,8 @@ import {
   canvasAtom,
   images,
   activeObjectAtom,
-  // canvasSavePointAtom,
+  // canvasSaveAtom,
 } from "../../store/store";
-// import ExportCanvas from "../../util/exportCanvas";
 
 import IconButton from "@mui/material/IconButton";
 import TitleIcon from "@mui/icons-material/Title";
@@ -30,7 +29,7 @@ import Preview from "../modal/Preview";
 const ToolBox = () => {
   const canvas = useAtomValue(canvasAtom);
   const [activeObject, setActiveObject] = useAtom(activeObjectAtom);
-  // const [canvasSavePoint, setCanvasSavePoint] = useAtom(canvasSavePointAtom);
+  // const [canvasSave, setCanvasSave] = useAtom(canvasSaveAtom);
   // const [currentSavePointIndex, setCurrentSavePointIndex] = useState(0);
 
   const [modalState, setModalState] = useState<Record<string, boolean>>({
@@ -60,10 +59,10 @@ const ToolBox = () => {
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
 
   // /** 현재 canvas를 저장하는 함수 */
-  // const addSavePoint = (canvas: fabric.Canvas) => {
-  //   if (!canvas) return;
-  //   setCanvasSavePoint((prev) => [...prev, canvas]);
-  // };
+  const addSavePoint = (canvas: fabric.Canvas) => {
+    if (!canvas) return;
+    setCanvasSave((prev) => [...prev, canvas]);
+  };
 
   // /** 현재 canvas를 저장하는 함수 */
   // const moveToPrevSavePoint = () => {
@@ -234,7 +233,7 @@ const ToolBox = () => {
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
     setActiveObject(activeObject);
-    console.log("updateActiveObject");
+    console.log("updateActiveObject", activeObject);
   };
 
   useEffect(() => {
@@ -315,8 +314,8 @@ const ToolBox = () => {
     <div className="bg-F2F5F5">
       {/* <IconButton size="large" onClick={() => addSavePoint(canvas!)}>
         <SaveIcon fontSize="inherit" />
-      </IconButton>
-      <IconButton size="large" onClick={moveToPrevSavePoint}>
+      </IconButton> */}
+      {/* <IconButton size="large" onClick={moveToPrevSavePoint}>
         <UndoIcon fontSize="inherit" />
       </IconButton>
       <IconButton size="large" onClick={moveToNextSavePoint}>
@@ -424,7 +423,15 @@ const ToolBox = () => {
       <button onClick={() => setPreviewOpen(!previewOpen)}>
         export button
       </button>
-      {previewOpen && <Preview />}
+      {previewOpen && (
+        <>
+          <div
+            className="absolute w-screen h-screen opacity-60 z-10 bg-black"
+            onClick={() => setPreviewOpen(!previewOpen)}
+          ></div>
+          <Preview onClose={() => setPreviewOpen(!previewOpen)} />
+        </>
+      )}
     </div>
   );
 };
