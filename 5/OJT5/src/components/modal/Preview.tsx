@@ -1,7 +1,7 @@
 import { fabric } from "fabric";
 import { useAtomValue } from "jotai";
 import { answerAtom, canvasAtom } from "../../store/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -10,6 +10,8 @@ const Preview = ({ onClose }) => {
   const canvas = useAtomValue(canvasAtom);
   const answer = useAtomValue(answerAtom);
   const canvasJSON = canvas?.toJSON();
+  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
+  const [result, setResult] = useState<boolean | null>(null);
 
   useEffect(() => {
     const newCanvas = new fabric.Canvas("previewCanvas", {
@@ -29,24 +31,35 @@ const Preview = ({ onClose }) => {
 
     // 객체 클릭 이벤트 리스너 추가
     newCanvas.on("mouse:down", function (event) {
-      const clickedObject = event.target;
+      const clickedObject = event.target?.toObject();
+      const clickX = event.e.clientX; // 마우스 클릭된 x 좌표
+      const clickY = event.e.clientY; // 마우스 클릭된 y 좌표
 
-      // 클릭된 객체의 속성들을 가져오는 부분 수정
-      const clickedObjectProps = clickedObject?.toObject();
-      console.log(clickedObjectProps);
+      console.log(clickedObject);
       console.log("answer", answer);
       if (
-        clickedObjectProps &&
-        clickedObjectProps.fill === answer.fill &&
-        clickedObjectProps.height === answer.height &&
-        clickedObjectProps.opacity === answer.opacity &&
-        clickedObjectProps.width === answer.width &&
-        clickedObjectProps.type === answer.type &&
-        Math.round(clickedObjectProps.scaleX) == Math.round(answer.scaleX) &&
-        Math.round(clickedObjectProps.scaleY) == Math.round(answer.scaleY)
+        clickedObject &&
+        clickedObject.fill === answer.fill &&
+        clickedObject.height === answer.height &&
+        clickedObject.opacity === answer.opacity &&
+        clickedObject.width === answer.width &&
+        clickedObject.type === answer.type &&
+        Math.round(clickedObject.scaleX) == Math.round(answer.scaleX) &&
+        Math.round(clickedObject.scaleY) == Math.round(answer.scaleY)
       ) {
-        console.log("Attributes match!");
+        setResult(true);
+
+        setTimeout(() => {
+          setResult(null);
+        }, 5000);
+      } else {
+        setResult(false);
+
+        setTimeout(() => {
+          setResult(null);
+        }, 5000);
       }
+      setClickPosition({ x: clickX, y: clickY });
     });
     return () => {
       // 컴포넌트 언마운트 시 이벤트 리스너 제거
@@ -62,6 +75,45 @@ const Preview = ({ onClose }) => {
           <CloseIcon />
         </IconButton>
       </div>
+      {result === true ? (
+        <div
+          style={{
+            position: "absolute",
+            left: "calc(50% - 150px)",
+            top: "calc(50% - 25px)",
+            width: "300px",
+            height: "50px",
+            backgroundColor: "green",
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 50,
+          }}
+        >
+          O
+        </div>
+      ) : result === false ? (
+        <div
+          style={{
+            position: "absolute",
+            left: "calc(50% - 150px)",
+            top: "calc(50% - 25px)",
+            width: "300px",
+            height: "50px",
+            backgroundColor: "red",
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 50,
+          }}
+        >
+          X
+        </div>
+      ) : (
+        <div></div>
+      )}
       <canvas id="previewCanvas" style={{ width: "800px", height: "500px" }} />
     </div>
     // </div>

@@ -361,7 +361,7 @@ const ToolBox = () => {
       {previewOpen && (
         <>
           <div
-            className="absolute w-screen h-screen opacity-60 z-10 bg-black"
+            className="absolute w-full h-full top-0 opacity-60 z-10 bg-black"
             onClick={() => setPreviewOpen(!previewOpen)}
           ></div>
           <Preview onClose={() => setPreviewOpen(!previewOpen)} />

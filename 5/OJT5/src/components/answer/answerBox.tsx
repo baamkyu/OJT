@@ -1,5 +1,5 @@
 import { answerAtom, answerListAtom } from "../../store/store";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
@@ -8,7 +8,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 
 const AnswerBox = () => {
   const [answerList, setAnswerList] = useAtom(answerListAtom);
-  const [answer, setAnswer] = useAtom(answerAtom);
+  const setAnswer = useSetAtom(answerAtom);
 
   const removeFromAnswerList = (idxToRemove: number) => {
     setAnswerList((prevList) =>
