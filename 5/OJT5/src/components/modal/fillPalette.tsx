@@ -26,12 +26,10 @@ const colorSelectBox = [
   "bg-indigo-300",
   "bg-purple-300",
 ];
-
-const FillPalette = ({ onSelectColor }) => {
+const FillPalette = ({ onSelect }: { onSelect: (color: string) => void }) => {
   const handleColor = (color: string) => {
     const selectedColor = getColorCode(color);
-    console.log(`Selected color code: ${selectedColor}`);
-    onSelectColor(selectedColor); // 선택한 색상을 부모 컴포넌트로 전달
+    onSelect(selectedColor); // 선택한 색상을 부모 컴포넌트로 전달
   };
 
   const getColorCode = (color: string) => {

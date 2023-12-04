@@ -21,7 +21,7 @@ export const answerListAtom = atom<
 >([]);
 
 /** 정답 후보 중 정답으로 설정된 초이스 항목 */
-export const answerAtom = atom<any>("");
+export const answerAtom = atom<fabric.Object | null>(null);
 
 // export const canvasSaveAtom = atom<(fabric.Canvas | null)[]>([]);
 

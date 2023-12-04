@@ -9,7 +9,7 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CropDinIcon from "@mui/icons-material/CropDin";
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
-import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
+import PreviewIcon from "@mui/icons-material/Preview";
 
 import PropertyTool from "./PropertyTool";
 import FillPalette from "../modal/fillPalette";
@@ -189,12 +189,13 @@ const ToolBox = () => {
     canvas.on("selection:created", updateActiveObject);
   };
 
-  const getPosition = (ref) => {
+  /** 클릭된 button의 x좌표를 반환해주는 함수 */
+  const getPosition = (ref: React.RefObject<HTMLButtonElement>) => {
     if (ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      return rect.left; // 또는 다른 필요한 좌표 값
+      const button = ref.current.getBoundingClientRect();
+      return button.left;
     }
-    return 0; // 만약 ref가 null인 경우 기본값
+    return 0;
   };
 
   /** 선택된 object를 전역에서 관리하기 위한 함수 */
@@ -202,15 +203,10 @@ const ToolBox = () => {
     if (!canvas) return;
     const activeObject = canvas.getActiveObject();
     setActiveObject(activeObject);
-    console.log("updateActiveObject", activeObject);
   };
 
   useEffect(() => {
-    if (!canvas) {
-      console.log("no canvas");
-      return;
-    }
-    console.log("renderAll");
+    if (!canvas) return;
 
     setModalState({
       fillPaletteOpen: false,
@@ -250,11 +246,10 @@ const ToolBox = () => {
   }, [activeObject]);
 
   return (
-    // <div className="bg-F2F5F5 w-full">
     <div>
       <div className="inline-block ml-4">
         <IconButton size="large" onClick={() => setPreviewOpen(!previewOpen)}>
-          <SystemUpdateAltIcon fontSize="inherit" />
+          <PreviewIcon fontSize="inherit" />
         </IconButton>
         <div className="inline-block ml-4">
           <IconButton size="large" onClick={addText}>
@@ -306,7 +301,7 @@ const ToolBox = () => {
             zIndex: 10,
           }}
         >
-          <FillPalette onSelectColor={handleFillColor} />
+          <FillPalette onSelect={handleFillColor} />
         </div>
       )}
       {modalState.strokePaletteOpen && (
@@ -318,7 +313,7 @@ const ToolBox = () => {
             zIndex: 10,
           }}
         >
-          <FillPalette onSelectColor={handleStrokeColor} />
+          <FillPalette onSelect={handleStrokeColor} />
         </div>
       )}
       {modalState.strokeWidthOpen && (
@@ -330,7 +325,7 @@ const ToolBox = () => {
             zIndex: 10,
           }}
         >
-          <StrokeWidth onSelectWidth={handleStrokeWidth} />
+          <StrokeWidth onSelect={handleStrokeWidth} />
         </div>
       )}
       {modalState.strokeDashOpen && (
@@ -342,7 +337,7 @@ const ToolBox = () => {
             zIndex: 10,
           }}
         >
-          <StrokeDash onSelectDash={handleStrokeDash} />
+          <StrokeDash onSelect={handleStrokeDash} />
         </div>
       )}
       {modalState.opacityOpen && (
@@ -354,7 +349,7 @@ const ToolBox = () => {
             zIndex: 10,
           }}
         >
-          <Opacity onSelectOpacity={handleOpacity} />
+          <Opacity onSelect={handleOpacity} />
         </div>
       )}
 

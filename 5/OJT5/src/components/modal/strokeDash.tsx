@@ -1,5 +1,10 @@
-const StrokeDash = ({ onSelectDash }) => {
+const StrokeDash = ({
+  onSelect,
+}: {
+  onSelect: (dash: Array<number>) => void;
+}) => {
   const strokeDashList = [
+    [0],
     [3, 3],
     [6, 6],
     [10, 10],
@@ -9,7 +14,7 @@ const StrokeDash = ({ onSelectDash }) => {
 
   const handleSelect = (dash: Array<number>) => {
     const index = strokeDashList.indexOf(dash);
-    onSelectDash(strokeDashList[index]);
+    onSelect(strokeDashList[index]);
   };
 
   return (

@@ -15,6 +15,7 @@ const FabricCanvas = () => {
       backgroundColor: "#ffffff",
     });
 
+  /** 단축키, 키보드이벤트 세팅 */
   const handleKeyDown = (event) => {
     const pressedKey = event.key;
 
@@ -23,13 +24,8 @@ const FabricCanvas = () => {
       switch (pressedKey) {
         case "Delete":
         case "Backspace":
-          if (
-            activeObject instanceof fabric.Textbox &&
-            activeObject.isEditing
-          ) {
-            // activeObject.setSelectionStyles()
+          if (activeObject instanceof fabric.Textbox && activeObject.isEditing)
             break;
-          }
 
           if (canvasObjects) {
             canvasObjects.forEach((obj) => {
@@ -72,9 +68,6 @@ const FabricCanvas = () => {
       console.log("no active object");
     }
   };
-  // useEffect(() => {
-  //   // Force a re-render when activeObject changes
-  // }, [activeObject]);
 
   useEffect(() => {
     if (!canvas) {

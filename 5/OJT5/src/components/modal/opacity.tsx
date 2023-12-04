@@ -1,10 +1,10 @@
-const Opacity = ({ onSelectOpacity }) => {
+const Opacity = ({ onSelect }: { onSelect: (opacity: number) => void }) => {
   const opacityList = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
 
   const handleSelect = (opacity: number) => {
     const index = opacityList.indexOf(opacity);
     console.log(opacityList[index]);
-    onSelectOpacity(opacityList[index]);
+    onSelect(opacityList[index]);
   };
 
   return (

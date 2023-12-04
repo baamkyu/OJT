@@ -1,9 +1,9 @@
-const StrokeWidth = ({ onSelectWidth }) => {
+const StrokeWidth = ({ onSelect }: { onSelect: (width: number) => void }) => {
   const strokeWidthList = [0, 1, 2, 3, 4, 8, 12, 16, 24];
 
   const handleSelect = (width: number) => {
     const index = strokeWidthList.indexOf(width);
-    onSelectWidth(strokeWidthList[index]);
+    onSelect(strokeWidthList[index]);
   };
 
   return (

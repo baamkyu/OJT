@@ -6,19 +6,19 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 /** 문제 풀 수 있는 모달 */
-const Preview = ({ onClose }) => {
+const Preview = ({ onClose }: { onClose: () => void }) => {
   const canvas = useAtomValue(canvasAtom);
   const answer = useAtomValue(answerAtom);
-  const canvasJSON = canvas?.toJSON();
-  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
   const [result, setResult] = useState<boolean | null>(null);
+  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
+
+  const canvasJSON = canvas?.toJSON();
 
   useEffect(() => {
     const newCanvas = new fabric.Canvas("previewCanvas", {
       width: 1200,
       height: 675,
       backgroundColor: "#ffffff",
-      selection: false,
     });
 
     newCanvas.loadFromJSON(canvasJSON, function () {
@@ -34,31 +34,32 @@ const Preview = ({ onClose }) => {
       const clickedObject = event.target?.toObject();
       const clickX = event.e.clientX; // 마우스 클릭된 x 좌표
       const clickY = event.e.clientY; // 마우스 클릭된 y 좌표
-
-      console.log(clickedObject);
-      console.log("answer", answer);
+      console.log("window", window.innerWidth, window.innerHeight);
+      console.log("click", clickX, clickY);
       if (
         clickedObject &&
+        answer &&
         clickedObject.fill === answer.fill &&
         clickedObject.height === answer.height &&
         clickedObject.opacity === answer.opacity &&
         clickedObject.width === answer.width &&
         clickedObject.type === answer.type &&
-        Math.round(clickedObject.scaleX) == Math.round(answer.scaleX) &&
-        Math.round(clickedObject.scaleY) == Math.round(answer.scaleY)
+        Math.round(clickedObject.scaleX) === Math.round(answer.scaleX || 0) &&
+        Math.round(clickedObject.scaleY) === Math.round(answer.scaleY || 0)
       ) {
         setResult(true);
 
         setTimeout(() => {
           setResult(null);
-        }, 5000);
+        }, 3000);
       } else {
         setResult(false);
 
         setTimeout(() => {
           setResult(null);
-        }, 5000);
+        }, 3000);
       }
+
       setClickPosition({ x: clickX, y: clickY });
     });
     return () => {
@@ -79,27 +80,29 @@ const Preview = ({ onClose }) => {
         <div
           style={{
             position: "absolute",
-            left: "calc(50% - 150px)",
-            top: "calc(50% - 25px)",
-            width: "300px",
+            left: `calc(${clickPosition.x - window.innerWidth / 2 + 600}px)`,
+            top: `calc(${clickPosition.y - window.innerHeight / 2 + 338}px)`,
+            width: "100px",
             height: "50px",
             backgroundColor: "green",
             color: "white",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            fontSize: "24px",
+            borderRadius: "16px",
             zIndex: 50,
           }}
         >
-          O
+          정답!
         </div>
       ) : result === false ? (
         <div
           style={{
             position: "absolute",
-            left: "calc(50% - 150px)",
-            top: "calc(50% - 25px)",
-            width: "300px",
+            left: `calc(${clickPosition.x - window.innerWidth / 2 + 600}px)`,
+            top: `calc(${clickPosition.y - window.innerHeight / 2 + 338}px)`,
+            width: "70px",
             height: "50px",
             backgroundColor: "red",
             color: "white",
@@ -107,14 +110,16 @@ const Preview = ({ onClose }) => {
             alignItems: "center",
             justifyContent: "center",
             zIndex: 50,
+            fontSize: "24px",
+            borderRadius: "16px",
           }}
         >
-          X
+          오답
         </div>
       ) : (
         <div></div>
       )}
-      <canvas id="previewCanvas" style={{ width: "800px", height: "500px" }} />
+      <canvas id="previewCanvas" />
     </div>
     // </div>
   );
