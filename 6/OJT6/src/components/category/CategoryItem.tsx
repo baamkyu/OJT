@@ -5,7 +5,7 @@ import PjtExplainModal from "../modal/PjtExplainModal";
 
 import { useState } from "react";
 
-const CategoryItem = ({ id, onClick }) => {
+const CategoryItem = ({ id, onClick }: { id: string; onClick: () => void }) => {
   const [pjtTitle, setPjtTitle] = useState("");
   const [pjtDetail, setPjtDetail] = useState("");
   const [pjtUseTool, setPjtUseTool] = useState("");
@@ -25,16 +25,16 @@ const CategoryItem = ({ id, onClick }) => {
         setPjtDetail("패스 애니메이션 제작");
         setModalOpen(true);
         break;
-      case "3-ex":
-        setPjtTitle("벽돌깨기 게임");
-        setPjtUseTool("CANVAS");
-        setPjtDetail("캔버스로 벽돌깨기 게임 제작");
-        setModalOpen(true);
-        break;
       case "3":
         setPjtTitle("전투기 게임");
         setPjtUseTool("CANVAS");
         setPjtDetail("캔버스로 전투기 게임 제작");
+        setModalOpen(true);
+        break;
+      case "4-ex":
+        setPjtTitle("벽돌깨기 게임");
+        setPjtUseTool("Phaser");
+        setPjtDetail("Phaser 라이브러리 활용한 게임 개발 튜토리얼");
         setModalOpen(true);
         break;
       case "4":

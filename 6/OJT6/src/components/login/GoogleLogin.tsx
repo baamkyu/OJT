@@ -2,11 +2,11 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { useSetAtom } from "jotai";
 
-import { isLogin } from "../../store/store";
+import { isLoginAtom } from "../../store/store";
 
 /** 구글로그인 시도하는 함수 */
 const TryGoogleLogin = () => {
-  const setIsLogin = useSetAtom(isLogin);
+  const setIsLogin = useSetAtom(isLoginAtom);
   const navigate = useNavigate();
 
   const clientId =

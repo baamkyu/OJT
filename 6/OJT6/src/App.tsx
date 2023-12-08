@@ -5,23 +5,23 @@ import { useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 
-import { isLogin } from "./store/store";
+import { isLoginAtom } from "./store/store";
 import { useAtomValue } from "jotai";
 
 function App() {
-  const isLoginState = useAtomValue(isLogin);
+  const isLogin = useAtomValue(isLoginAtom);
   const navigate = useNavigate();
 
   /** 로그인 여부 판별 후 리다이렉트 */
   useEffect(() => {
-    if (!isLoginState) {
+    if (!isLogin) {
       navigate("/login");
       return;
     } else {
       navigate("/");
       return;
     }
-  }, [isLoginState]);
+  }, [isLogin]);
 
   return (
     <div className="flex justify-center text-center">

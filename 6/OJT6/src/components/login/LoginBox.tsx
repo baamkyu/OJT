@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { isLogin } from "../../store/store";
+import { isLoginAtom } from "../../store/store";
 import { useSetAtom } from "jotai";
 
 import TryGoogleLogin from "./GoogleLogin";
@@ -7,7 +7,7 @@ import TryGoogleLogin from "./GoogleLogin";
 const Login = () => {
   const [inputId, setInputId] = useState<string>("");
   const [inputPw, setInputPw] = useState<string>("");
-  const setIsLogin = useSetAtom(isLogin);
+  const setIsLogin = useSetAtom(isLoginAtom);
 
   /** msw를 활용하여 로그인을 시도하는 함수 */
   const tryLogin = async () => {
