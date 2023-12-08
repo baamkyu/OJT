@@ -1,6 +1,6 @@
 import Header from "../components/header/Header";
-import ContentBox from "../components/body/ContentBox";
-import Category from "../components/body/Category";
+import ContentBox from "../components/project/ContentBox";
+import Category from "../components/category/Category";
 
 const MainPage = () => {
   return (

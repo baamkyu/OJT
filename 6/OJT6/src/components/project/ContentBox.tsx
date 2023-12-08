@@ -1,4 +1,4 @@
 const ContentBox = () => {
-  return <></>;
+  return <div className="bg-black w-full h-full"></div>;
 };
 export default ContentBox;

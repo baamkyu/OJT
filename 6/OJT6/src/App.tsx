@@ -1,7 +1,3 @@
-// import Header from "./components/header/Header";
-// import Body from "./components/body/Body";
-// import LoginPage from "./pages/LoginPage";
-// import Transition from "./Transition";
 import { Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -31,7 +27,7 @@ function App() {
     <div className="flex justify-center text-center">
       <div className="w-[1172px] flex justify-center flex-col">
         <Routes>
-          <Route path="/" element={<MainPage />}></Route>
+          <Route path="" element={<MainPage />}></Route>
           <Route path="/login" element={<LoginPage />}></Route>
         </Routes>
       </div>

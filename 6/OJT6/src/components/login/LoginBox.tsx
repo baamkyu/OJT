@@ -1,16 +1,32 @@
 import { useState } from "react";
-import Swal from "sweetalert2";
+import { isLogin } from "../../store/store";
+import { useSetAtom } from "jotai";
 
-import TryGoogleLogin from "../GoogleLogin";
+import TryGoogleLogin from "./GoogleLogin";
 
 const Login = () => {
   const [inputId, setInputId] = useState<string>("");
   const [inputPw, setInputPw] = useState<string>("");
+  const setIsLogin = useSetAtom(isLogin);
 
-  const tryLogin = () => {
-    console.log("inputId", inputId);
-    console.log("inputPw", inputPw);
-    Swal.fire("로그인 시도");
+  /** msw를 활용하여 로그인을 시도하는 함수 */
+  const tryLogin = async () => {
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          inputId: inputId,
+          inputPw: inputPw,
+        }),
+      });
+      // return되는 반환 값
+      const result = await response.json();
+      // 반환 값에 따른 로직 추가
+      result.login ? setIsLogin(true) : setIsLogin(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   return (

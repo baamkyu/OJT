@@ -1,5 +1,5 @@
 import Header from "../components/header/Header";
-import LoginBox from "../components/body/LoginBox";
+import LoginBox from "../components/login/LoginBox";
 import { Link } from "react-router-dom";
 
 const LoginPage = () => {
