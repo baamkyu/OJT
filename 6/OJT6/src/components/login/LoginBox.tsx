@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { isLoginAtom } from "../../store/store";
-import { useSetAtom } from "jotai";
+import { useNavigate } from "react-router-dom";
 
 import TryGoogleLogin from "./GoogleLogin";
 
 const Login = () => {
   const [inputId, setInputId] = useState<string>("");
   const [inputPw, setInputPw] = useState<string>("");
-  const setIsLogin = useSetAtom(isLoginAtom);
+  const navigate = useNavigate();
 
   /** msw를 활용하여 로그인을 시도하는 함수 */
   const tryLogin = async () => {
@@ -22,8 +21,12 @@ const Login = () => {
       });
       // return되는 반환 값
       const result = await response.json();
+      console.log(result);
       // 반환 값에 따른 로직 추가
-      result.login ? setIsLogin(true) : setIsLogin(false);
+      result.login &&
+        (localStorage.setItem("token", result.token),
+        localStorage.setItem("userName", result.userName));
+      navigate("/");
     } catch (error) {
       console.error("Error fetching data:", error);
     }

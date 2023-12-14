@@ -4,13 +4,11 @@ import { useEffect } from "react";
 
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
-
-import { isLoginAtom } from "./store/store";
-import { useAtomValue } from "jotai";
+import MyPage from "./pages/MyPage";
 
 function App() {
-  const isLogin = useAtomValue(isLoginAtom);
   const navigate = useNavigate();
+  const isLogin = localStorage.getItem("token");
 
   /** 로그인 여부 판별 후 리다이렉트 */
   useEffect(() => {
@@ -29,6 +27,7 @@ function App() {
         <Routes>
           <Route path="" element={<MainPage />}></Route>
           <Route path="/login" element={<LoginPage />}></Route>
+          <Route path="/mypage" element={<MyPage />}></Route>
         </Routes>
       </div>
     </div>

@@ -31,12 +31,6 @@ const CategoryItem = ({ id, onClick }: { id: string; onClick: () => void }) => {
         setPjtDetail("캔버스로 전투기 게임 제작");
         setModalOpen(true);
         break;
-      case "4-ex":
-        setPjtTitle("벽돌깨기 게임");
-        setPjtUseTool("Phaser");
-        setPjtDetail("Phaser 라이브러리 활용한 게임 개발 튜토리얼");
-        setModalOpen(true);
-        break;
       case "4":
         setPjtTitle("레이스");
         setPjtUseTool("Phaser");

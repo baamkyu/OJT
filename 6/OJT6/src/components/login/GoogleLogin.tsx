@@ -1,4 +1,9 @@
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import {
+  GoogleLogin,
+  GoogleOAuthProvider,
+  // useGoogleLogin,
+  // hasGrantedAnyScopeGoogle,
+} from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { useSetAtom } from "jotai";
 
@@ -11,14 +16,21 @@ const TryGoogleLogin = () => {
 
   const clientId =
     "22782167732-u6d2fmv2bnoh4k6jkmj6nmkkal9hcavq.apps.googleusercontent.com";
+
+  // const hasAccess = hasGrantedAnyScopeGoogle(tokenResponse, "profile");
+
+  // useGoogleLogin({ scope: "name" });
+
+  const onSuccess = (res) => {
+    console.log(res);
+    setIsLogin(true);
+    navigate("/");
+  };
+
   return (
     <GoogleOAuthProvider clientId={clientId}>
       <GoogleLogin
-        onSuccess={(res) => {
-          console.log("success", res);
-          setIsLogin(true);
-          navigate("/");
-        }}
+        onSuccess={onSuccess}
         onError={() => {
           console.log("error");
         }}

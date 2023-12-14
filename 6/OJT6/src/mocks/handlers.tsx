@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 import Swal from "sweetalert2";
+import { generateToken } from "../utils/tokenUtils";
 
 export const handlers = [
   http.post("/api/login", async ({ request }) => {
@@ -11,8 +12,14 @@ export const handlers = [
     // 예제로 간단한 사용자 이름과 비밀번호를 확인
     if (inputId === "test" && inputPw === "1234") {
       // 로그인이 성공하면 세션에 사용자 정보를 저장하거나 토큰을 발급할 수 있음
+      const token = generateToken(inputId);
       console.log("로그인 성공");
-      return HttpResponse.json({ login: true, message: "로그인 성공" });
+      return HttpResponse.json({
+        login: true,
+        userName: "임범규",
+        message: "로그인 성공",
+        token,
+      });
     } else {
       // 로그인 실패 시 에러 응답
       if (inputId === "test") {

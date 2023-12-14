@@ -7,7 +7,8 @@ const MainPage = () => {
     <>
       <Header />
       <Category />
-      <div className="flex justify-center h-[800px] w-full mt-4 bg-blue-100 rounded-2xl">
+      {/* <div className="flex justify-center h-[800px] w-full mt-4 bg-blue-100 rounded-2xl"> */}
+      <div className="h-[800px] w-full mt-4">
         <ContentBox />
       </div>
     </>
