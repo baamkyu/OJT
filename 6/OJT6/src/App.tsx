@@ -17,6 +17,34 @@ function App() {
       return;
     } else {
       navigate("/");
+      if (!localStorage.getItem("ojt1Data")) {
+        const data = { solvedNum: 0, wrongNum: 0, correctNum: 0 };
+        localStorage.setItem("ojt1Data", JSON.stringify(data));
+      }
+      if (!localStorage.getItem("ojt2Data")) {
+        const data = { totalPlayNum: 0, totalPlayTime: 0, curPlayTime: 0 };
+        localStorage.setItem("ojt2Data", JSON.stringify(data));
+      }
+      if (!localStorage.getItem("ojt3Data")) {
+        const data = {
+          getMoney: 0,
+          shootCount: 0,
+          hitCount: 0,
+          hitBullet: 0,
+          hitBomb: 0,
+          hitMoney: 0,
+        };
+        localStorage.setItem("ojt3Data", JSON.stringify(data));
+      }
+      if (!localStorage.getItem("ojt4Data")) {
+        const data = {
+          totalPlayNum: 0,
+          timeInSeconds: 0,
+          bestTimeInSeconds: 1000,
+          curTimeInSeconds: 0,
+        };
+        localStorage.setItem("ojt4Data", JSON.stringify(data));
+      }
       return;
     }
   }, [isLogin]);

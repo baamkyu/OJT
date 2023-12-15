@@ -527,7 +527,7 @@ export const ojt2Atom = atom({ finishedNum: 0, time: 0 });
 
 export const ojt3Atom = atom({
   getMoney: 0,
-  hitRate: 0,
+  shootCount: 0,
   hitBullet: 0,
   hitBomb: 0,
   hitMoney: 0,
