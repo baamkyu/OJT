@@ -11,6 +11,7 @@ const ContentBox = () => {
   const ojt2DataString = localStorage.getItem("ojt2Data");
   const ojt3DataString = localStorage.getItem("ojt3Data");
   const ojt4DataString = localStorage.getItem("ojt4Data");
+  const ojt5DataString = localStorage.getItem("ojt5Data");
   let ojt1Data: { solvedNum: number; wrongNum: number; correctNum: number };
   let ojt2Data: {
     totalPlayNum: number;
@@ -31,6 +32,11 @@ const ContentBox = () => {
     bestTimeInSeconds: number;
     curTimeInSeconds: number;
   };
+  let ojt5Data: {
+    solvedNum: number;
+    wrongNum: number;
+    correctNum: number;
+  };
   if (ojt1DataString) {
     ojt1Data = JSON.parse(ojt1DataString);
   }
@@ -43,13 +49,16 @@ const ContentBox = () => {
   if (ojt4DataString) {
     ojt4Data = JSON.parse(ojt4DataString);
   }
+  if (ojt5DataString) {
+    ojt5Data = JSON.parse(ojt5DataString);
+  }
 
   useEffect(() => {
     const handler = function (event: MessageEvent) {
       switch (event.data.type) {
         case "ojt1 correct":
           ojt1Data.solvedNum += 1;
-          ojt1Data!.correctNum += 1;
+          ojt1Data.correctNum += 1;
           localStorage.setItem("ojt1Data", JSON.stringify(ojt1Data));
           console.log("ojt1 correct 실행");
           break;
@@ -88,6 +97,21 @@ const ContentBox = () => {
           if (event.data.timeInSeconds < ojt4Data.bestTimeInSeconds)
             ojt4Data.bestTimeInSeconds = event.data.timeInSeconds;
           localStorage.setItem("ojt4Data", JSON.stringify(ojt4Data));
+          break;
+
+        case "ojt5 correct":
+          console.log("ojt5 correct");
+          ojt5Data.correctNum += 1;
+          ojt5Data.solvedNum += 1;
+          localStorage.setItem("ojt5Data", JSON.stringify(ojt5Data));
+          break;
+
+        case "ojt5 wrong":
+          console.log("ojt5 wrong");
+          ojt5Data.wrongNum += 1;
+          ojt5Data.solvedNum += 1;
+          localStorage.setItem("ojt5Data", JSON.stringify(ojt5Data));
+          break;
       }
     };
     window.addEventListener("message", handler);

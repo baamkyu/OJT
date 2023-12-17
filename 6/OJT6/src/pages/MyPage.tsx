@@ -2,7 +2,7 @@ import Header from "../components/header/Header";
 import Category from "../components/category/Category";
 import StatisticsBox from "../components/project/StatisticsBox";
 import { useEffect, useState } from "react";
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { selectedProjectAtom } from "../store/store";
 import Swal from "sweetalert2";
 import { IconButton } from "@mui/material";
@@ -11,7 +11,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const MyPage = () => {
-  const setSelectedProject = useSetAtom(selectedProjectAtom);
+  const [selectedProject, setSelectedProject] = useAtom(selectedProjectAtom);
 
   const [isStatisticsOpen, setIsStatisticsOpen] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -49,13 +49,20 @@ const MyPage = () => {
           )}
         </IconButton>
       </div>
+
       {isStatisticsOpen && (
         <>
           <Category />
-          <StatisticsBox />
         </>
       )}
-
+      {selectedProject && (
+        <div>
+          <p className="flex mt-8 ml-8 text-2xl font-bold">
+            OJT{selectedProject} 기록
+          </p>
+          <StatisticsBox />
+        </div>
+      )}
       <div className="flex justify-center mt-8">
         <button
           onClick={doLogout}

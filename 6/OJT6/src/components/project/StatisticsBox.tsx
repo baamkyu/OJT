@@ -2,6 +2,7 @@ import { selectedProjectAtom } from "../../store/store";
 import { useAtomValue } from "jotai";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const StatisticsBox = () => {
@@ -15,16 +16,29 @@ const StatisticsBox = () => {
   const ojt3Data = JSON.parse(storedOjt3Data!);
   const storedOjt4Data = localStorage.getItem("ojt4Data");
   const ojt4Data = JSON.parse(storedOjt4Data!);
+  const storedOjt5Data = localStorage.getItem("ojt5Data");
+  const ojt5Data = JSON.parse(storedOjt5Data!);
   console.log("ojt1Data", ojt1Data);
   console.log("ojt2Data", ojt2Data);
   console.log("ojt3Data", ojt3Data);
   console.log("ojt4Data", ojt4Data);
+  console.log("ojt5Data", ojt5Data);
 
   const ojt1chart = {
     labels: ["정답", "오답"],
     datasets: [
       {
         data: [ojt1Data.correctNum, ojt1Data.wrongNum],
+        backgroundColor: ["rgb(99, 255, 132)", "rgb(255, 99, 132)"],
+        hoverOffset: 4,
+      },
+    ],
+  };
+  const ojt5chart = {
+    labels: ["정답", "오답"],
+    datasets: [
+      {
+        data: [ojt5Data.correctNum, ojt5Data.wrongNum],
         backgroundColor: ["rgb(99, 255, 132)", "rgb(255, 99, 132)"],
         hoverOffset: 4,
       },
@@ -37,8 +51,10 @@ const StatisticsBox = () => {
       legend: {
         display: true,
         labels: {
+          color: "white",
           font: {
-            size: 24, // 글자 크기 조절
+            size: 24,
+            weight: 700,
           },
         },
       },
@@ -56,66 +72,179 @@ const StatisticsBox = () => {
         ojt3Data.shootCount) *
         1000
     ) / 10;
+  const ojt5rate =
+    Math.round(
+      (ojt5Data.correctNum / (ojt5Data.wrongNum + ojt5Data.correctNum)) * 1000
+    ) / 10;
 
+  const secondToMinute = (time: number): string => {
+    const min = Math.floor(time / 60);
+    const sec = time % 60;
+
+    const formattedMin = min === 0 ? "0" : min < 10 ? `0${min}` : `${min}`;
+    const formattedSec = sec < 10 ? `0${sec}` : `${sec}`;
+
+    return `${formattedMin}분 ${formattedSec}초`;
+  };
   const statistics = () => {
     switch (selectedProject) {
       case "1":
         return (
-          <div className="flex justify-center w-full mt-10">
-            <div className="flex flex-col justify-center text-2xl mx-20">
-              <p className="mb-4">맞춘 문제 수 {ojt1Data.correctNum}</p>
-              <p className="mb-2">틀린 문제 수 {ojt1Data.wrongNum}</p>
-              <p className="mt-10">정답률 {ojt1rate}%</p>
-            </div>
-            <div style={{ width: "240px", height: "240px" }}>
-              <Doughnut data={ojt1chart} options={options} />
-            </div>
-          </div>
+          <>
+            {ojt1Data.correctNum != 0 || ojt1Data.wrongNum != 0 ? (
+              <div className="flex justify-center w-fit bg-green-700 text-2xl my-10 p-10 rounded-xl">
+                <div className="flex flex-col justify-center text-2xl mx-20 text-white font-semibold">
+                  <p className="mb-4">맞춘 문제 수 : {ojt1Data.correctNum}</p>
+                  <p className="mb-2">틀린 문제 수 : {ojt1Data.wrongNum}</p>
+                  <p className="mt-10">정답률 : {ojt1rate}%</p>
+                </div>
+                {(ojt1Data.correctNum != 0 || ojt1Data.wrongNum != 0) && (
+                  <div style={{ width: "240px", height: "240px" }}>
+                    <Doughnut data={ojt1chart} options={options} />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>기록 없음</>
+            )}
+          </>
         );
+
       case "2":
         return (
-          <div className="flex flex-col justify-center text-2xl mx-20 mt-10">
-            <p className="mb-4">총 횟수 {ojt2Data.totalPlayNum}</p>
-            <p className="mb-2">
-              평균 {ojt2Data.totalPlayTime / ojt2Data.totalPlayNum}
-            </p>
-            <p className="mt-10">최근 기록{ojt2Data.curPlayTime}</p>
-          </div>
+          <>
+            {ojt2Data.totalPlayNum != 0 ? (
+              <div className="flex flex-col justify-center w-fit bg-green-700 text-2xl mx-20 my-10 p-10 rounded-xl">
+                <div className="flex flex-row justify-center">
+                  <div className="flex flex-col">
+                    <div className="mb-2 text-white font-semibold">
+                      평균 기록
+                    </div>
+                    <div className="flex items-center justify-center w-56 h-32 mx-8 bg-black border-8 border-gray-500">
+                      <span className="text-red-500 font-bold italic text-4xl">
+                        {ojt2Data.totalPlayTime / ojt2Data.totalPlayNum}초
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="mb-2 text-white font-semibold">
+                      최근 기록
+                    </div>
+                    <div className="flex items-center justify-center w-56 h-32 mx-8 bg-black border-8 border-gray-500">
+                      <span className="text-red-500 font-bold italic text-4xl">
+                        {ojt2Data.curPlayTime}초
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <>기록 없음</>
+            )}
+          </>
         );
       case "3":
         return (
-          <div>
-            총/최대/평균 플레이 시간, 획득 머니, 적중률, 파괴아이템
-            <div className="flex flex-col justify-center text-2xl mx-20">
-              <p>총 플레이 시간</p>
-
-              <p>평균 플레이 시간 (판수도 기록해야겠네?)</p>
-              <p>최대 플레이 시간</p>
-              <br />
-              <hr />
-              <br />
-              <p className="mb-4">총 획득한 머니 {ojt3Data.getMoney}</p>
-              <p className="mb-4">파괴한 폭탄 수 {ojt3Data.hitBomb}</p>
-              <p className="mb-4">파괴한 총알 수 {ojt3Data.hitBullet}</p>
-              <p className="mb-4">파괴한 머니 수 {ojt3Data.hitMoney}</p>
-              <p className="mt-10">명중률 {ojt3rate}%</p>
-            </div>
-          </div>
+          <>
+            {ojt3rate ? (
+              <div className="flex flex-col justify-center w-fit min-w-[400px] bg-green-700 text-2xl mx-20 my-10 p-10 rounded-xl text-white">
+                <div className="text-2xl mb-12 font-bold">전투기 게임 기록</div>
+                <div className="text-xl font-semibold">
+                  <p className="mb-8">
+                    <img
+                      src="/assets/getMoney.png"
+                      alt="getMoney"
+                      className="w-10 h-10 inline-block mr-2"
+                    />
+                    획득 머니 : {ojt3Data.getMoney}
+                  </p>
+                  <p className="mb-4">
+                    <img
+                      src="/assets/bomb.png"
+                      alt="hitBomb"
+                      className="w-10 h-10 inline-block mr-2"
+                    />
+                    파괴한 폭탄 수 : {ojt3Data.hitBomb}
+                  </p>
+                  <p className="mb-8">
+                    <img
+                      src="/assets/bullet.png"
+                      alt="hitBullet"
+                      className="w-10 h-10 inline-block mr-2"
+                    />
+                    파괴한 총알 수 : {ojt3Data.hitBullet}
+                  </p>
+                  <p>
+                    <img
+                      src="/assets/hitRate.png"
+                      alt="hitRate"
+                      className="w-10 h-10 inline-block mr-2"
+                    />
+                    명중률 : {ojt3rate} %
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <>기록 없음</>
+            )}
+          </>
+          // </div>
         );
       case "4":
         return (
-          <div className="flex flex-col justify-center items-center text-2xl m-20">
-            <p className="mb-4">최고 기록 {ojt4Data.bestTimeInSeconds}</p>
-            <p className="mb-4">누적 플레이 횟수 {ojt4Data.totalPlayNum}</p>
-            <p className="mb-4">누적 플레이 타임 {ojt4Data.timeInSeconds}</p>
-            <p className="mb-4">최근 기록 {ojt4Data.curTimeInSeconds}</p>
-          </div>
+          <>
+            {ojt4Data.bestTimeInSeconds != 1000 ? (
+              <div className="flex flex-col justify-center w-fit min-w-[400px] bg-green-700 text-2xl mx-20 my-10 p-10 rounded-xl text-white">
+                <div className="text-2xl mb-12 font-bold">레이스 게임 기록</div>
+                <p className="mb-4">
+                  최고 기록 : {secondToMinute(ojt4Data.bestTimeInSeconds)}
+                </p>
+                <p className="mb-4">
+                  누적 플레이 횟수 : {ojt4Data.totalPlayNum}
+                </p>
+                <p className="mb-4">
+                  누적 플레이 타임 : {secondToMinute(ojt4Data.timeInSeconds)}
+                </p>
+                <p className="mb-4">
+                  평균 플레이 타임 :{" "}
+                  {secondToMinute(
+                    ojt4Data.timeInSeconds / ojt4Data.totalPlayNum
+                  )}
+                </p>
+                <p className="mb-4">
+                  최근 기록 : {secondToMinute(ojt4Data.curTimeInSeconds)}
+                </p>
+              </div>
+            ) : (
+              <>기록 없음</>
+            )}
+          </>
         );
       case "5":
-        return <div>총 푼 문제 수, 틀린 문제 수, 맞춘 문제 수, 정답률</div>;
+        return (
+          <>
+            {ojt5Data.correctNum != 0 || ojt5Data.wrongNum != 0 ? (
+              <div className="flex justify-center w-fit bg-green-700 text-2xl my-10 p-10 rounded-xl">
+                <div className="flex flex-col justify-center text-2xl mx-20 text-white font-semibold">
+                  <p className="mb-4">맞춘 문제 수 : {ojt5Data.correctNum}</p>
+                  <p className="mb-2">틀린 문제 수 : {ojt5Data.wrongNum}</p>
+                  <p className="mt-10">정답률 : {ojt5rate}%</p>
+                </div>
+                {(ojt5Data.correctNum != 0 || ojt5Data.wrongNum != 0) && (
+                  <div style={{ width: "240px", height: "240px" }}>
+                    <Doughnut data={ojt5chart} options={options} />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>기록 없음</>
+            )}
+          </>
+        );
+      // return <div>총 푼 문제 수, 틀린 문제 수, 맞춘 문제 수, 정답률</div>;
     }
   };
 
-  return <>{statistics()}</>;
+  return <div className="flex justify-center">{statistics()}</div>;
 };
 export default StatisticsBox;

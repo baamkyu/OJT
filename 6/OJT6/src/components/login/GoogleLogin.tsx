@@ -8,19 +8,20 @@ const TryGoogleLogin = () => {
   const clientId =
     "22782167732-u6d2fmv2bnoh4k6jkmj6nmkkal9hcavq.apps.googleusercontent.com";
 
-  const onSuccess = (res) => {
-    console.log(res);
+  const onSuccess = () => {
     localStorage.setItem("token", "success");
     navigate("/");
+  };
+
+  const onError = () => {
+    alert("Google Login Error");
   };
 
   return (
     <GoogleOAuthProvider clientId={clientId}>
       <GoogleLogin
         onSuccess={onSuccess}
-        onError={() => {
-          console.log("error");
-        }}
+        onError={onError}
         logo_alignment="center"
         size="large"
         width="384px"

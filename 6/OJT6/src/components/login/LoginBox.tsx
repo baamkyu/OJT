@@ -19,16 +19,14 @@ const Login = () => {
           inputPw: inputPw,
         }),
       });
-      // return되는 반환 값
       const result = await response.json();
-      console.log(result);
-      // 반환 값에 따른 로직 추가
+      /** 로그인 결과에 따른 로직 */
       result.login &&
         (localStorage.setItem("token", result.token),
         localStorage.setItem("userName", result.userName));
       navigate("/");
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Login API Error", error);
     }
   };
 

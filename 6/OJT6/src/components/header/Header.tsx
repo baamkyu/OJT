@@ -2,14 +2,14 @@ import IconButton from "@mui/material/IconButton";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-import { useAtomValue } from "jotai";
-import { isLoginAtom, userNameAtom } from "../../store/store";
+import { useSetAtom } from "jotai";
+import { selectedProjectAtom } from "../../store/store";
 import { useNavigate, useLocation } from "react-router-dom";
 import Logo from "./Logo";
 
 const Header = () => {
   const isLogin = localStorage.getItem("token");
-  const userName = useAtomValue(userNameAtom);
+  const setSelectedProject = useSetAtom(selectedProjectAtom);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,13 +17,15 @@ const Header = () => {
 
   const moveToMainPage = () => {
     navigate("/");
+    setSelectedProject("");
   };
   const moveToMyPage = () => {
     navigate("/mypage");
+    setSelectedProject("");
   };
 
   return (
-    <div className="mt-6 mb-16 flex justify-between">
+    <div className="mt-6 mb-16 px-4 flex justify-between">
       {isMyPage ? (
         <div onClick={moveToMainPage} className="cursor-pointer">
           <IconButton>
@@ -44,10 +46,7 @@ const Header = () => {
           <IconButton>
             <AccountBoxIcon style={{ width: "40px", height: "40px" }} />
           </IconButton>
-          <span className="text-xl underline cursor-pointer">
-            {/* {userName}님 안녕하세요. */}
-            마이페이지
-          </span>
+          <span className="text-xl underline cursor-pointer">마이페이지</span>
         </div>
       ) : (
         <div></div>

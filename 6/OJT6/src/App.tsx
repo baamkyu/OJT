@@ -45,6 +45,11 @@ function App() {
         };
         localStorage.setItem("ojt4Data", JSON.stringify(data));
       }
+
+      if (!localStorage.getItem("ojt5Data")) {
+        const data = { solvedNum: 0, wrongNum: 0, correctNum: 0 };
+        localStorage.setItem("ojt5Data", JSON.stringify(data));
+      }
       return;
     }
   }, [isLogin]);
