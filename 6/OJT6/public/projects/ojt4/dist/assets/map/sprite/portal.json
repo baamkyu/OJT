@@ -1,0 +1,63 @@
+{
+  "frames": {
+    "portal2": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 91,
+        "h": 92
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 5,
+        "y": 2,
+        "w": 91,
+        "h": 92
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "portal1": {
+      "frame": {
+        "x": 0,
+        "y": 91,
+        "w": 89,
+        "h": 88
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 2,
+        "y": 3,
+        "w": 89,
+        "h": 88
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "portal.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 92,
+      "h": 179
+    },
+    "scale": 1
+  }
+}
