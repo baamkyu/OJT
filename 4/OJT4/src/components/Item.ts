@@ -1,4 +1,4 @@
-import GameScene from "../scenes/Game";
+// import GameScene from "../scenes/Game";
 
 export class ItemList {
   scene: Phaser.Scene;

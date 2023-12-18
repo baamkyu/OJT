@@ -1,4 +1,4 @@
-import moneyImage from "../images/money.png";
+import moneyImage from "../../public/assets/images/money.png";
 
 type TOptions = {
   img: HTMLImageElement;

@@ -1,5 +1,5 @@
-import planeImage from "../images/plane.png";
-import getMoneyImage from "../images/money.png";
+import planeImage from "../../public/assets/images/plane.png";
+import getMoneyImage from "../../public/assets/images/money.png";
 
 type typeXY = {
   moneyX: number;

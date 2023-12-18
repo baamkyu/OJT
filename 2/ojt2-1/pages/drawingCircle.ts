@@ -56,7 +56,7 @@ export const DrawingCircle = () => {
     "http://www.w3.org/2000/svg",
     "image"
   );
-  circlePointIcon.setAttribute("href", "../src/icons/arrowWhite.png");
+  circlePointIcon.setAttribute("href", "/assets/arrowWhite.png");
   circlePointIcon.setAttribute("width", "20");
   circlePointIcon.setAttribute("height", "20");
   circlePointIcon.setAttribute("x", "590");
@@ -90,7 +90,7 @@ export const DrawingCircle = () => {
     "http://www.w3.org/2000/svg",
     "image"
   );
-  speechBubbleIcon.setAttribute("href", "../src/icons/speechBubble.png");
+  speechBubbleIcon.setAttribute("href", "/assets/speechBubble.png");
   speechBubbleIcon.setAttribute("width", "64");
   speechBubbleIcon.setAttribute("height", "64");
   speechBubbleIcon.setAttribute("x", "700");
@@ -99,7 +99,13 @@ export const DrawingCircle = () => {
   finishUI.appendChild(speechBubbleIcon);
   finishUI.appendChild(correctUI);
 
+  let timesecond = 0;
   let drawing = false;
+
+  const timer = setInterval(() => {
+    timesecond += 0.1;
+  }, 100);
+
   function startDrawing() {
     // 나중에 원과의 거리를 통해 유효한 클릭인지를 검토하는 로직 추가해야함
     drawing = true;
@@ -208,25 +214,30 @@ export const DrawingCircle = () => {
       const mouseY: number = transformedPoint.y;
       let best = closestPoint(dottedPath, [mouseX, mouseY]);
 
-      // 테두리 길이값 초기화
-      prevLength = best.length;
-
       // 뒤로 가는 거 방지
       if (best.length < prevLength) return;
       // 한 번에 많이 움직이는 거 방지
       if (best.length - prevLength > 50) return;
+      // 테두리 길이값 초기화
+      prevLength = best.length;
 
       // 한 바퀴만 돌 수 있도록 로직 설정
       if (best.length > 608) {
         isFinish = true;
         drawing = false;
         secondGroup.appendChild(finishUI);
+
+        clearInterval(timer);
+        window.parent.postMessage(
+          { type: "ojt2-2 finish", time: Math.round(timesecond * 10) / 10 },
+          "*"
+        );
       }
 
       // 마우스와 원과의 거리가 20 이하인 경우만 실행
-      if (best.distance < 20) {
+      if (best.distance < 40) {
         // 시작점 주변에서 움직일 경우 시작점으로
-        if (best.x < 620 && best.x > 585 && best.y < 110 && best.y > 90) {
+        if (best.x < 620 && best.x > 608 && best.y < 110 && best.y > 90) {
           circlePoint.setAttribute("cx", "600");
           circlePoint.setAttribute("cy", "100");
           circlePointIcon.setAttribute("x", "590");
@@ -249,15 +260,13 @@ export const DrawingCircle = () => {
 
           circlePointIcon.setAttribute("x", (best.x - 10).toString());
           circlePointIcon.setAttribute("y", (best.y - 10).toString());
-          // console.log(best.x, best.y);
+
           drawPath.setAttribute(
             "stroke-dashoffset",
             (628.4 - best.length).toString()
           );
         }
         drawPath.setAttribute("stroke-dasharray", "628.4");
-
-        console.log(prevLength);
       }
     }
   }

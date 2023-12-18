@@ -1,8 +1,8 @@
-import hitRateImage from "../images/hitRate.png";
-import moneyImage from "../images/getMoney.png";
-import bulletItemImage from "../images/bullet.png";
-import bombItemImage from "../images/bomb.png";
-import moneyItemImage from "../images/money.png";
+import hitRateImage from "../../public/assets/images/hitRate.png";
+import moneyImage from "../../public/assets/images/getMoney.png";
+import bulletItemImage from "../../public/assets/images/bullet.png";
+import bombItemImage from "../../public/assets/images/bomb.png";
+import moneyItemImage from "../../public/assets/images/money.png";
 
 const hitRateImg = new Image();
 hitRateImg.src = hitRateImage;
@@ -82,7 +82,7 @@ export const EndingModal = (
   // "다시하기" 버튼
   const buttonWidth = 130;
   const buttonHeight = 40;
-  const buttonX = x + (modalWidth - buttonWidth) / 2;
+  const buttonX = x + modalWidth / 2 + buttonWidth;
   const buttonY = y + modalHeight - 40;
 
   const restartButton = document.createElement("button");

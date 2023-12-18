@@ -1,0 +1,115 @@
+{
+    "frames": {
+        "walk2": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 138,
+                "h": 71
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 138,
+                "h": 71
+            },
+            "sourceSize": {
+                "w": 138,
+                "h": 71
+            }
+        },
+        "dead": {
+            "frame": {
+                "x": 138,
+                "y": 0,
+                "w": 135,
+                "h": 71
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 135,
+                "h": 71
+            },
+            "sourceSize": {
+                "w": 135,
+                "h": 71
+            }
+        },
+        "walk1": {
+            "frame": {
+                "x": 273,
+                "y": 0,
+                "w": 135,
+                "h": 71
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 135,
+                "h": 71
+            },
+            "sourceSize": {
+                "w": 135,
+                "h": 71
+            }
+        },
+        "walk4": {
+            "frame": {
+                "x": 408,
+                "y": 0,
+                "w": 134,
+                "h": 71
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 134,
+                "h": 71
+            },
+            "sourceSize": {
+                "w": 134,
+                "h": 71
+            }
+        },
+        "walk3": {
+            "frame": {
+                "x": 542,
+                "y": 0,
+                "w": 122,
+                "h": 67
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 122,
+                "h": 67
+            },
+            "sourceSize": {
+                "w": 122,
+                "h": 67
+            }
+        }
+    },
+    "meta": {
+        "app": "http://free-tex-packer.com",
+        "version": "0.6.7",
+        "image": "bug2.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 664,
+            "h": 71
+        },
+        "scale": 1
+    }
+}

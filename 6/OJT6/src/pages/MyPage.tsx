@@ -30,6 +30,7 @@ const MyPage = () => {
     }).then((result) => {
       if (result.isDenied) {
         localStorage.clear();
+        setSelectedProject("");
         navigate("/login");
         Swal.fire("로그아웃 되었습니다.", "", "success");
       }
@@ -40,7 +41,7 @@ const MyPage = () => {
     <>
       <Header />
       <div className="flex items-center">
-        <p className="ml-8 text-2xl font-bold">통계</p>
+        <p className="ml-8 text-2xl font-bold">프로젝트</p>
         <IconButton onClick={() => setIsStatisticsOpen(!isStatisticsOpen)}>
           {isStatisticsOpen ? (
             <KeyboardArrowDownIcon style={{ width: "40px", height: "40px" }} />
@@ -63,7 +64,7 @@ const MyPage = () => {
           <StatisticsBox />
         </div>
       )}
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-56">
         <button
           onClick={doLogout}
           className="bg-red-50 text-red-600 border-red-300 border rounded-lg w-1/5 h-10 hover:bg-red-700 hover:text-white transition duration-300"

@@ -480,7 +480,6 @@ export const handlers = [
     }
   }),
   http.get("/api/problem", () => {
-    console.log("get problem");
     return HttpResponse.json(problemJSON);
   }),
 ];

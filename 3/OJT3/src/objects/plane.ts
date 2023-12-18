@@ -1,5 +1,5 @@
-import planeImage from "../images/plane.png";
-import planeBulletImage from "../images/planeBullet.png";
+import planeImage from "../../public/assets/images/plane.png";
+import planeBulletImage from "../../public/assets/images/planeBullet.png";
 import Sound from "../objects/sound";
 
 type TOptions = {

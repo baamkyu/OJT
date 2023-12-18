@@ -14,7 +14,23 @@ const Preview = ({ onClose }: { onClose: () => void }) => {
 
   const canvasJSON = canvas?.toJSON();
 
+  function isArraySame(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+
+    for (let i = 0; i < arr1.length; i++) {
+      if (Math.abs(arr1[i] - arr2[i]) > 1) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   useEffect(() => {
+    console.log(canvasJSON);
+    console.log(answer);
     const newCanvas = new fabric.Canvas("previewCanvas", {
       width: 1200,
       height: 675,
@@ -34,9 +50,31 @@ const Preview = ({ onClose }: { onClose: () => void }) => {
       const clickedObject = event.target?.toObject();
       const clickX = event.e.clientX; // 마우스 클릭된 x 좌표
       const clickY = event.e.clientY; // 마우스 클릭된 y 좌표
-      console.log("window", window.innerWidth, window.innerHeight);
-      console.log("click", clickX, clickY);
-      if (
+      // console.log("window", window.innerWidth, window.innerHeight);
+      // console.log("click", clickX, clickY);
+
+      /** 이미지인 경우 */
+      if (event.target?.type === "image") {
+        if (
+          answer?.ownMatrixCache.key.substring(0, 2) ===
+            event.target.ownMatrixCache.key.substring(0, 2) &&
+          isArraySame(
+            answer?.ownMatrixCache.value,
+            event.target.ownMatrixCache.value
+          )
+        ) {
+          setResult(true);
+          setTimeout(() => {
+            setResult(null);
+          }, 3000);
+        } else {
+          setResult(false);
+
+          setTimeout(() => {
+            setResult(null);
+          }, 1500);
+        }
+      } else if (
         clickedObject &&
         answer &&
         clickedObject.fill === answer.fill &&
@@ -44,6 +82,9 @@ const Preview = ({ onClose }: { onClose: () => void }) => {
         clickedObject.opacity === answer.opacity &&
         clickedObject.width === answer.width &&
         clickedObject.type === answer.type &&
+        clickedObject.stroke === answer.stroke &&
+        clickedObject.strokeWidth === answer.strokeWidth &&
+        clickedObject.strokeDashArray === answer.strokeDashArray &&
         Math.round(clickedObject.scaleX) === Math.round(answer.scaleX || 0) &&
         Math.round(clickedObject.scaleY) === Math.round(answer.scaleY || 0)
       ) {
@@ -57,7 +98,7 @@ const Preview = ({ onClose }: { onClose: () => void }) => {
 
         setTimeout(() => {
           setResult(null);
-        }, 3000);
+        }, 1500);
       }
 
       setClickPosition({ x: clickX, y: clickY });

@@ -12,9 +12,9 @@ const App = () => {
     "svg"
   );
 
-  svg.setAttribute("width", "1000");
-  svg.setAttribute("height", "800");
-  svg.setAttribute("viewBox", "0 0 1000 800");
+  svg.setAttribute("width", "100%");
+  svg.setAttribute("height", "100%");
+  svg.setAttribute("viewBox", "0 0 1200 800");
   svg.id = "svg";
   svg.appendChild(DrawCircle());
   svg.appendChild(DrawingCircle());

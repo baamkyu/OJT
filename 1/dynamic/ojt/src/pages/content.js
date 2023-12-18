@@ -44,10 +44,10 @@ export const content = (pageIndex) => {
 
   // 태그들의 속성 설정
   svg.setAttribute("viewBox", "0 0 1200 800");
-  svg.setAttribute("width", "1200");
-  svg.setAttribute("height", "800");
+  svg.setAttribute("width", "100%");
+  svg.setAttribute("height", "100%");
 
-  header.setAttribute("width", "1200");
+  header.setAttribute("width", "100%");
   header.setAttribute("height", "80");
   header.setAttribute("fill", "green");
   header.setAttribute("x", "0");
@@ -102,10 +102,11 @@ export const content = (pageIndex) => {
       resultMessage.textContent = "정답! 👍🏻";
       resultMessage.setAttribute("fill", "green");
       resultMessage.setAttribute("z-index", "1");
+      window.parent.postMessage({ type: "ojt1 correct" }, "*");
       // 여기에서 정답 처리 로직을 수행
     } else {
       resultMessage.textContent = "아쉬워요 😟";
-      resultMessage.setAttribute("fill", "red");
+      window.parent.postMessage({ type: "ojt1 wrong" }, "*");
       // 여기에서 오답 처리 로직을 수행
     }
     svg.appendChild(resultMessage);

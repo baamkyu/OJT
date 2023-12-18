@@ -1,4 +1,4 @@
-import bombImage from "../images/bomb.png";
+import bombImage from "../../public/assets/images/bomb.png";
 
 type TOptions = {
   img: HTMLImageElement;

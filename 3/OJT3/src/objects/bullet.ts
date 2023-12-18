@@ -1,4 +1,4 @@
-import bulletImage from "../images/bullet.png";
+import bulletImage from "../../public/assets/images/bullet.png";
 type TOptions = {
   img: HTMLImageElement;
   x: number;

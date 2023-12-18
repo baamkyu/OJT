@@ -1,8 +1,8 @@
-import gunshot from "../sound/gunshot.mp3";
-import gunshot2 from "../sound/gunshot2.mp3";
-import getMoney from "../sound/money.mp3";
-import auch from "../sound/auch.mp3";
-import endGameAudio from "../sound/endGame.mp3";
+import gunshot from "../../public/assets/sound/gunshot.mp3";
+import gunshot2 from "../../public/assets/sound/gunshot2.mp3";
+import getMoney from "../../public/assets/sound/money.mp3";
+import auch from "../../public/assets/sound/auch.mp3";
+import endGameAudio from "../../public/assets/sound/endGame.mp3";
 
 export default class Sound {
   shotAudio: HTMLAudioElement;

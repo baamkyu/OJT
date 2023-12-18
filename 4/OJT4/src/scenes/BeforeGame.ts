@@ -28,7 +28,8 @@ export default class BeforeGame extends Phaser.Scene {
     this.gameNPC.setInteractive(); // 클릭 이벤트를 받기 위해 interactive 설정
     this.gameNPC.on("pointerdown", () => {
       console.log("click");
-      this.showModal(this.scene);
+      // this.showModal(this.scene);
+      this.showModal();
     });
 
     // NPC chat
@@ -103,7 +104,8 @@ export default class BeforeGame extends Phaser.Scene {
     this.cursors = this.input.keyboard!.createCursorKeys();
   }
 
-  showModal(scene: any) {
+  // showModal(scene: any) {
+  showModal() {
     // 모달 창을 생성합니다.
     var modal = document.createElement("div");
     modal.id = "modalDiv";

@@ -1,0 +1,63 @@
+{
+    "frames": {
+        "bee1.png": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 102,
+                "h": 88
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 102,
+                "h": 88
+            },
+            "sourceSize": {
+                "w": 102,
+                "h": 88
+            },
+            "pivot": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        "bee2.png": {
+            "frame": {
+                "x": 0,
+                "y": 88,
+                "w": 112,
+                "h": 76
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 112,
+                "h": 76
+            },
+            "sourceSize": {
+                "w": 112,
+                "h": 76
+            },
+            "pivot": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        }
+    },
+    "meta": {
+        "app": "http://free-tex-packer.com",
+        "version": "0.6.7",
+        "image": "airplane.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 112,
+            "h": 164
+        },
+        "scale": 1
+    }
+}

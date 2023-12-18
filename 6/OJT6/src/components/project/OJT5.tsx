@@ -127,7 +127,7 @@ const OJT5 = () => {
               setTimeout(() => {
                 setResult(null);
                 setProblemNum(problemNum + 1);
-              }, 3000);
+              }, 2000);
             } else if (clickedObject === undefined) {
               console.log("undefined!");
             } else {

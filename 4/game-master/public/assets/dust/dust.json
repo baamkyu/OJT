@@ -1,0 +1,255 @@
+{
+  "frames": {
+    "dust10": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 320
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 320
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 320
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "dust09": {
+      "frame": {
+        "x": 320,
+        "y": 0,
+        "w": 267,
+        "h": 273
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 267,
+        "h": 273
+      },
+      "sourceSize": {
+        "w": 267,
+        "h": 273
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "dust08": {
+      "frame": {
+        "x": 320,
+        "y": 273,
+        "w": 262,
+        "h": 267
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 262,
+        "h": 267
+      },
+      "sourceSize": {
+        "w": 262,
+        "h": 267
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "dust07": {
+      "frame": {
+        "x": 0,
+        "y": 320,
+        "w": 257,
+        "h": 259
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 257,
+        "h": 259
+      },
+      "sourceSize": {
+        "w": 257,
+        "h": 259
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "dust06": {
+      "frame": {
+        "x": 582,
+        "y": 273,
+        "w": 249,
+        "h": 251
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 249,
+        "h": 251
+      },
+      "sourceSize": {
+        "w": 249,
+        "h": 251
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "dust05": {
+      "frame": {
+        "x": 587,
+        "y": 0,
+        "w": 237,
+        "h": 243
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 237,
+        "h": 243
+      },
+      "sourceSize": {
+        "w": 237,
+        "h": 243
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "dust04": {
+      "frame": {
+        "x": 582,
+        "y": 524,
+        "w": 230,
+        "h": 233
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 230,
+        "h": 233
+      },
+      "sourceSize": {
+        "w": 230,
+        "h": 233
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "dust03": {
+      "frame": {
+        "x": 257,
+        "y": 540,
+        "w": 218,
+        "h": 214
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 218,
+        "h": 214
+      },
+      "sourceSize": {
+        "w": 218,
+        "h": 214
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "dust02": {
+      "frame": {
+        "x": 0,
+        "y": 579,
+        "w": 173,
+        "h": 181
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 173,
+        "h": 181
+      },
+      "sourceSize": {
+        "w": 173,
+        "h": 181
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "dust01": {
+      "frame": {
+        "x": 475,
+        "y": 540,
+        "w": 88,
+        "h": 73
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 88,
+        "h": 73
+      },
+      "sourceSize": {
+        "w": 88,
+        "h": 73
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "dust.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 831,
+      "h": 760
+    },
+    "scale": 1
+  }
+}

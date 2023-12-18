@@ -59,6 +59,9 @@ export default class Ending extends Phaser.Scene {
         },
       }
     );
+    console.log(gameoverText, resultText);
+    const timeInSeconds = gameScene.timer.timeInSeconds;
+    window.parent.postMessage({ type: "ojt4 finish", timeInSeconds }, "*");
 
     // '다시하기' 버튼
     const restartButton = this.add.text(

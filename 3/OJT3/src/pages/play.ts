@@ -1,7 +1,7 @@
-import planeImage from "../images/plane.png";
-import bombImage from "../images/bomb.png";
-import bulletImage from "../images/bullet.png";
-import moneyImage from "../images/money.png";
+import planeImage from "../../public/assets/images/plane.png";
+import bombImage from "../../public/assets/images/bomb.png";
+import bulletImage from "../../public/assets/images/bullet.png";
+import moneyImage from "../../public/assets/images/money.png";
 import Sound from "../objects/sound";
 import Bullet from "../objects/bullet";
 import Bomb from "../objects/bomb";
@@ -9,7 +9,7 @@ import Money from "../objects/money";
 import Plane from "../objects/plane";
 import info from "../objects/info";
 // import { BoomAni } from "../ani/boomani";
-import backgroundImage from "../images/background.png";
+import backgroundImage from "../../public/assets/images/background.png";
 import { shootCount } from "../objects/plane";
 import { EndingModal } from "./endingmodal";
 
@@ -325,6 +325,18 @@ export const Play = () => {
         hitBomb,
         hitMoney,
         restartGame
+      );
+      window.parent.postMessage(
+        {
+          type: "ojt3 finish",
+          getMoney,
+          shootCount,
+          hitCount,
+          hitBullet,
+          hitBomb,
+          hitMoney,
+        },
+        "*"
       );
     }
   }

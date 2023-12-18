@@ -5,6 +5,7 @@ import SceneKeys from "../constants/SceneKeys";
 import { ItemList } from "../components/Item";
 import TimerComponent from "../components/Timer";
 import { Portal, FinishPortal } from "../components/MapElement";
+// import { GameObjects, Physics, Types } from "phaser";
 
 export default class GameScene extends Phaser.Scene {
   player!: Player;
@@ -31,8 +32,8 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     // make map, background
-    const width: number = this.game.canvas.width;
-    const height: number = this.game.canvas.height;
+    // const width: number = this.game.canvas.width;
+    // const height: number = this.game.canvas.height;
 
     this.background = new Background(this);
 
@@ -71,6 +72,7 @@ export default class GameScene extends Phaser.Scene {
       return true;
     });
 
+    console.log(superjump1, superjump2, dash1, dash2);
     // player
     this.player = new Player(this, 100, 1100, "player", "stand1");
     this.player.setScale(0.5);
@@ -115,7 +117,6 @@ export default class GameScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, 2560, 1440);
 
     // platform 불러오기
-    ///@ts-ignore
     const tileset = map.addTilesetImage("tile", "tiles");
     ///@ts-ignore
     const platformsLayer = map.createLayer("tileset", tileset, 0, 0);
@@ -205,46 +206,37 @@ export default class GameScene extends Phaser.Scene {
     this.player.setY(y);
 
     if (shake) {
-      let shakeConfig: any = {
-        duration: 500, // 흔들림 지속 시간 (밀리초)
-        intensity: 0.5, // 흔들림 강도
-        stagger: 10, // 각 흔들림 간격 (밀리초)
-        force: true, // true로 설정하면 현재 흔들림 애니메이션을 중지하고 바로 새로운 애니메이션을 시작함
-      };
-
       this.cameras.main.shake(200, 0.05);
     }
   };
 
   // 아이템 관리 함수
   collectItem(_: any, item: any) {
-    if (item.active) {
-      item.setActive(false);
-      item.setVisible(false);
-      if (item.texture.key === "shield") {
-        //@ts-ignore
-        const getItem = this.sound.add("getItem");
-        getItem.play();
-        this.shieldNum += 1;
-      } else if (item.texture.key === "dash") {
-        //@ts-ignore
-        const getItem = this.sound.add("getItem");
-
-        getItem.play();
-
-        this.dashNum += 1;
-      } else if (item.texture.key === "superjump") {
-        //@ts-ignore
-        const getItem = this.sound.add("getItem");
-        getItem.play();
-        this.superjumpNum += 1;
-      }
-
-      setTimeout(() => {
-        item.setActive(true);
-        item.setVisible(true);
-      }, 5000);
+    if (!item.active) return;
+    item.setActive(false);
+    item.setVisible(false);
+    if (item.texture.key === "shield") {
+      const getItem = this.sound.add("getItem");
+      getItem.play();
+      this.shieldNum += 1;
+      return;
     }
+    if (item.texture.key === "dash") {
+      const getItem = this.sound.add("getItem");
+
+      getItem.play();
+
+      this.dashNum += 1;
+    } else if (item.texture.key === "superjump") {
+      const getItem = this.sound.add("getItem");
+      getItem.play();
+      this.superjumpNum += 1;
+    }
+
+    setTimeout(() => {
+      item.setActive(true);
+      item.setVisible(true);
+    }, 5000);
   }
 
   update() {

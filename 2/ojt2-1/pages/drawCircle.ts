@@ -97,7 +97,7 @@ export const DrawCircle = () => {
       "http://www.w3.org/2000/svg",
       "image"
     );
-    speechBubbleIcon.setAttribute("href", "../src/icons/speechBubble.png");
+    speechBubbleIcon.setAttribute("href", "/assets/speechBubble.png");
     speechBubbleIcon.setAttribute("width", "64");
     speechBubbleIcon.setAttribute("height", "64");
     speechBubbleIcon.setAttribute("x", "302");
@@ -107,7 +107,8 @@ export const DrawCircle = () => {
     finishUIGroup.appendChild(correctUI);
     firstGroup.appendChild(finishUIGroup);
 
-    window.parent.postMessage({ type: "firstGroupFinish" }, "*");
+    window.postMessage({ type: "firstGroupFinish" }, "*");
+    window.parent.postMessage({ type: "ojt2-1 finish" }, "*");
   };
 
   // 원의 길이 탐색

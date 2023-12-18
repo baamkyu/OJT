@@ -3,55 +3,39 @@ import { useAtomValue } from "jotai";
 
 import OJT5 from "./OJT5";
 import { useEffect } from "react";
+interface ContentBoxProps {
+  data: {
+    ojt1Data: { solvedNum: number; wrongNum: number; correctNum: number };
+    ojt2Data: {
+      totalPlayNum: number;
+      totalPlayTime: number;
+      curPlayTime: number;
+    };
+    ojt3Data: {
+      getMoney: number;
+      hitBomb: number;
+      hitBullet: number;
+      hitCount: number;
+      hitMoney: number;
+      shootCount: number;
+    };
+    ojt4Data: {
+      totalPlayNum: number;
+      timeInSeconds: number;
+      bestTimeInSeconds: number;
+      curTimeInSeconds: number;
+    };
+    ojt5Data: { solvedNum: number; wrongNum: number; correctNum: number };
+  };
+}
 
-const ContentBox = () => {
+const ContentBox = ({ data }: ContentBoxProps) => {
   const selectedProject = useAtomValue(selectedProjectAtom);
-
-  const ojt1DataString = localStorage.getItem("ojt1Data");
-  const ojt2DataString = localStorage.getItem("ojt2Data");
-  const ojt3DataString = localStorage.getItem("ojt3Data");
-  const ojt4DataString = localStorage.getItem("ojt4Data");
-  const ojt5DataString = localStorage.getItem("ojt5Data");
-  let ojt1Data: { solvedNum: number; wrongNum: number; correctNum: number };
-  let ojt2Data: {
-    totalPlayNum: number;
-    totalPlayTime: number;
-    curPlayTime: number;
-  };
-  let ojt3Data: {
-    getMoney: number;
-    hitBomb: number;
-    hitBullet: number;
-    hitCount: number;
-    hitMoney: number;
-    shootCount: number;
-  };
-  let ojt4Data: {
-    totalPlayNum: number;
-    timeInSeconds: number;
-    bestTimeInSeconds: number;
-    curTimeInSeconds: number;
-  };
-  let ojt5Data: {
-    solvedNum: number;
-    wrongNum: number;
-    correctNum: number;
-  };
-  if (ojt1DataString) {
-    ojt1Data = JSON.parse(ojt1DataString);
-  }
-  if (ojt2DataString) {
-    ojt2Data = JSON.parse(ojt2DataString);
-  }
-  if (ojt3DataString) {
-    ojt3Data = JSON.parse(ojt3DataString);
-  }
-  if (ojt4DataString) {
-    ojt4Data = JSON.parse(ojt4DataString);
-  }
-  if (ojt5DataString) {
-    ojt5Data = JSON.parse(ojt5DataString);
-  }
+  const ojt1Data = data.ojt1Data;
+  const ojt2Data = data.ojt2Data;
+  const ojt3Data = data.ojt3Data;
+  const ojt4Data = data.ojt4Data;
+  const ojt5Data = data.ojt5Data;
 
   useEffect(() => {
     const handler = function (event: MessageEvent) {
@@ -75,9 +59,7 @@ const ContentBox = () => {
           ojt2Data.curPlayTime = event.data.time;
           ojt2Data.totalPlayTime += event.data.time;
           ojt2Data.totalPlayNum += 1;
-          console.log(event.data);
           localStorage.setItem("ojt2Data", JSON.stringify(ojt2Data));
-          console.log("ojt2-2 finish 실행");
           break;
         case "ojt3 finish":
           console.log("ojt3 finish 실행");
@@ -98,14 +80,12 @@ const ContentBox = () => {
             ojt4Data.bestTimeInSeconds = event.data.timeInSeconds;
           localStorage.setItem("ojt4Data", JSON.stringify(ojt4Data));
           break;
-
         case "ojt5 correct":
           console.log("ojt5 correct");
           ojt5Data.correctNum += 1;
           ojt5Data.solvedNum += 1;
           localStorage.setItem("ojt5Data", JSON.stringify(ojt5Data));
           break;
-
         case "ojt5 wrong":
           console.log("ojt5 wrong");
           ojt5Data.wrongNum += 1;
